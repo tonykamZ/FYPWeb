@@ -1,0 +1,46 @@
+<head>
+    <title>Login</title>
+    <style>
+
+    </style>
+
+</head>
+
+<body>
+
+
+    <div class="container">
+        <form method="POST" action="/">
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label><b>Username</b></label>
+                    <input type="string" class="form-control" name="username" required>
+                </div>
+
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label><b>Password</b></label>
+                    <input type="string" class="form-control" name="password" required>
+                </div>
+
+            </div>
+
+            <button class="btn btn-outline-success" type="submit">Login</button>
+
+            <a class="btn btn-outline-info" href="http://localhost:1337/api/v1/auth/google">verify with Gmail</a>
+        </form>
+    </div>
+
+</body>
+
+<script>
+    var status = "<%= status %>";
+    // logged in 
+    if (status == "login") {
+        var name = "<%= req.session.username %>";
+        alert("Welcome! " + name);
+        window.location.replace("/");
+    }
+</script>
