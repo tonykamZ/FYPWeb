@@ -1,7 +1,9 @@
 <head>
     <title>Login</title>
     <style>
-
+        .container {
+            padding-top: 20px;
+        }
     </style>
 
 </head>
@@ -27,20 +29,20 @@
 
             </div>
 
-            <button class="btn btn-outline-success" type="submit">Login</button>
+            <div>
+                <button class="btn btn-outline-success" type="submit">Login</button>
+            </div>
 
-            <a class="btn btn-outline-info" href="http://localhost:1337/api/v1/auth/google">verify with Gmail</a>
+            <small>
+                <a href="/signup">Don't have an account yet? create an account here</a>
+
+            </small>
+
         </form>
     </div>
 
 </body>
 
 <script>
-    var status = "<%= status %>";
-    // logged in 
-    if (status == "login") {
-        var name = "<%= req.session.username %>";
-        alert("Welcome! " + name);
-        window.location.replace("/");
-    }
+   
 </script>

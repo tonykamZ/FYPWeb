@@ -24,7 +24,7 @@ module.exports = {
                 req.session.userid = user.id;
                 req.session.username = user.name;
                 req.session.useremail = user.email;
-                return res.view('loginForm', {status:'login'});
+                return res.view('SignupForm', { status: 'verified' });
             }
         })(req, res, next);
     },

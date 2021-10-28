@@ -1,0 +1,81 @@
+<head>
+    <title>Login</title>
+    <script src="https://code.iconify.design/2/2.0.3/iconify.min.js"></script>
+    <style>
+        .container {
+            padding-top: 20px;
+        }
+
+        .iconify {
+            margin-bottom: 4px;
+        }
+
+        #create{
+            display: none;
+        }
+    </style>
+
+</head>
+
+<body>
+
+
+    <div class="container">
+        <p><b>Step 1:</b> login to your Gmail account to proceed the verification</p>
+        <a class="btn btn-outline-info" href="http://localhost:1337/api/v1/auth/google">Verify with your Gmail <span
+                class="iconify" data-icon="logos:google-gmail"></span></a>
+
+        <br><br>
+        <% if(req.session.useremail){ %>
+            <p style="color: grey;">Valid Gmail: <b><%= req.session.useremail %></b> <a style="color: red;" href='/disconnectGmail'>Disconnect</a>
+            </p>
+            <% } %>
+
+            <p><b>Step 2:</b> </p>
+                <form method="POST" action="/">
+                    <div class="form-row">
+                        <div class="form-group col-md-4">
+                            <label><b>Username</b></label>
+                            <input type="string" class="form-control" id="username" name="username" required disabled>
+                        </div>
+
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col-md-4">
+                            <label><b>Password</b></label>
+                            <input type="string" class="form-control" id="password" name="password" required disabled>
+                        </div>
+
+                    </div>
+
+
+                    <div>
+                        <button id="create" class="btn btn-outline-success" type="submit">Create</button>
+                    </div>
+
+
+
+                </form>
+    </div>
+
+</body>
+
+<script>
+    var useremail = "<%= req.session.useremail %>";
+    var status = "<%= status %>";
+    // logged in Gmail
+    if (status == "verified") {
+        var name = "<%= req.session.username %>";
+        alert("Welcome! " + name + "\nYou're now logged in your Gmail account");
+        window.location.replace("/signup");
+
+    }
+
+    // contain valid gmail
+    if (useremail) {
+        document.getElementById("username").disabled = false;
+        document.getElementById("password").disabled = false;
+        document.getElementById("create").style.display = "inline";
+    }
+</script>
