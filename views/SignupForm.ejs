@@ -21,7 +21,7 @@
 
 
     <div class="container">
-        <p><b>Step 1:</b> login to your Gmail account to proceed the verification</p>
+        <p><b>Step 1:</b> Login to your Gmail account to proceed the verification</p>
         <a class="btn btn-outline-info" href="http://localhost:1337/api/v1/auth/google">Verify with your Gmail <span
                 class="iconify" data-icon="logos:google-gmail"></span></a>
 
@@ -31,8 +31,8 @@
             </p>
             <% } %>
 
-            <p><b>Step 2:</b> </p>
-                <form method="POST" action="/">
+            <p><b>Step 2:</b> Enter your username & password for new account</p>
+                <form method="POST" action="/signup">
                     <div class="form-row">
                         <div class="form-group col-md-4">
                             <label><b>Username</b></label>
@@ -74,6 +74,7 @@
 
     // contain valid gmail
     if (useremail) {
+        // enable input fields and display the create button
         document.getElementById("username").disabled = false;
         document.getElementById("password").disabled = false;
         document.getElementById("create").style.display = "inline";

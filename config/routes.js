@@ -37,6 +37,7 @@ module.exports.routes = {
   'GET /': 'UserController.login',
   'POST /': 'UserController.login',
   'GET /signup': 'UserController.signup',
+  'POST /signup': 'UserController.signup',
   'GET /disconnectGmail': 'UserController.disconnectGmail',
 
   'GET /api/v1/auth/google': { controller: 'PassportController', action: 'googleAuth' },

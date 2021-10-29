@@ -24,6 +24,13 @@ module.exports = {
                 req.session.userid = user.id;
                 req.session.username = user.name;
                 req.session.useremail = user.email;
+
+                // go to DB check if it has connected account
+                // ...
+
+                // if yes, req.session.exisitngAC = ac.name
+
+                
                 return res.view('SignupForm', { status: 'verified' });
             }
         })(req, res, next);
