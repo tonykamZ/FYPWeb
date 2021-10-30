@@ -1,0 +1,55 @@
+<head>
+    <title>User profile</title>
+    <style>
+        .container {
+            padding-top: 20px;
+        }
+    </style>
+
+</head>
+
+<body>
+
+
+    <div class="container">
+        <!-- image -->
+        <div>
+            <input type="image" readonly style="display: none;">
+        </div>
+
+        <!-- User info -->
+        <div>
+            <b> User information</b>
+            <small>Connected to Gmail: <%= req.session.connectedGmail %></small>
+            <div class="form-group col-md-4">
+                <label><b>User name:</b></label>
+                <input class="form-control" value="<%= req.session.memberid %>" readonly>
+            </div>
+
+            <div class="form-group col-md-2">
+                <label><b>Credit Score</b></label>
+                <input class="form-control" type="number" value="<%= req.session.creditScore %>" readonly>
+            </div>
+
+            <div class="form-group col-md-4">
+                <label><b>Nick Name</b></label>
+                <input class="form-control" type="text" value="<%= req.session.nickname %>" readonly>
+            </div>
+
+
+
+        </div>
+
+        <button class="btn btn-outline-info" onclick="showEdit()">Edit profile</button>
+
+        <a class="btn btn-outline-danger" href="/logout">Log out</a>
+    </div>
+
+</body>
+
+<script>
+
+    function showEdit() {
+
+    }
+</script>
