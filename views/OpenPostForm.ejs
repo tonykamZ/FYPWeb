@@ -1,0 +1,67 @@
+<head>
+    <title>Make a post</title>
+    <style>
+        .container {
+            padding-top: 20px;
+        }
+    </style>
+
+</head>
+
+<body>
+
+
+    <div class="container">
+        <h3><b>Create new post</b></h3>
+        <form method="POST" action="/post">
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label><b>Post Title</b></label>
+                    <input type="string" class="form-control" name="title" required>
+                </div>
+
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label><b>Description</b></label>
+                    <textarea rows="5" id="description" name="description" class="form-control" required>
+                    </textarea>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-2">
+                    <label><b>Member limit</b></label>
+                    <input type="number" class="form-control" name="memberLimit" min=1 max=100 required>
+                </div>
+
+                <div class="form-group col-md-4">
+                    <label><b>Attribution</b></label>
+                    <input type="url" class="form-control" name="attribution" required>
+                </div>
+            </div>
+
+            <div>
+                <% if(req.session.memberid){ %>
+                <button class="btn btn-outline-success" type="submit">Create post</button>
+                <% }else{ %>
+                    <a class="btn btn-primary" href="/login">Login</a> or <a href="/signup">signup a new account</a> to create a post.
+                    <% } %>
+            </div>
+
+            <small>
+                **IMPORTANT** Please make sure the information that you provided is correct. Suspicious malicious
+                behavior may cause
+                credit score deduction of your account. Low credit score may lead to account restriction. For details,
+                please check out our <a href="/terms">policies and terms.</a>
+            </small>
+
+        </form>
+    </div>
+
+</body>
+
+<script>
+
+</script>

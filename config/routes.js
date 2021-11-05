@@ -34,13 +34,18 @@ module.exports.routes = {
   ***************************************************************************/
 
 
-  'GET /': 'UserController.login',
-  'POST /': 'UserController.login',
+  'GET /': 'UserController.home',
+  'GET /login': 'UserController.login',
+  'POST /login': 'UserController.login',
   'GET /signup': 'UserController.signup',
   'POST /signup': 'UserController.signup',
+  'GET /post': 'UserController.post',
+  'POST /post': 'UserController.post',
   'GET /disconnectGmail': 'UserController.disconnectGmail',
   'GET /profile': {view:'profile/profile'},
   'GET /logout': 'UserController.logout',
+  'GET /editProfile' :  'UserController.editProfile',
+  'POST /editProfile' :  'UserController.editProfile',
 
   'GET /api/v1/auth/google': { controller: 'PassportController', action: 'googleAuth' },
   'GET /api/v1/auth/google/callback': { controller: 'PassportController', action: 'googleCallback' },

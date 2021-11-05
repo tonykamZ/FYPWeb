@@ -1,5 +1,5 @@
 <head>
-    <title>Login</title>
+    <title>Log In</title>
     <style>
         .container {
             padding-top: 20px;
@@ -12,15 +12,18 @@
 
 
     <div class="container">
-        <form method="POST" action="/">
+        <form method="POST" action="/login">
             <div class="form-row">
                 <div class="form-group col-md-4">
                     <label><b>Username</b></label>
-                    <input type="string" class="form-control" name="username" required>
+                    <input type="string" class="form-control" value="<%= username %>" name="username" required>
                 </div>
 
             </div>
 
+            <p id="infoText" style="color: #ff3030;">
+
+            </p>
             <div class="form-row">
                 <div class="form-group col-md-4">
                     <label><b>Password</b></label>
@@ -44,5 +47,18 @@
 </body>
 
 <script>
-   
+    var status = "<%= status %>";
+    if (status == "incorrectPW") {
+        var username = "<%= username %>";
+        var infoText = document.getElementById("infoText");
+        infoText.innerHTML = "";
+        infoText.innerHTML += "🧐Incorrect password for user \""+username+"\", "+
+        "<a href=\"/forgotPassword\">forgot your password?</a>";
+
+    }else if(status == "UserNotExisit"){
+        var username = "<%= username %>";
+        var infoText = document.getElementById("infoText");
+        infoText.innerHTML = "";
+        infoText.innerHTML += "⚠️No such user \""+username+"\" !";
+    }
 </script>

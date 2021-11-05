@@ -1,6 +1,6 @@
 <head>
-    <title>Login</title>
-    <script src="https://code.iconify.design/2/2.0.3/iconify.min.js"></script>
+    <title>Sign Up</title>
+
     <style>
         .container {
             padding-top: 20px;
@@ -10,7 +10,7 @@
             margin-bottom: 4px;
         }
 
-        #create{
+        #create {
             display: none;
         }
     </style>
@@ -27,36 +27,46 @@
 
         <br><br>
         <% if(req.session.useremail){ %>
-            <p style="color: grey;">Valid Gmail: <b><%= req.session.useremail %></b> <a style="color: red;" href='/disconnectGmail'>Disconnect</a>
+            <p style="color: grey;">Valid Gmail: <b>
+                    <%= req.session.useremail %>
+                </b> <a style="color: red;" href='/disconnectGmail'>Disconnect</a>
             </p>
             <% } %>
 
-            <p><b>Step 2:</b> Enter your username & password for new account</p>
-                <form method="POST" action="/signup">
-                    <div class="form-row">
-                        <div class="form-group col-md-4">
-                            <label><b>Username</b></label>
-                            <input type="string" class="form-control" id="username" name="username" required disabled>
-                        </div>
+                <p><b>Step 2:</b> Enter your username & password for new account</p>
+                <% if(ExisitingUser){ %>
+                    <p>🤔Already has an account? username: "<%= ExisitingUser.username %>",
 
-                    </div>
+                            <a href="/login">Login with "<%= ExisitingUser.username %>"</a>
+                    </p>
+                    <% }%>
+                        <form method="POST" action="/signup">
+                            <div class="form-row">
+                                <div class="form-group col-md-4">
+                                    <label><b>Username</b></label>
+                                    <input type="string" class="form-control" id="username" name="username" required
+                                        disabled>
+                                </div>
 
-                    <div class="form-row">
-                        <div class="form-group col-md-4">
-                            <label><b>Password</b></label>
-                            <input type="string" class="form-control" id="password" name="password" required disabled>
-                        </div>
+                            </div>
 
-                    </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-4">
+                                    <label><b>Password</b></label>
+                                    <input type="string" class="form-control" id="password" name="password" required
+                                        disabled>
+                                </div>
 
-
-                    <div>
-                        <button id="create" class="btn btn-outline-success" type="submit">Create</button>
-                    </div>
+                            </div>
 
 
+                            <div>
+                                <button id="create" class="btn btn-outline-success" type="submit">Create</button>
+                            </div>
 
-                </form>
+
+
+                        </form>
     </div>
 
 </body>
@@ -64,11 +74,21 @@
 <script>
     var useremail = "<%= req.session.useremail %>";
     var status = "<%= status %>";
+    var ExisitingUser = "<%= ExisitingUser %>";
     // logged in Gmail
     if (status == "verified") {
         var name = "<%= req.session.username %>";
         alert("Welcome! " + name + "\nYou're now logged in your Gmail account");
         window.location.replace("/signup");
+
+    }
+
+    // if such User Exisit
+    if (ExisitingUser) {
+        var DBusername = "<%= ExisitingUser.username %>";
+        var DBuseremail = "<%= ExisitingUser.connectedGmail %>";
+        alert("Username (" + DBusername + ") already been registered using Gmail: " + DBuseremail + "!" +
+            "Are you " + DBusername + "? login with your password~");
 
     }
 

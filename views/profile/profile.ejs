@@ -3,6 +3,12 @@
     <style>
         .container {
             padding-top: 20px;
+            padding-bottom: 100px;
+        }
+
+        #confirmButton,
+        #cancelButton {
+            display: none;
         }
     </style>
 
@@ -12,37 +18,62 @@
 
 
     <div class="container">
-        <!-- image -->
-        <div>
-            <input type="image" readonly style="display: none;">
-        </div>
-
-        <!-- User info -->
-        <div>
-            <b> User information</b>
-            <small>Connected to Gmail: <%= req.session.connectedGmail %></small>
-            <div class="form-group col-md-4">
-                <label><b>User name:</b></label>
-                <input class="form-control" value="<%= req.session.memberid %>" readonly>
+        <form action="/editProfile" method="POST">
+            <!-- image -->
+            <div>
+                <input type="image" readonly style="display: none;">
             </div>
 
-            <div class="form-group col-md-2">
-                <label><b>Credit Score</b></label>
-                <input class="form-control" type="number" value="<%= req.session.creditScore %>" readonly>
+            <!-- User info -->
+            <div>
+                <h2><b> User information</b> <i class="far fa-user-circle"></i></h2>
+
+                <br>
+
+                <div class="form-group col-md-4">
+                    <label><b>User name:</b></label>
+                    <input class="form-control" value="<%= req.session.memberid %>" readonly>
+                    <p><small>Connected to Gmail: <span class="iconify" data-icon="logos:google-gmail"></span> <b
+                                style="color: blue;">
+                                <%= req.session.connectedGmail %>
+                            </b></small></p>
+                </div>
+
+                <div class="form-group col-md-2">
+                    <label><b>Credit Score</b></label>
+                    <input class="form-control" type="number" value="<%= req.session.creditScore %>" readonly>
+                </div>
+
+
+                <div class="form-group col-md-4">
+                    <label><b>Nick Name</b></label>
+                    <input class="form-control" type="text" id="nickname" name="nickname"
+                        value="<%= req.session.nickname %>" readonly>
+                </div>
+
+                <div class="form-group col-md-4">
+                    <label><b>personal description</b></label>
+                    <textarea rows="5" id="description" name="description" class="form-control" readonly>
+                 <%= req.session.description %>
+                    </textarea>
+                </div>
+
             </div>
+            <div class="button-group">
+                <button id="editButton" class="btn btn-outline-info" type="button" onclick="showEdit()">Edit profile</button>
 
-            <div class="form-group col-md-4">
-                <label><b>Nick Name</b></label>
-                <input class="form-control" type="text" value="<%= req.session.nickname %>" readonly>
+
+                <!-- Editing layout -->
+
+                <button id="confirmButton" class="btn btn-outline-success" type="submit">Confirm</button>
+                <button id="cancelButton" class="btn btn-outline-secondary" type="button" onclick="cancelEdit()">Cancel</button>
+
+                <!-- Editing layout -->
+
+                <a class="btn btn-outline-danger" href="/logout">Log out</a>
             </div>
+        </form>
 
-
-
-        </div>
-
-        <button class="btn btn-outline-info" onclick="showEdit()">Edit profile</button>
-
-        <a class="btn btn-outline-danger" href="/logout">Log out</a>
     </div>
 
 </body>
@@ -50,6 +81,22 @@
 <script>
 
     function showEdit() {
+        // enable input fields 
+        document.getElementById("nickname").readOnly = false;
+        document.getElementById("description").readOnly = false;
 
+        // hide edit button
+        document.getElementById("editButton").style.display = "none";
+
+
+        // show confirm button & cancel button
+        document.getElementById("confirmButton").style.display = "inline";
+        document.getElementById("cancelButton").style.display = "inline";
     }
+
+    function cancelEdit() {
+        // refresh the page
+        window.location.replace("/profile");
+    }
+
 </script>
