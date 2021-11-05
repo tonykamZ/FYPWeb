@@ -32,46 +32,56 @@
 
                 <div class="form-group col-md-4">
                     <label><b>User name:</b></label>
-                    <input class="form-control" value="<%= req.session.memberid %>" readonly>
+                    <input class="form-control" value="<%= user.username %>" readonly>
                     <p><small>Connected to Gmail: <span class="iconify" data-icon="logos:google-gmail"></span> <b
                                 style="color: blue;">
-                                <%= req.session.connectedGmail %>
+                                <%= user.connectedGmail %>
                             </b></small></p>
                 </div>
 
                 <div class="form-group col-md-2">
                     <label><b>Credit Score</b></label>
-                    <input class="form-control" type="number" value="<%= req.session.creditScore %>" readonly>
+                    <input class="form-control" type="number" value="<%= user.creditScore %>" readonly>
                 </div>
 
 
                 <div class="form-group col-md-4">
                     <label><b>Nick Name</b></label>
                     <input class="form-control" type="text" id="nickname" name="nickname"
-                        value="<%= req.session.nickname %>" readonly>
+                        value="<%= user.profile.nickname %>" readonly>
                 </div>
 
                 <div class="form-group col-md-4">
                     <label><b>personal description</b></label>
-                    <textarea rows="5" id="description" name="description" class="form-control" readonly>
-                 <%= req.session.description %>
-                    </textarea>
+                    <textarea rows="5" id="description" name="description" class="form-control"
+                        readonly><%= user.profile.description %></textarea>
                 </div>
 
             </div>
-            <div class="button-group">
-                <button id="editButton" class="btn btn-outline-info" type="button" onclick="showEdit()">Edit profile</button>
+            <% if(user.username==req.session.memberid){ %>
+                <!-- personal layout -->
+                <div class="button-group">
+                    <button id="editButton" class="btn btn-outline-info" type="button" onclick="showEdit()">Edit
+                        profile</button>
 
 
-                <!-- Editing layout -->
 
-                <button id="confirmButton" class="btn btn-outline-success" type="submit">Confirm</button>
-                <button id="cancelButton" class="btn btn-outline-secondary" type="button" onclick="cancelEdit()">Cancel</button>
 
-                <!-- Editing layout -->
+                    <button id="confirmButton" class="btn btn-outline-success" type="submit">Confirm</button>
+                    <button id="cancelButton" class="btn btn-outline-secondary" type="button"
+                        onclick="cancelEdit()">Cancel</button>
 
-                <a class="btn btn-outline-danger" href="/logout">Log out</a>
-            </div>
+
+
+                    <a class="btn btn-outline-danger" href="/logout">Log out</a>
+                </div>
+                <!-- personal layout -->
+                <% }else{ %>
+                    <!-- read others layout -->
+                    <button class="btn btn-outline-danger" type="button" onclick="reportUser()">Report</button>
+                    <!-- read others layout -->
+
+                    <% } %>
         </form>
 
     </div>
@@ -79,6 +89,11 @@
 </body>
 
 <script>
+    var memberid = "<%= req.session.memberid %>";
+    if(!memberid){
+        alert("This is a forbidden page for visitor, please login to see this page!");
+        window.location.replace("/login");
+    }
 
     function showEdit() {
         // enable input fields 
@@ -97,6 +112,10 @@
     function cancelEdit() {
         // refresh the page
         window.location.replace("/profile");
+    }
+
+    function reportUser(){
+        alert("not yet developed~");
     }
 
 </script>

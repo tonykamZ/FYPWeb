@@ -1,0 +1,101 @@
+<head>
+    <title>Post detail</title>
+    <style>
+        .container {
+            padding-top: 20px;
+        }
+    </style>
+
+</head>
+
+<body>
+
+
+    <% if(!post){ %>
+        <h1>No result!</h1><small>Please make sure the id field in the path is correct!</small>
+        <% }else{ %>
+            <div class="container">
+                <h3>Post Detail:</h3>
+                <!-- Light card -->
+                <article class="postcard light red">
+                    <a class="postcard__img_link">
+                        <img class="postcard__img" src="https://picsum.photos/501/500" alt="Image Title" />
+                    </a>
+                    <div class="postcard__text t-dark">
+                        <h1 class="postcard__title red"><a href="#">
+                                <%= post.post.title %>
+                            </a></h1>
+                        <div class="postcard__subtitle small">
+                            <i class="fas fa-calendar-alt mr-2"></i>
+                            <%= post.createDate %>
+                        </div>
+                        <div class="postcard__bar"></div>
+                        <div class="postcard__preview-txt">
+                            <% if(post.post.description){ %>
+                                <%= post.post.description %>
+                                    <% }else{ %>
+                                        No description😳
+                                        <% } %>
+                        </div>
+                        <div class="postcard__preview-txt">
+                            <small>Attribution(s):
+                                <a href="<%= post.post.attribution %>" target="_blank">
+                                    <%= post.post.attribution %>
+                                </a></small>
+                        </div>
+                        <ul class="postcard__tagbox">
+                            <li class="tag__item"><i class="fas fa-users mr-2"></i>
+                                <%= post.joinedMembers.length + 1 %>/<%= post.post.memberLimit %>
+                            </li>
+                            <li class="tag__item"><i class="fas fa-user-secret mr-2"></i>Host by:
+                                <% if(post.post.HostNickname){ %>
+                                    <%= post.post.HostNickname %>
+                                        <% }else{ %>
+                                            <%= post.HostUsername %>
+                                                <% } %>
+                            </li>
+                            <li class="tag__item" id="creditTag">
+                            </li>
+                            <li class="tag__item play red">
+                                <% if(req.session.memberid){ %>
+                                    <a href="#"><i class="fas fa-hand-o-right mr-2"></i>Join</a>
+                                    <% }else{ %>
+                                        <a href="/login"><i class="fas fa-sign-in-alt mr-2"></i>Login to Join</a>
+                                        <% } %>
+                            </li>
+                        </ul>
+                    </div>
+                </article>
+                <!-- Light card -->
+
+                <!-- Comment or reply -->
+
+                <!-- Comment or reply -->
+
+                
+            </div>
+
+
+
+            <% } %>
+</body>
+
+<script>
+
+    // set the credit level
+    var creditScore = "<%= post.creditScore %>";
+    if (creditScore > 90) {
+        document.getElementById("creditTag").innerHTML = "";
+        document.getElementById("creditTag").innerHTML += "<i class=\"fas fa-smile-wink mr-2\"></i>creditable";
+    } else if (creditScore > 70) {
+        document.getElementById("creditTag").innerHTML = "";
+        document.getElementById("creditTag").innerHTML += " <i class=\"fas fa-thumbs-up mr-2\"></i>trustworthy";
+    } else if (creditScore > 50) {
+        document.getElementById("creditTag").innerHTML = "";
+        document.getElementById("creditTag").innerHTML += "<i class=\"fas fa-thumbs-down mr-2\"></i>deceptive";
+    } else {
+        document.getElementById("creditTag").innerHTML = "";
+        document.getElementById("creditTag").innerHTML += "<i class=\"fas fa-frown-open mr-2\"></i>misleading";
+    }
+
+</script>

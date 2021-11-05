@@ -12,6 +12,7 @@
 
 
     <div class="container">
+        <h3>Log In to your account</h3>
         <form method="POST" action="/login">
             <div class="form-row">
                 <div class="form-group col-md-4">
@@ -48,17 +49,24 @@
 
 <script>
     var status = "<%= status %>";
-    if (status == "incorrectPW") {
-        var username = "<%= username %>";
-        var infoText = document.getElementById("infoText");
-        infoText.innerHTML = "";
-        infoText.innerHTML += "🧐Incorrect password for user \""+username+"\", "+
-        "<a href=\"/forgotPassword\">forgot your password?</a>";
+    if (status) {
+        if (status == "incorrectPW") {
+            var username = "<%= username %>";
+            var infoText = document.getElementById("infoText");
+            infoText.innerHTML = "";
+            infoText.innerHTML += "🧐Incorrect password for user \"" + username + "\", " +
+                "<a href=\"/forgotPassword\">forgot your password?</a>";
 
-    }else if(status == "UserNotExisit"){
-        var username = "<%= username %>";
-        var infoText = document.getElementById("infoText");
-        infoText.innerHTML = "";
-        infoText.innerHTML += "⚠️No such user \""+username+"\" !";
+        } else if (status == "UserNotExisit") {
+            var username = "<%= username %>";
+            var infoText = document.getElementById("infoText");
+            infoText.innerHTML = "";
+            infoText.innerHTML += "⚠️No such user \"" + username + "\" !";
+        } else if (status == "CreatedNewAC") {
+            alert("Your account has been created, login with your password~");
+            this.window.location += "#success";
+        } else {
+            alert("Unknown status: " + status + " !");
+        }
     }
 </script>

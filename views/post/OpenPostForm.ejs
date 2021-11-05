@@ -1,0 +1,141 @@
+<head>
+    <title>Make a post</title>
+    <style>
+        .container {
+            padding-top: 10px;
+        }
+
+        .fa-plus {
+            float: right;
+        }
+
+        .fa-minus {
+            float: right;
+        }
+
+        #minusInput {
+            display: none;
+        }
+
+        .btn:focus {
+            outline: none;
+            box-shadow: none;
+        }
+    </style>
+
+</head>
+
+<body>
+
+
+    <div class="container">
+        <h3><b>Create new post</b></h3>
+        <form method="POST" action="/post">
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label><b>Post Title</b></label>
+                    <input type="string" class="form-control" name="title" required>
+                </div>
+
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label><b>Description</b></label>
+                    <textarea rows="5" id="description" name="description" class="form-control" required></textarea>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-2">
+                    <label><b>Member limit</b></label>
+                    <input type="number" class="form-control" name="memberLimit" min=1 max=100 required>
+                </div>
+
+                <div class="form-group col-md-4">
+                    <label><b>Attribution</b></label>
+                    <button id="addInput" class="btn btn-info tooltip-top" data-tooltip="Add additional attribution"
+                        type="button" onclick="AddExtraInput()"><i class="fa fa-plus"></i></button>
+                    <button id="minusInput" class="btn btn-danger tooltip-top"
+                        data-tooltip="Reduce additional attribution"" type="button" onclick="MinusExtraInput()"><i
+                            class="fa fa-minus"></i></button>
+                    <input type="url" class="form-control" name="attribution" required>
+
+                    <input type="url" class="form-control" name="attribution2" id="attribution2" hidden>
+                    <input type="url" class="form-control" name="attribution3" id="attribution3" hidden>
+                    <input type="url" class="form-control" name="attribution4" id="attribution4" hidden>
+                    <input type="url" class="form-control" name="attribution5" id="attribution5" hidden>
+                </div>
+            </div>
+
+            <div>
+                <% if(req.session.memberid){ %>
+                    <button class="btn btn-outline-success" type="submit">Create post</button>
+                    <% }else{ %>
+                        <a class="btn btn-primary" href="/login">Login</a> or <a href="/signup">signup a new account</a>
+                        to create a post.
+                        <% } %>
+            </div>
+
+            <small>
+                **IMPORTANT** Please make sure the information that you provided is correct. Suspicious malicious
+                behavior may cause
+                credit score deduction of your account. Low credit score may lead to account restriction. For details,
+                please check out our <a href="/terms">policies and terms.</a>
+            </small>
+
+        </form>
+    </div>
+
+</body>
+
+<script>
+    var inputOffset = 1;
+    function AddExtraInput() {
+
+        if (inputOffset == 1) {
+            var attr2 = document.getElementById("attribution2");
+            attr2.hidden = false;
+            inputOffset++;
+            document.getElementById("minusInput").style.display = "inline";
+        } else if (inputOffset == 2) {
+            var attr3 = document.getElementById("attribution3");
+            attr3.hidden = false;
+            inputOffset++;
+        } else if (inputOffset == 3) {
+            var attr4 = document.getElementById("attribution4");
+            attr4.hidden = false;
+            inputOffset++;
+        } else if (inputOffset == 4) {
+            var attr5 = document.getElementById("attribution5");
+            attr5.hidden = false;
+            inputOffset++;
+            // input offset > input fields (5)
+            // hide the add button
+            document.getElementById("addInput").style.display = "none";
+        }
+
+    }
+
+    function MinusExtraInput() {
+        if (inputOffset == 2) {
+            document.getElementById("minusInput").style.display = "none";
+            var attr2 = document.getElementById("attribution2");
+            attr2.hidden = true;
+            inputOffset--;
+        } else if (inputOffset == 3) {
+            var attr3 = document.getElementById("attribution3");
+            attr3.hidden = true;
+            inputOffset--;
+        } else if (inputOffset == 4) {
+            var attr4 = document.getElementById("attribution4");
+            attr4.hidden = true;
+            inputOffset--;
+        } else if (inputOffset == 5) {
+            var attr5 = document.getElementById("attribution5");
+            attr5.hidden = true;
+            inputOffset--;
+            document.getElementById("addInput").style.display = "inline";
+        }
+    }
+</script>

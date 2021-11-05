@@ -139,7 +139,8 @@ module.exports = {
             return res.json(successJSON);
         }
 
-        return res.redirect('/');
+        sails.log("created a new account!");
+        return res.view('loginForm', { status: 'CreatedNewAC', username: username });
 
     },
 
@@ -202,7 +203,7 @@ module.exports = {
 
     post: async function (req, res) {
 
-        if (req.method == "GET") return res.view('OpenPostForm');
+        if (req.method == "GET") return res.view('post/OpenPostForm');
 
         var title = req.body.title;
         var description = req.body.description.trim();
@@ -241,7 +242,7 @@ module.exports = {
         sails.log("Date string: " + dateString);
 
         var db = sails.getDatastore().manager;
-        db.collection('post').insertOne(
+        var result = await db.collection('post').insertOne(
             {
                 HostUsername: req.session.memberid, HostNickname: req.session.nickname, creditScore: req.session.creditScore, post: {
                     title: title, description: description, memberLimit: memberLimit, attribution: attribution
@@ -252,18 +253,18 @@ module.exports = {
 
         )
 
-        return res.ok();
+        return res.json(result);
+
+
+
 
     },
 
     home: async function (req, res) {
 
         var db = sails.getDatastore().manager;
-
-
-
         db.collection('post', function (err, collection) {
-            collection.find().toArray(function (err, results) {
+            collection.find().sort({ createDate: -1 }).toArray(function (err, results) {
                 // get all posts from the DB
                 return res.view('Home', { posts: results });
             })
@@ -272,6 +273,35 @@ module.exports = {
 
 
 
+    },
+
+    postDetail: async function (req, res) {
+
+        var id = req.params.id;
+        var ObjectId = require('mongodb').ObjectId;
+        var o_id = new ObjectId(id);
+
+        var db = sails.getDatastore().manager;
+        var result = await db.collection('post').findOne({ "_id": o_id });
+
+        return res.view('post/postDetail', { post: result });
+
+
+
+    },
+
+
+    userDetail: async function (req, res) {
+        
+        var username = req.query.username;
+
+        var db = sails.getDatastore().manager;
+        // username is the unique key
+        var result = await db.collection('user').findOne({ "username": username });
+        if(result){
+            return res.view('profile/profile', { user: result });
+        }
+        
     },
 
 
