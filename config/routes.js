@@ -47,6 +47,8 @@ module.exports.routes = {
   'POST /post': 'UserController.post',
   'GET /read/post/:id': 'UserController.postDetail',
 
+  'GET /manage': 'UserController.manage',
+
   
   'GET /editProfile' :  'UserController.editProfile',
   'POST /editProfile' :  'UserController.editProfile',

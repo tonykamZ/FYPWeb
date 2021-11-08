@@ -39,9 +39,12 @@
                         </div>
                         <div class="postcard__preview-txt">
                             <small>Attribution(s):
-                                <a href="<%= post.post.attribution %>" target="_blank">
-                                    <%= post.post.attribution %>
-                                </a></small>
+                                <% post.post.attribution.forEach(function(link){ %>
+                                    <a href="<%= link %>" target="_blank">
+                                        <%= link %>
+                                    </a>
+                                    <% }) %>
+                            </small>
                         </div>
                         <ul class="postcard__tagbox">
                             <li class="tag__item"><i class="fas fa-users mr-2"></i>
@@ -49,18 +52,27 @@
                             </li>
                             <li class="tag__item"><i class="fas fa-user-secret mr-2"></i>Host by:
                                 <% if(post.post.HostNickname){ %>
-                                    <%= post.post.HostNickname %>
-                                        <% }else{ %>
+                                    <a href="/read/profile?username=<%= post.HostUsername %>">
+                                        <%= post.post.HostNickname %>
+                                    </a>
+                                    <% }else{ %>
+                                        <a href="/read/profile?username=<%= post.HostUsername %>">
                                             <%= post.HostUsername %>
-                                                <% } %>
+                                        </a>
+                                        <% } %>
                             </li>
                             <li class="tag__item" id="creditTag">
                             </li>
                             <li class="tag__item play red">
                                 <% if(req.session.memberid){ %>
-                                    <a href="#"><i class="fas fa-hand-o-right mr-2"></i>Join</a>
+                                    <% if(post.HostUsername != req.session.memberid){ %>
+                                        <a href="#"><i class="fas fa-hand-o-right mr-2"></i>Join</a>
+                                        <% }else { %>
+                                            <a href="#"><i class="fas fa-edit mr-2"></i>Manage</a>
+                                            <% } %>
                                     <% }else{ %>
                                         <a href="/login"><i class="fas fa-sign-in-alt mr-2"></i>Login to Join</a>
+                                        <!-- should store url session to nav back later -->
                                         <% } %>
                             </li>
                         </ul>
@@ -72,7 +84,7 @@
 
                 <!-- Comment or reply -->
 
-                
+
             </div>
 
 

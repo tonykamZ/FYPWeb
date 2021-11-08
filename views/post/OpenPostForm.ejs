@@ -78,7 +78,7 @@
             </div>
 
             <small>
-                **IMPORTANT** Please make sure the information that you provided is correct. Suspicious malicious
+                <b>**IMPORTANT**</b> Please make sure the information that you provided is correct. Suspicious malicious
                 behavior may cause
                 credit score deduction of your account. Low credit score may lead to account restriction. For details,
                 please check out our <a href="/terms">policies and terms.</a>
@@ -96,19 +96,23 @@
         if (inputOffset == 1) {
             var attr2 = document.getElementById("attribution2");
             attr2.hidden = false;
+            attr2.required = true;
             inputOffset++;
             document.getElementById("minusInput").style.display = "inline";
         } else if (inputOffset == 2) {
             var attr3 = document.getElementById("attribution3");
             attr3.hidden = false;
+            attr3.required = true;
             inputOffset++;
         } else if (inputOffset == 3) {
             var attr4 = document.getElementById("attribution4");
             attr4.hidden = false;
+            attr4.required = true;
             inputOffset++;
         } else if (inputOffset == 4) {
             var attr5 = document.getElementById("attribution5");
             attr5.hidden = false;
+            attr5.required = true;
             inputOffset++;
             // input offset > input fields (5)
             // hide the add button
@@ -122,18 +126,22 @@
             document.getElementById("minusInput").style.display = "none";
             var attr2 = document.getElementById("attribution2");
             attr2.hidden = true;
+            attr2.required = false;
             inputOffset--;
         } else if (inputOffset == 3) {
             var attr3 = document.getElementById("attribution3");
             attr3.hidden = true;
+            attr3.required = false;
             inputOffset--;
         } else if (inputOffset == 4) {
             var attr4 = document.getElementById("attribution4");
             attr4.hidden = true;
+            attr4.required = false;
             inputOffset--;
         } else if (inputOffset == 5) {
             var attr5 = document.getElementById("attribution5");
             attr5.hidden = true;
+            attr5.required = false;
             inputOffset--;
             document.getElementById("addInput").style.display = "inline";
         }

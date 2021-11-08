@@ -196,7 +196,7 @@ module.exports = {
         req.session.nickname = nickname;
         req.session.description = description.trim();
 
-        return res.redirect("/profile");
+        return res.redirect("/read/profile?username="+req.session.memberid);
 
     },
 
@@ -208,8 +208,26 @@ module.exports = {
         var title = req.body.title;
         var description = req.body.description.trim();
         var memberLimit = req.body.memberLimit;
-        var attribution = req.body.attribution
+        var attribution = req.body.attribution;
+        var attribution2 = req.body.attribution2;
+        var attribution3 = req.body.attribution3;
+        var attribution4 = req.body.attribution4;
+        var attribution5 = req.body.attribution5;
 
+        var attr = [attribution] // define new array for storing links
+        // check if there exist additional attribution links
+        if (attribution2) {
+            attr.push(attribution2);
+            if (attribution3) {
+                attr.push(attribution3);
+                if (attribution4) {
+                    attr.push(attribution4);
+                    if (attribution5) {
+                        attr.push(attribution5);
+                    }
+                }
+            }
+        }
         var date = new Date();
         var day = date.getDate();
         var month = date.getMonth();
@@ -237,7 +255,7 @@ module.exports = {
         // DD/MM/YYYY HH:MM:SS
         var dateString = day + "/" + month + "/" + year + " " + h + ":" + m + ":" + s
 
-        sails.log(title + ", " + description + ", " + memberLimit + ", " + attribution);
+        sails.log(title + ", " + description + ", " + memberLimit + ", " + attr);
         sails.log("Date: " + date);
         sails.log("Date string: " + dateString);
 
@@ -245,7 +263,7 @@ module.exports = {
         var result = await db.collection('post').insertOne(
             {
                 HostUsername: req.session.memberid, HostNickname: req.session.nickname, creditScore: req.session.creditScore, post: {
-                    title: title, description: description, memberLimit: memberLimit, attribution: attribution
+                    title: title, description: description, memberLimit: memberLimit, attribution: attr
                 }, createDate: dateString, updateDate: '', joinedMembers: [], comments: [{
                     content: '', byUsername: '', byUserNickname: '', byDate: ''
                 }]
@@ -253,7 +271,9 @@ module.exports = {
 
         )
 
-        return res.json(result);
+
+         return res.redirect('/');
+        //return res.json(result);
 
 
 
@@ -290,18 +310,31 @@ module.exports = {
 
     },
 
+    manage: async function (req, res) {
+
+        var db = sails.getDatastore().manager;
+        db.collection('post', function (err, collection) {
+            collection.find({'HostUsername':req.session.memberid}).sort({ createDate: -1 }).toArray(function (err, results) {
+                // get all posts of session user from the DB
+                return res.view('post/manage', { posts: results });
+            })
+
+        })
+
+    },
+
 
     userDetail: async function (req, res) {
-        
+
         var username = req.query.username;
 
         var db = sails.getDatastore().manager;
         // username is the unique key
         var result = await db.collection('user').findOne({ "username": username });
-        if(result){
+        if (result) {
             return res.view('profile/profile', { user: result });
         }
-        
+
     },
 
 

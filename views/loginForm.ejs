@@ -27,8 +27,11 @@
             </p>
             <div class="form-row">
                 <div class="form-group col-md-4">
-                    <label><b>Password</b></label>
-                    <input type="string" class="form-control" name="password" required>
+                    <label><b>Password</b>
+                    <span id="showNhidePW" onclick="showNhidePW()" style="cursor: pointer;"><i class="fas fa-eye"></i></span></label>
+                    <input type="password" class="form-control" id="userPW" name="password" required>
+
+                    
                 </div>
 
             </div>
@@ -67,6 +70,20 @@
             this.window.location += "#success";
         } else {
             alert("Unknown status: " + status + " !");
+        }
+    }
+
+    function showNhidePW() {
+        var x = document.getElementById("userPW");
+        var showNhidePW = document.getElementById("showNhidePW");
+        if (x.type === "password") {
+            x.type = "text";
+            showNhidePW.innerHTML = "";
+            showNhidePW.innerHTML += "<i class=\"fas fa-eye-slash\"></i>";
+        } else {
+            x.type = "password";
+            showNhidePW.innerHTML = "";
+            showNhidePW.innerHTML += "<i class=\"fas fa-eye\"></i>";
         }
     }
 </script>
