@@ -28,7 +28,7 @@
                     <!-- Dark card -->
                     <article class="postcard dark red">
                         <a class="postcard__img_link" href="/read/post/<%= post._id %>">
-                            <img class="postcard__img" src="https://picsum.photos/501/500" alt="Image Title" />
+                            <img class="postcard__img" src="<%= post.post.imgInput %>" alt="Image Title" />
                         </a>
                         <div class="postcard__text">
                             <h1 class="postcard__title red"><a href="/read/post/<%= post._id %>">
@@ -73,7 +73,17 @@
                                 <li class="tag__item play red">
                                     <% if(req.session.memberid){ %>
                                         <% if(post.HostUsername != req.session.memberid){ %>
-                                            <a href="#"><i class="fas fa-hand-o-right mr-2"></i>Join</a>
+                                            <% var duplicated = false; %>
+                                            <% post.joinedMembers.forEach(function(member){ %>
+                                                <% if(member == req.session.memberid){ %>
+                                                    <% duplicated = true; %>
+                                                    <% } %>
+                                                <% }) %>
+                                                <% if(duplicated){ %>
+                                                    <a href="#"><i class="fas fa-comments mr-2"></i>Chat</a>
+                                                    <% }else{ %>
+                                            <a href="/join/<%= post._id %>"><i class="fas fa-hand-o-right mr-2"></i>Join</a>
+                                            <% } %>
                                             <% }else { %>
                                                 <a href="#"><i class="fas fa-edit mr-2"></i>Manage</a>
                                                 <% } %>
@@ -90,7 +100,7 @@
                         <!-- Light card -->
                         <article class="postcard light red">
                             <a class="postcard__img_link" href="/read/post/<%= post._id %>">
-                                <img class="postcard__img" src="https://picsum.photos/501/500" alt="Image Title" />
+                                <img class="postcard__img" src="<%= post.post.imgInput %>" alt="Image Title" />
                             </a>
                             <div class="postcard__text t-dark">
                                 <h1 class="postcard__title red"><a href="/read/post/<%= post._id %>">
@@ -135,7 +145,17 @@
                                     <li class="tag__item play red">
                                         <% if(req.session.memberid){ %>
                                              <% if(post.HostUsername != req.session.memberid){ %>
-                                            <a href="#"><i class="fas fa-hand-o-right mr-2"></i>Join</a>
+                                                <% var duplicated = false; %>
+                                                <% post.joinedMembers.forEach(function(member){ %>
+                                                    <% if(member == req.session.memberid){ %>
+                                                        <% duplicated = true; %>
+                                                        <% } %>
+                                                    <% }) %>
+                                                    <% if(duplicated){ %>
+                                                        <a href="#"><i class="fas fa-comments mr-2"></i>Chat</a>
+                                                        <% }else{ %>
+                                                <a href="/join/<%= post._id %>"><i class="fas fa-hand-o-right mr-2"></i>Join</a>
+                                                <% } %>
                                             <% }else { %>
                                                 <a href="#"><i class="fas fa-edit mr-2"></i>Manage</a>
                                                 <% } %>
@@ -156,17 +176,3 @@
     </div>
 
 </body>
-
-<script>
-
-    var today = new Date();
-    var postsLength = 0 || "<%= posts.length %>";
-    // loop all data
-    for (var i = 0; i < postsLength; i++) {
-        // check its create date and time
-        var createDate = "<%= posts[0].createDate %>";
-        var dateAndTime = createDate.split(' '); // [DD/MM/YYYY],[HH:MM:SS]  
-    }
-
-
-</script>

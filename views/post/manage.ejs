@@ -30,11 +30,11 @@
                 <% if(cnt%2==1){ %>
                     <!-- Dark card -->
                     <article class="postcard dark red">
-                        <a class="postcard__img_link" href="/read/post/<%= post._id %>">
-                            <img class="postcard__img" src="https://picsum.photos/501/500" alt="Image Title" />
+                        <a class="postcard__img_link" href="/manage/post/<%= post._id %>">
+                            <img class="postcard__img" src="<%= post.post.imgInput %>" alt="Image Title" />
                         </a>
                         <div class="postcard__text">
-                            <h1 class="postcard__title red"><a href="/read/post/<%= post._id %>">
+                            <h1 class="postcard__title red"><a href="/manage/post/<%= post._id %>">
                                     <%= post.post.title %>
                                 </a></h1>
                             <div class="postcard__subtitle small">
@@ -80,11 +80,11 @@
                     <% }else{ %>
                         <!-- Light card -->
                         <article class="postcard light red">
-                            <a class="postcard__img_link" href="/read/post/<%= post._id %>">
-                                <img class="postcard__img" src="https://picsum.photos/501/500" alt="Image Title" />
+                            <a class="postcard__img_link" href="/manage/post/<%= post._id %>">
+                                <img class="postcard__img" src="<%= post.post.imgInput %>" alt="Image Title" />
                             </a>
                             <div class="postcard__text t-dark">
-                                <h1 class="postcard__title red"><a href="/read/post/<%= post._id %>">
+                                <h1 class="postcard__title red"><a href="/manage/post/<%= post._id %>">
                                         <%= post.post.title %>
                                     </a></h1>
                                 <div class="postcard__subtitle small">
@@ -121,14 +121,6 @@
                                                 <a href="/read/profile?username=<%= post.HostUsername %>">
                                                     <%= post.HostUsername %>
                                                 </a>
-                                                <% } %>
-                                    </li>
-                                    <li class="tag__item play red">
-                                        <% if(req.session.memberid){ %>
-                                            <a href="#"><i class="fas fa-hand-o-right mr-2"></i>Join</a>
-                                            <% }else{ %>
-                                                <a href="/login"><i class="fas fa-sign-in-alt mr-2"></i>Login to
-                                                    Join</a>
                                                 <% } %>
                                     </li>
                                 </ul>

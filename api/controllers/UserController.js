@@ -196,7 +196,7 @@ module.exports = {
         req.session.nickname = nickname;
         req.session.description = description.trim();
 
-        return res.redirect("/read/profile?username="+req.session.memberid);
+        return res.redirect("/read/profile?username=" + req.session.memberid);
 
     },
 
@@ -213,6 +213,7 @@ module.exports = {
         var attribution3 = req.body.attribution3;
         var attribution4 = req.body.attribution4;
         var attribution5 = req.body.attribution5;
+        var img = req.body.imgInput;
 
         var attr = [attribution] // define new array for storing links
         // check if there exist additional attribution links
@@ -263,7 +264,7 @@ module.exports = {
         var result = await db.collection('post').insertOne(
             {
                 HostUsername: req.session.memberid, HostNickname: req.session.nickname, creditScore: req.session.creditScore, post: {
-                    title: title, description: description, memberLimit: memberLimit, attribution: attr
+                    title: title, description: description, memberLimit: memberLimit, attribution: attr, imgInput: img
                 }, createDate: dateString, updateDate: '', joinedMembers: [], comments: [{
                     content: '', byUsername: '', byUserNickname: '', byDate: ''
                 }]
@@ -272,7 +273,7 @@ module.exports = {
         )
 
 
-         return res.redirect('/');
+        return res.redirect('/');
         //return res.json(result);
 
 
@@ -286,6 +287,10 @@ module.exports = {
         db.collection('post', function (err, collection) {
             collection.find().sort({ createDate: -1 }).toArray(function (err, results) {
                 // get all posts from the DB
+                if (req.wantsJSON) {
+                    sails.log("returning Home page json data");
+                    return res.json(results);
+                }
                 return res.view('Home', { posts: results });
             })
 
@@ -304,6 +309,11 @@ module.exports = {
         var db = sails.getDatastore().manager;
         var result = await db.collection('post').findOne({ "_id": o_id });
 
+        if (req.wantsJSON) {
+            sails.log("returning detail page json data");
+            sails.log("stringgify result: " + JSON.stringify(result));
+            return res.json(result);
+        }
         return res.view('post/postDetail', { post: result });
 
 
@@ -314,8 +324,13 @@ module.exports = {
 
         var db = sails.getDatastore().manager;
         db.collection('post', function (err, collection) {
-            collection.find({'HostUsername':req.session.memberid}).sort({ createDate: -1 }).toArray(function (err, results) {
+            collection.find({ 'HostUsername': req.session.memberid }).sort({ createDate: -1 }).toArray(function (err, results) {
                 // get all posts of session user from the DB
+                if (req.wantsJSON) {
+                    sails.log("returning manage page json data");
+                    sails.log("stringgify result: " + JSON.stringify(result));
+                    return res.json(results);
+                }
                 return res.view('post/manage', { posts: results });
             })
 
@@ -331,9 +346,69 @@ module.exports = {
         var db = sails.getDatastore().manager;
         // username is the unique key
         var result = await db.collection('user').findOne({ "username": username });
+
+        // also find all joined post of such user
+        await db.collection('post').find({ "joinedMembers": username }).toArray(function (err, results) {
+
+            if (result) {
+                if (req.wantsJSON) {
+                    sails.log("returning user profile page json data");
+                    sails.log("stringgify result: " + JSON.stringify(result));
+                    return res.json({
+                        userDetail: result,
+                        joinedPosts: results
+                    });
+                }
+                return res.view('profile/profile', { user: result, joinedPosts: results });
+            }
+
+        });
+
+    },
+
+    joinPost: async function (req, res) {
+
+
+        var id = req.params.id;
+        var ObjectId = require('mongodb').ObjectId;
+        var o_id = new ObjectId(id);
+
+        var db = sails.getDatastore().manager;
+        var result = await db.collection('post').findOne({ "_id": o_id });
+
         if (result) {
-            return res.view('profile/profile', { user: result });
+
+            var memberCnt = result.joinedMembers.length;
+            sails.log("Exisiting members count: " + memberCnt);
+
+            // loop the exisiting members, check if current user is duplicated in DB?
+            for (var i = 0; i < memberCnt; i++) {
+                sails.log(i + " : " + result.joinedMembers[i]);
+                if (result.joinedMembers[i] == req.session.memberid) {
+                    // duplicated
+                    return res.redirect('/read/post/' + id);
+                }
+            }
+
+            //update user count: push current session user to that post
+            db.collection('post').updateOne(
+                { "_id": o_id },
+                { $push: { joinedMembers: req.session.memberid } }
+            )
+
+        } else {
+            //return null
+            return res.view('post/postDetail', { post: NULL });
         }
+
+        if (req.wantsJSON) {
+            sails.log("returning detail page json data");
+            sails.log("stringgify result: " + JSON.stringify(result));
+            return res.json(result);
+        }
+
+        sails.log(req.session.memberid + " request joining this post (" + id + ") ...")
+        return res.view('post/postDetail', { post: result });
 
     },
 

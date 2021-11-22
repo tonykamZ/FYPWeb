@@ -68,6 +68,15 @@
                 </div>
             </div>
 
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label><b>Upload Image URL</b></label>
+                    <input type="url" class="form-control" name="imgInput" id="imgInput" required>
+                </div>
+                
+            </div>
+            <p><small>don't know how to convert the image to url? refer to this website: <a href="https://www.linkpicture.com/" target="_blank" style="color: blue;">https://www.linkpicture.com/</a></small></p>
+            <br>
             <div>
                 <% if(req.session.memberid){ %>
                     <button class="btn btn-outline-success" type="submit">Create post</button>
@@ -81,7 +90,7 @@
                 <b>**IMPORTANT**</b> Please make sure the information that you provided is correct. Suspicious malicious
                 behavior may cause
                 credit score deduction of your account. Low credit score may lead to account restriction. For details,
-                please check out our <a href="/terms">policies and terms.</a>
+                please check out our <a href="/terms" style="color: blue;">policies and terms.</a>
             </small>
 
         </form>
@@ -145,5 +154,13 @@
             inputOffset--;
             document.getElementById("addInput").style.display = "inline";
         }
+    }
+
+    function ShowFileName() {
+        var imgInput = document.getElementById("imgInput");
+        var filenameDisplay = document.getElementById("filenameDisplay");
+
+        filenameDisplay.innerHTML = "";
+        filenameDisplay.innerHTML += "Selected: " + imgInput.files[0].name;
     }
 </script>

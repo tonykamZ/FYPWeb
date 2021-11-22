@@ -41,11 +41,12 @@ module.exports.routes = {
   'POST /signup': 'UserController.signup',
 
   'GET /disconnectGmail': 'UserController.disconnectGmail',
- 'GET /logout': 'UserController.logout',
+  'GET /logout': 'UserController.logout',
 
   'GET /post': 'UserController.post',
   'POST /post': 'UserController.post',
   'GET /read/post/:id': 'UserController.postDetail',
+  'GET /join/:id': 'UserController.joinPost',
 
   'GET /manage': 'UserController.manage',
 
