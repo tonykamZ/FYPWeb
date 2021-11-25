@@ -15,9 +15,10 @@
         <h1>No result!</h1><small>Please make sure the id field in the path is correct!</small>
         <% }else{ %>
             <div class="container">
-                <button class="btn btn-outline-secondary" type="button" style="float: right;" onclick="window.history.back()">Back</button>
+                <button class="btn btn-outline-secondary" type="button" style="float: right;"
+                    onclick="window.history.back()">Back</button>
                 <h3>Post Detail:</h3>
-                
+
                 <!-- Light card -->
                 <article class="postcard light red">
                     <a class="postcard__img_link">
@@ -94,17 +95,33 @@
                     <a href="/read/profile?username=<%= post.HostUsername %>">
                         <% if(post.post.HostNickname){ %>
                             <a href="/read/profile?username=<%= post.HostUsername %>">
-                                <i class="fas fa-user-secret mr-2"></i><%= post.post.HostNickname %>
+                                <i class="fas fa-user-secret mr-2"></i>
+                                <%= post.post.HostNickname %>
                             </a>
                             <% }else{ %>
                                 <a href="/read/profile?username=<%= post.HostUsername %>">
-                                    <i class="fas fa-user-secret mr-2"></i><%= post.HostUsername %>
+                                    <i class="fas fa-user-secret mr-2"></i>
+                                    <%= post.HostUsername %>
                                 </a>
                                 <% } %>&#160;
                     </a>
                     <% post.joinedMembers.forEach(function(m){ %>
-                        <a href="/read/profile?username=<%= m %>"><i class="fas fa-user mr-2"></i><%= m %>&#160;</a>
+                        <a href="/read/profile?username=<%= m %>"><i class="fas fa-user mr-2"></i>
+                            <%= m %>&#160;
+                        </a>
                         <% }); %>
+
+
+                        <% if(req.session.memberid){ %>
+                            <% if(duplicated==true){ %>
+                            <li class="tag__item">
+                                <a href="/leave/post/<%= post._id %>">
+                                    <i class="fas fa-sign-out-alt mr-2"></i>leave
+                                </a>
+                            </li>
+                            <% } %>
+                            <% } %>
+
                 </div>
 
                 <!-- Light card -->

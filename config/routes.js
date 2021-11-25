@@ -48,6 +48,8 @@ module.exports.routes = {
   'GET /read/post/:id': 'UserController.postDetail',
   'GET /join/:id': 'UserController.joinPost',
 
+  'GET /leave/post/:id': 'UserController.leavePost',
+
   'GET /manage': 'UserController.manage',
 
   

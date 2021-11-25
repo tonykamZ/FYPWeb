@@ -383,15 +383,16 @@ module.exports = {
 
             // loop the exisiting members, check if current user is duplicated in DB?
             for (var i = 0; i < memberCnt; i++) {
-                sails.log(i + " : " + result.joinedMembers[i]);
+                sails.log("["+i + "] : " + result.joinedMembers[i]);
                 if (result.joinedMembers[i] == req.session.memberid) {
                     // duplicated
+                    sails.log("user duplicated in the DB!");
                     return res.redirect('/read/post/' + id);
                 }
             }
 
             //update user count: push current session user to that post
-            db.collection('post').updateOne(
+            await db.collection('post').updateOne(
                 { "_id": o_id },
                 { $push: { joinedMembers: req.session.memberid } }
             )
@@ -408,7 +409,30 @@ module.exports = {
         }
 
         sails.log(req.session.memberid + " request joining this post (" + id + ") ...")
-        return res.view('post/postDetail', { post: result });
+        return res.redirect("/read/post/"+id);
+
+    },
+
+
+    leavePost: async function (req, res) {
+
+        var id = req.params.id;
+        var ObjectId = require('mongodb').ObjectId;
+        var o_id = new ObjectId(id);
+
+        var db = sails.getDatastore().manager;
+        // remove session user in the post
+        await db.collection('post').updateOne(
+            { "_id": o_id },
+            { $pull: { joinedMembers: req.session.memberid } }
+        )
+
+        if (req.wantsJSON) {
+            sails.log("returning detail page json data");
+            sails.log("stringgify result: " + JSON.stringify(result));
+            return res.json(result);
+        }
+        return res.redirect('/read/post/' + id);
 
     },
 
