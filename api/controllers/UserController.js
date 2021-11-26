@@ -265,9 +265,7 @@ module.exports = {
             {
                 HostUsername: req.session.memberid, HostNickname: req.session.nickname, creditScore: req.session.creditScore, post: {
                     title: title, description: description, memberLimit: memberLimit, attribution: attr, imgInput: img
-                }, createDate: dateString, updateDate: '', joinedMembers: [], comments: [{
-                    content: '', byUsername: '', byUserNickname: '', byDate: ''
-                }]
+                }, createDate: dateString, updateDate: '', joinedMembers: [], comments: []
             }
 
         )
@@ -433,6 +431,55 @@ module.exports = {
             return res.json(result);
         }
         return res.redirect('/read/post/' + id);
+
+    },
+
+    comment: async function (req, res) {
+
+        var id = req.params.id; // post id
+        var ObjectId = require('mongodb').ObjectId;
+        var o_id = new ObjectId(id);
+        var cm = req.params.cm.trim(); // comment content
+        var username = req.session.memberid; 
+        var UserNickname = req.session.nickname;
+
+        var date = new Date();
+        var day = date.getDate();
+        var month = date.getMonth();
+        var year = date.getFullYear();
+        var h = date.getHours();
+        var m = date.getMinutes();
+        var s = date.getSeconds();
+        if (day < 10) {
+            day = "0" + day;
+        }
+        // it seems the date.getMonth() is wrong(?) Nov --> get 10 return
+        month = month + 1;
+        if (month < 10) {
+            month = "0" + month;
+        }
+        if (h < 10) {
+            h = "0" + h;
+        }
+        if (m < 10) {
+            m = "0" + m;
+        }
+        if (s < 10) {
+            s = "0" + s;
+        }
+        // DD/MM/YYYY HH:MM:SS
+        var dateString = day + "/" + month + "/" + year + " " + h + ":" + m + ":" + s
+
+        var db = sails.getDatastore().manager;
+        var result = await db.collection('post').updateOne(
+            { "_id": o_id },
+            { $push: { comments: {
+                content: cm, byUsername: username, byUserNickname: UserNickname, byDate: dateString
+            } } }
+        )
+
+        sails.log("result = "+result);
+        return res.ok();
 
     },
 
