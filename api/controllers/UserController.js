@@ -265,7 +265,7 @@ module.exports = {
             {
                 HostUsername: req.session.memberid, HostNickname: req.session.nickname, creditScore: req.session.creditScore, post: {
                     title: title, description: description, memberLimit: memberLimit, attribution: attr, imgInput: img
-                }, createDate: dateString, updateDate: '', joinedMembers: [], comments: []
+                }, createDate: dateString, updateDate: '', joinedMembers: [],joinedHistory:[], comments: []
             }
 
         )
@@ -376,6 +376,7 @@ module.exports = {
 
         if (result) {
 
+            // host user is not included in "joinedMembers"
             var memberCnt = result.joinedMembers.length;
             sails.log("Exisiting members count: " + memberCnt);
 
@@ -389,11 +390,42 @@ module.exports = {
                 }
             }
 
+            var date = new Date();
+            var day = date.getDate();
+            var month = date.getMonth();
+            var year = date.getFullYear();
+            var h = date.getHours();
+            var m = date.getMinutes();
+            var s = date.getSeconds();
+            if (day < 10) {
+                day = "0" + day;
+            }
+            // it seems the date.getMonth() is wrong(?) Nov --> get 10 return
+            month = month + 1;
+            if (month < 10) {
+                month = "0" + month;
+            }
+            if (h < 10) {
+                h = "0" + h;
+            }
+            if (m < 10) {
+                m = "0" + m;
+            }
+            if (s < 10) {
+                s = "0" + s;
+            }
+            // DD/MM/YYYY HH:MM:SS
+            var dateString = day + "/" + month + "/" + year + " " + h + ":" + m + ":" + s;
+            var timing = dateString+" - "+req.session.memberid+" has joined";
+            sails.log("timing = "+timing);
             //update user count: push current session user to that post
+            //push the successful joined record to DB
             await db.collection('post').updateOne(
                 { "_id": o_id },
-                { $push: { joinedMembers: req.session.memberid } }
+                { $push: { joinedMembers: req.session.memberid } },
+                { $push: { joinedHistory: timing } }
             )
+            
 
         } else {
             //return null
@@ -419,10 +451,39 @@ module.exports = {
         var o_id = new ObjectId(id);
 
         var db = sails.getDatastore().manager;
+        var date = new Date();
+        var day = date.getDate();
+        var month = date.getMonth();
+        var year = date.getFullYear();
+        var h = date.getHours();
+        var m = date.getMinutes();
+        var s = date.getSeconds();
+        if (day < 10) {
+            day = "0" + day;
+        }
+        // it seems the date.getMonth() is wrong(?) Nov --> get 10 return
+        month = month + 1;
+        if (month < 10) {
+            month = "0" + month;
+        }
+        if (h < 10) {
+            h = "0" + h;
+        }
+        if (m < 10) {
+            m = "0" + m;
+        }
+        if (s < 10) {
+            s = "0" + s;
+        }
+        // DD/MM/YYYY HH:MM:SS
+        var dateString = day + "/" + month + "/" + year + " " + h + ":" + m + ":" + s;
+        var timing = dateString+" - "+req.session.memberid+" has left";
+        sails.log("timing = "+timing);
         // remove session user in the post
         await db.collection('post').updateOne(
             { "_id": o_id },
-            { $pull: { joinedMembers: req.session.memberid } }
+            { $pull: { joinedMembers: req.session.memberid } },
+            { $push: { joinedHistory: timing } }
         )
 
         if (req.wantsJSON) {

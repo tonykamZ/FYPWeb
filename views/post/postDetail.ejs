@@ -5,6 +5,17 @@
             padding-top: 20px;
         }
 
+        #goToTop{
+            font-size: 30px;
+            cursor: pointer;
+            position: fixed;
+            top: 70%;
+            left: 4%;
+            opacity: 0;
+            transition: all ease-in-out .2s;
+
+        }
+
         input[type=text]:focus,
         input[type=password]:focus {
             background: rgb(238, 238, 238);
@@ -18,7 +29,7 @@
 
         .messageBox .textA {
             position: relative;
-            width: 100%;
+            width: 90%;
             height: 100%;
         }
 
@@ -61,7 +72,6 @@
 
         .messageBox {
             background-color: white;
-            position: fixed;
             bottom: 9%;
             left: 0;
             width: 100%;
@@ -69,8 +79,6 @@
             display: flex;
             align-items: center;
             padding: 7px 27px;
-            transition: opacity .5s ease-out;
-            opacity: 0;
         }
 
         .nameAlert {
@@ -92,13 +100,14 @@
 
         .prof {
             min-width: 35px;
-            min-height: 35px;
+            min-height: 25px;
+            height: 35px;
             margin: auto 10px 0 10px;
             background: black;
             color: white;
-            font-weight: 700;
+            font-weight: 570;
             text-align: center;
-            border-radius: 2rem;
+            border-radius: 45%;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -297,23 +306,8 @@
             transition: .5s;
         }
 
-        #goToDown {
-            height: 35px;
-            position: fixed;
-            bottom: var(--chatboxH);
-            right: 0;
-            margin-right: 12px;
-            width: 35px;
-            transition: 0.5s;
-        }
-
         .downDowny {
             bottom: -70px !important;
-        }
-
-        #goToDown span {
-            cursor: pointer;
-            font-size: 30px;
         }
 
         .showItem {
@@ -528,7 +522,7 @@
                                                         <% } %>
                                                             <% }) %>
                                                                 <% if(duplicated){ %>
-                                                                    <a href="#"><i
+                                                                    <a onclick="window.scrollTo(0, document.body.scrollHeight);" style="cursor: pointer;"><i
                                                                             class="fas fa-comments mr-2"></i>Chat</a>
                                                                     <% }else{ %>
                                                                         <a href="/join/<%= post._id %>"><i
@@ -610,19 +604,58 @@
                                         <div class="welcomeMess"><i class="far fa-comment-alt"
                                                 style="font-size: 50px;"></i>
                                             <h1 class="roomTitle">Chat Room</h1>
-                                            <p id="copyLinker2" class="copyLinker2">#40</p>
+                                            <!-- <p id="copyLinker2" class="copyLinker2">#40</p> -->
                                         </div>
 
-                                        <p class="timeId">date time</p>
+
+                                        <% var perviousCommentDate = ""; %>
                                         <% post.comments.forEach(function(cm){ %>
+                                            <% if(perviousCommentDate){ %>
+                                                <!-- Check DD/MM/YYYY -->
+                                                <% var arr1 = perviousCommentDate.split(" "); %>
+                                                <% var arr2 = cm.byDate.split(" "); %>
+                                                <!-- Check DD/MM/YYYY -->
+                                                <% if(arr1[0] == arr2[0]){ %>
+                                                    <!-- Check time (hour and minutes) -->
+                                                <% var arr3 = arr1[1].split(":"); %>
+                                                <% var arr4 = arr2[1].split(":"); %>
+                                                <!-- Check time (hour and minutes) -->
+                                                <% if(arr3[0] == arr4[0]){ %>
+                                                    <% var PreviousMinutes = parseInt(arr3[1]); %>
+                                                    <% var NowMinutes = parseInt(arr4[1]); %>
+                                                    <% var minutesDiff = PreviousMinutes - NowMinutes; %>
+                                                    <!-- not showing datetime if it is within 5 minutes difference -->
+                                                    <% if(minutesDiff == 0 || minutesDiff == 1 || minutesDiff == 2 || minutesDiff == 3 || minutesDiff == 4 || minutesDiff == 5 ||minutesDiff == -1 ||minutesDiff == -2 ||minutesDiff == -3 ||minutesDiff == -4 ||minutesDiff == -5 ){ %>
+                                                    <% }else { %>
+                                                        <p class="timeId"><%= cm.byDate %></p>
+                                                        <% } %>
+                                                    <% }else{ %>
+                                                        <p class="timeId"><%= cm.byDate %></p>
+                                                        <% } %>
+
+                                                    <% }else{ %>
+                                                        <p class="timeId"><%= cm.byDate %></p>
+                                                        <% } %>
+                                                
+                                                <% }else{ %>
+                                                    <p class="timeId"><%= cm.byDate %></p>
+                                                    <% } %>
+                                            <% perviousCommentDate = cm.byDate; %>
+                                            
                                             <% var displayName="" ; %>
+                                            <!-- cut length of username -->
                                                 <% if(cm.byUsername.length> 2){ %>
                                                     <% displayName=cm.byUsername.substring(0,1); %>
                                                         <% }else{ %>
                                                             <% displayName=cm.byUsername; %>
                                                                 <% } %>
+
+
                                                                     <% if(cm.byUsername !=req.session.memberid){ %>
-                                                                        <!-- other users-->
+                                                                        <% var randomColor = Math.floor(Math.random()*16777215).toString(16); %>
+                                                                        <% var hexCode = "#" + randomColor; %>
+                                                                        
+                                                                        <!-- other users layout -->
                                                                         <div class="message">
                                                                             <div class="prof">
                                                                                 <p>
@@ -638,9 +671,9 @@
                                                                                 </div>
                                                                             </div>
                                                                         </div>
-                                                                        <!-- other users-->
+                                                                        <!-- other users layout -->
                                                                         <% }else{ %>
-                                                                            <!-- session users-->
+                                                                            <!-- session user layout -->
                                                                             <div class="message mMess 1122334"
                                                                                 data-number="1122334">
                                                                                 <div class="messArea">
@@ -658,22 +691,37 @@
                                                                                     </p>
                                                                                 </div>
                                                                             </div>
-                                                                            <!-- session users-->
+                                                                            <!-- session user layout -->
                                                                             <% } %>
                                                                                 <% }); %>
                                                                                     <!--End of Chat cont-->
                                     </div>
+<a id="goToTop" onclick="window.scrollTo(0, 0);"><i class="fas fa-angle-double-up"></i></a>
 
+<% if(req.session.memberid){ %>
+    <% if(post.HostUsername == req.session.memberid || duplicated==true){ %>
                                     <div class="messageBox" id="messageBox">
-                                        <div class="prof" style="background-color: #ff7b54;">
-                                            <p>me</p>
+                                        
+                                        <% var displayName="" ; %>
+                                            <!-- cut length of username -->
+                                                <% if(req.session.memberid.length> 2){ %>
+                                                    <% displayName=req.session.memberid.substring(0,1); %>
+                                                        <% }else{ %>
+                                                            <% displayName= req.session.memberid; %>
+                                                                <% } %>
+                                        <div class="prof" style="background-color: #ff7b54;  margin-bottom: 39px;">
+                                            <p><%= displayName %></p>
                                         </div>
                                         <div class="textA"><textarea id="message" name="message" rows="1" cols="30"
-                                                placeholder="Type your message here"></textarea></div>
-                                        <button class="btn btn-outline-primary" id="send" type="button"
+                                                placeholder="Type your message here"></textarea>
+                                            
+                                            </div>
+                                        <button class="btn btn-outline-primary" id="send" type="button" style="float: right; margin-bottom: 39px;"
                                             onclick="fetchCommentToDB(document.getElementById('message').value); sendT(document.getElementById('message').value); document.getElementById('message').value = ''; "><i
-                                                class="fas fa-paper-plane" disabled></i></button>
+                                                class="fas fa-paper-plane"></i></button>
                                     </div>
+                                    <% }} %>
+                                    <div id="chat"></div>
                                 </div>
 
                                 <% }; %>
@@ -703,13 +751,13 @@
         document.getElementById("creditTag").innerHTML = "";
         document.getElementById("creditTag").innerHTML += "<i class=\"fas fa-frown-open mr-2\"></i>misleading";
     }
+    
 
 </script>
 
 <script>
 
-    myID = document.getElementById("messageBox");
-    sendButton = document.getElementById("send");
+    myID = document.getElementById("goToTop");
     var body = document.body,
         html = document.documentElement;
     var height = Math.max(body.scrollHeight, body.offsetHeight,
@@ -717,7 +765,7 @@
 
     var myScrollFunc = function () {
         var y = window.scrollY;
-        height = height * 0.9; // actual height is less that 100% height
+        height = height * 0.87; // actual height is less that 100% height
         var percentage = y / height * 100;
         if (percentage > 80) {
             myID.style.opacity = 1;

@@ -8,6 +8,16 @@
             text-rendering: optimizeLegibility;
             font-weight: initial;
         }
+
+        #Top{
+            font-size: 30px;
+            cursor: pointer;
+            position: fixed;
+            top: 70%;
+            left: 4%;
+            opacity: 0;
+            transition: all ease-in-out .2s;
+        }
     </style>
 
 </head>
@@ -17,6 +27,7 @@
 
     <div class="container">
         <h3 class="text-custom">Latest posts</h3>
+        <a id="Top" onclick="window.scrollTo(0, 0);"><i class="fas fa-angle-double-up"></i></a>
 
         <% var cnt=1; %>
         <% var today = new Date(); %>
@@ -80,7 +91,7 @@
                                                     <% } %>
                                                 <% }) %>
                                                 <% if(duplicated){ %>
-                                                    <a href="#"><i class="fas fa-comments mr-2"></i>Chat</a>
+                                                    <a href="/read/post/<%= post._id %>#chat"><i class="fas fa-comments mr-2"></i>Chat</a>
                                                     <% }else{ %>
                                             <a href="/join/<%= post._id %>"><i class="fas fa-hand-o-right mr-2"></i>Join</a>
                                             <% } %>
@@ -152,7 +163,7 @@
                                                         <% } %>
                                                     <% }) %>
                                                     <% if(duplicated){ %>
-                                                        <a href="#"><i class="fas fa-comments mr-2"></i>Chat</a>
+                                                        <a href="/read/post/<%= post._id %>#chat"><i class="fas fa-comments mr-2"></i>Chat</a>
                                                         <% }else{ %>
                                                 <a href="/join/<%= post._id %>"><i class="fas fa-hand-o-right mr-2"></i>Join</a>
                                                 <% } %>
@@ -176,3 +187,27 @@
     </div>
 
 </body>
+
+
+<script>
+    myID = document.getElementById("Top");
+    var body = document.body,
+        html = document.documentElement;
+    var height = Math.max(body.scrollHeight, body.offsetHeight,
+        html.clientHeight, html.scrollHeight, html.offsetHeight);
+
+    var myScrollFunc = function () {
+        var y = window.scrollY;
+        height = height * 0.87; // actual height is less that 100% height
+        var percentage = y / height * 100;
+        if (percentage > 80) {
+            myID.style.opacity = 1;
+            sendButton.disabled = false;
+        } else {
+            myID.style.opacity = 0;
+            sendButton.disabled = true;
+        }
+    };
+
+    window.addEventListener("scroll", myScrollFunc);
+</script>
