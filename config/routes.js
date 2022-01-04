@@ -53,6 +53,8 @@ module.exports.routes = {
   'POST /comment/:id/:cm': 'UserController.comment',
 
   'GET /manage': 'UserController.manage',
+  'GET /manage/post/:id': 'UserController.editPostForm',
+  'POST /manage/post/:id': 'UserController.editPostForm',
 
   
   'GET /editProfile' :  'UserController.editProfile',
@@ -61,4 +63,12 @@ module.exports.routes = {
 
   'GET /api/v1/auth/google': { controller: 'PassportController', action: 'googleAuth' },
   'GET /api/v1/auth/google/callback': { controller: 'PassportController', action: 'googleCallback' },
+
+
+
+  // admin
+
+  'GET /userlist': 'UserController.showUsers',
+
+
 };

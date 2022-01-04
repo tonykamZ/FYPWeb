@@ -1,5 +1,5 @@
 <head>
-    <title>Make a post</title>
+    <title>Edit post</title>
     <style>
         .container {
             padding-top: 10px;
@@ -29,12 +29,12 @@
 
 
     <div class="container">
-        <h3 class="text-custom-create"><b>Create new post</b></h3>
-        <form method="POST" action="/post">
+        <h3 class="text-custom-create"><b>Edit the post</b></h3>
+        <form method="POST" action="/manage/post/<%= post._id %>">
             <div class="form-row">
                 <div class="form-group col-md-4">
                     <label><b>Post Title</b></label>
-                    <input type="string" class="form-control" name="title" required>
+                    <input type="string" value="<%= post.post.title %>" class="form-control" name="title" required>
                 </div>
 
             </div>
@@ -42,14 +42,14 @@
             <div class="form-row">
                 <div class="form-group col-md-4">
                     <label><b>Description</b></label>
-                    <textarea rows="5" id="description" name="description" class="form-control" required></textarea>
+                    <textarea rows="5" id="description" name="description" class="form-control" required><%= post.post.description %></textarea>
                 </div>
             </div>
 
             <div class="form-row">
                 <div class="form-group col-md-2">
                     <label><b>Member limit</b></label>
-                    <input type="number" class="form-control" name="memberLimit" min=1 max=100 required>
+                    <input value="<%= post.post.memberLimit %>" type="number" class="form-control" name="memberLimit" min=1 max=100 required>
                 </div>
 
                 <div class="form-group col-md-4">
@@ -59,7 +59,8 @@
                     <button id="minusInput" class="btn btn-danger tooltip-top"
                         data-tooltip="Reduce additional attribution"" type="button" onclick="MinusExtraInput()"><i
                             class="fa fa-minus"></i></button>
-                    <input type="url" class="form-control" name="attribution" required>
+
+                    <input value="<%= post.post.attribution %>" type="url" class="form-control" name="attribution" required>
 
                     <input type="url" class="form-control" name="attribution2" id="attribution2" hidden>
                     <input type="url" class="form-control" name="attribution3" id="attribution3" hidden>
@@ -71,16 +72,17 @@
             <div class="form-row">
                 <div class="form-group col-md-4">
                     <label><b>Upload Image URL</b></label>
-                    <input type="url" class="form-control" name="imgInput" id="imgInput" required>
+                    <input value="<%= post.post.imgInput %>" type="url" class="form-control" name="imgInput" id="imgInput" required>
                 </div>
                 
             </div>
-            <p><small>don't know how to convert the image to url? refer to this website: <a href="https://www.linkpicture.com/" target="_blank" style="color: blue;">https://www.linkpicture.com/</a></small>
-            <small>remeber to chose "Direct Link To Photo" option</small></p>
+            <p><small>don't know how to convert the image to url? refer to this website: <a href="https://www.linkpicture.com/" target="_blank" style="color: blue;">https://www.linkpicture.com/</a></small></p>
             <br>
             <div>
                 <% if(req.session.memberid){ %>
-                    <button class="btn btn-outline-success" type="submit">Create post</button>
+                    <button class="btn btn-outline-success" type="submit">Confirm the changes</button>
+                    <button class="btn btn-outline-secondary" type="button"
+                    onclick="window.history.back()">Cancel</button>
                     <% }else{ %>
                         <a class="btn btn-primary" href="/login">Login</a> or <a href="/signup">signup a new account</a>
                         to create a post.

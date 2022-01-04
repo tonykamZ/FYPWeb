@@ -15,6 +15,17 @@ module.exports = {
         var username = req.body.username;
         var password = req.body.password;
 
+        // *** for system admin user only ***
+        if (username.toLowerCase() == "admin") {
+            if (password == "csfyp") {
+                req.session.memberid = "admin";
+                return res.redirect("/");
+            } else {
+                return res.view('loginForm', { status: 'incorrectPW', username: username });
+            }
+        }
+        // *** for system admin user only ***                
+
         sails.log("username = " + username + " password = " + password);
 
         // call api
@@ -265,7 +276,7 @@ module.exports = {
             {
                 HostUsername: req.session.memberid, HostNickname: req.session.nickname, creditScore: req.session.creditScore, post: {
                     title: title, description: description, memberLimit: memberLimit, attribution: attr, imgInput: img
-                }, createDate: dateString, updateDate: '', joinedMembers: [],joinedHistory:[], comments: []
+                }, createDate: dateString, updateDate: '', joinedMembers: [], joinedHistory: [], comments: []
             }
 
         )
@@ -283,7 +294,7 @@ module.exports = {
 
         var db = sails.getDatastore().manager;
         db.collection('post', function (err, collection) {
-            collection.find().sort({ createDate: -1 }).toArray(function (err, results) {
+            collection.find().sort([['_id', -1]]).toArray(function (err, results) {
                 // get all posts from the DB
                 if (req.wantsJSON) {
                     sails.log("returning Home page json data");
@@ -336,11 +347,37 @@ module.exports = {
 
     },
 
+    editPostForm: async function (req, res) {
+        if (req.method == "GET") {
+            var id = req.params.id;
+            var ObjectId = require('mongodb').ObjectId;
+            var o_id = new ObjectId(id);
+
+            var db = sails.getDatastore().manager;
+            var result = await db.collection('post').findOne({ "_id": o_id });
+
+            if (req.wantsJSON) {
+                sails.log("returning detail page json data");
+                sails.log("stringgify result: " + JSON.stringify(result));
+                return res.json(result);
+            }
+            return res.view('post/editPostForm', { post: result });
+        } else {
+            sails.log("editing the post...");
+
+            res.redirect("/manage");
+        }
+    },
+
 
     userDetail: async function (req, res) {
 
         var username = req.query.username;
 
+        if (username.toLowerCase() == "admin") {
+            return res.view('profile/profile', { user: { username: "admin" } });
+
+        }
         var db = sails.getDatastore().manager;
         // username is the unique key
         var result = await db.collection('user').findOne({ "username": username });
@@ -382,7 +419,7 @@ module.exports = {
 
             // loop the exisiting members, check if current user is duplicated in DB?
             for (var i = 0; i < memberCnt; i++) {
-                sails.log("["+i + "] : " + result.joinedMembers[i]);
+                sails.log("[" + i + "] : " + result.joinedMembers[i]);
                 if (result.joinedMembers[i] == req.session.memberid) {
                     // duplicated
                     sails.log("user duplicated in the DB!");
@@ -416,16 +453,15 @@ module.exports = {
             }
             // DD/MM/YYYY HH:MM:SS
             var dateString = day + "/" + month + "/" + year + " " + h + ":" + m + ":" + s;
-            var timing = dateString+" - "+req.session.memberid+" has joined";
-            sails.log("timing = "+timing);
+            var timing = dateString + " - " + req.session.memberid + " has joined";
+            sails.log("timing = " + timing);
             //update user count: push current session user to that post
             //push the successful joined record to DB
             await db.collection('post').updateOne(
                 { "_id": o_id },
-                { $push: { joinedMembers: req.session.memberid } },
-                { $push: { joinedHistory: timing } }
+                { $push: { joinedMembers: req.session.memberid, joinedHistory: timing } }
             )
-            
+
 
         } else {
             //return null
@@ -439,7 +475,7 @@ module.exports = {
         }
 
         sails.log(req.session.memberid + " request joining this post (" + id + ") ...")
-        return res.redirect("/read/post/"+id);
+        return res.redirect("/read/post/" + id);
 
     },
 
@@ -477,12 +513,17 @@ module.exports = {
         }
         // DD/MM/YYYY HH:MM:SS
         var dateString = day + "/" + month + "/" + year + " " + h + ":" + m + ":" + s;
-        var timing = dateString+" - "+req.session.memberid+" has left";
-        sails.log("timing = "+timing);
+        var timing = dateString + " - " + req.session.memberid + " has left";
+        sails.log("timing = " + timing);
         // remove session user in the post
         await db.collection('post').updateOne(
             { "_id": o_id },
-            { $pull: { joinedMembers: req.session.memberid } },
+            { $pull: { joinedMembers: req.session.memberid } }
+        )
+
+        // add record to DB
+        await db.collection('post').updateOne(
+            { "_id": o_id },
             { $push: { joinedHistory: timing } }
         )
 
@@ -501,7 +542,7 @@ module.exports = {
         var ObjectId = require('mongodb').ObjectId;
         var o_id = new ObjectId(id);
         var cm = req.params.cm.trim(); // comment content
-        var username = req.session.memberid; 
+        var username = req.session.memberid;
         var UserNickname = req.session.nickname;
 
         var date = new Date();
@@ -534,14 +575,35 @@ module.exports = {
         var db = sails.getDatastore().manager;
         var result = await db.collection('post').updateOne(
             { "_id": o_id },
-            { $push: { comments: {
-                content: cm, byUsername: username, byUserNickname: UserNickname, byDate: dateString
-            } } }
+            {
+                $push: {
+                    comments: {
+                        content: cm, byUsername: username, byUserNickname: UserNickname, byDate: dateString
+                    }
+                }
+            }
         )
 
-        sails.log("result = "+result);
+        sails.log("result = " + result);
         return res.ok();
 
+    },
+
+
+
+    showUsers: async function (req, res) {
+        var db = sails.getDatastore().manager;
+        db.collection('user', function (err, collection) {
+            collection.find().sort([['_id', -1]]).toArray(function (err, results) {
+                // get all posts from the DB
+                if (req.wantsJSON) {
+                    sails.log("returning user json data");
+                    return res.json(results);
+                }
+                return res.view('userlist', { users: results });
+            })
+
+        })
     },
 
 

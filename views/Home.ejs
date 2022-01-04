@@ -83,6 +83,9 @@
                                 </li>
                                 <li class="tag__item play red">
                                     <% if(req.session.memberid){ %>
+                                        <% if(req.session.memberid == "admin"){ %>
+                                            <a href="#"><i class="fas fa-edit mr-2"></i>Edit</a>
+                                            <% }else{ %>
                                         <% if(post.HostUsername != req.session.memberid){ %>
                                             <% var duplicated = false; %>
                                             <% post.joinedMembers.forEach(function(member){ %>
@@ -97,6 +100,7 @@
                                             <% } %>
                                             <% }else { %>
                                                 <a href="#"><i class="fas fa-edit mr-2"></i>Manage</a>
+                                                <% } %>
                                                 <% } %>
                                         <% }else{ %>
                                             <a href="/login"><i class="fas fa-sign-in-alt mr-2"></i>Login to Join</a>
@@ -155,6 +159,9 @@
                                     </li>
                                     <li class="tag__item play red">
                                         <% if(req.session.memberid){ %>
+                                            <% if(req.session.memberid == "admin"){ %>
+                                                <a href="#"><i class="fas fa-edit mr-2"></i>Edit</a>
+                                                <% }else{ %>
                                              <% if(post.HostUsername != req.session.memberid){ %>
                                                 <% var duplicated = false; %>
                                                 <% post.joinedMembers.forEach(function(member){ %>
@@ -170,10 +177,12 @@
                                             <% }else { %>
                                                 <a href="#"><i class="fas fa-edit mr-2"></i>Manage</a>
                                                 <% } %>
+                                                <% } %>
                                             <% }else{ %>
                                                 <a href="/login"><i class="fas fa-sign-in-alt mr-2"></i>Login to
                                                     Join</a>
                                                 <% } %>
+                                                
                                     </li>
                                 </ul>
                             </div>

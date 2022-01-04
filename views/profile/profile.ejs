@@ -61,8 +61,11 @@
     <div class="container">
         <div class="row">
             <!-- member layout -->
+            <% if(req.session.memberid){ %>
             <div class="column1">
-                <% if(req.session.memberid){ %>
+                <% if(user.username == "admin"){ %>
+                    <h2>Admin User</h2>
+                    <% }else{ %>
                     <form action="/editProfile" method="POST">
                         <!-- image -->
                         <div>
@@ -119,7 +122,9 @@
                                 <a class="btn btn-outline-danger" href="/logout">Log out</a>
                             </div>
                             <!-- personal layout -->
-                            <% }else{ %>
+                            <% }else if(req.session.memberid == "admin"){ %>
+
+                                <% }else{ %>
                                 <!-- read others layout -->
                                 <button class="btn btn-outline-danger" type="button"
                                     onclick="reportUser()">Report</button>
@@ -127,10 +132,14 @@
 
                                 <% } %>
                     </form>
+                    <% } %>
                     <!-- member layout -->
             </div>
 
             <div class="column2">
+                <% if(user.username == "admin"){ %>
+                    <a class="btn btn-outline-danger" href="/logout">Log out</a>
+                    <% }else{ %>
                 <% if(user.username==req.session.memberid){ %>
                     <% var cnt=0; %>
                         <% var today=new Date(); %>
@@ -199,12 +208,13 @@
                                         </section>
 
                                         <% if(cnt == 0){ %>
-                                            <b>you haven't joined any post yet😐</b>
-                                            <% } %>
-                                        <% }else{ %>
-<button class="btn btn-outline-secondary" type="button"
-onclick="window.history.back()">Back</button>
-                                            <% } %>
+                                            <b>you haven' t joined any post yet😐</b>
+                                        <% } %>
+                                            <% }else{ %>
+                                                <button class="btn btn-outline-secondary" type="button"
+                                                    onclick="window.history.back()">Back</button>
+                                                <% } %>
+                                                <% } %>
 
             </div>
             <% }else{ %>
@@ -212,12 +222,12 @@ onclick="window.history.back()">Back</button>
 
                 <h3><a href="/login">Login <li class="tag__item" style="cursor: pointer;"><i
                                 class="fas fa-sign-in-alt mr-2"></i></li></a> to browse user' s information</h3>
-                                        <!-- should store url session to nav back later -->
+                <!-- should store url session to nav back later -->
 
-                                        <!-- visitor layout -->
-                                        <% } %>
-            </div>
+                <!-- visitor layout -->
+                <% } %>
         </div>
+    </div>
 
 </body>
 

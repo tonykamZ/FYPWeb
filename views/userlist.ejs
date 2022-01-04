@@ -1,0 +1,57 @@
+<head>
+    <title>User list</title>
+    <style>
+
+    </style>
+
+</head>
+
+
+<body>
+    <% if(req.session.memberid){ %>
+        <% if(req.session.memberid=="admin"){ %>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Credit Score</th>
+                        <th>Gmail</th>
+                    </tr>
+                </thead>
+                <% users.forEach(function(user){ %>
+                    <tr>
+                        <td><a href="/read/profile?username=<%= user.username %>">
+                                <%= user.username %>
+                            </a></td>
+                        <td>
+                            <%= user.creditScore %>
+                        </td>
+                        <td>
+                            <%= user.connectedGmail %>
+                        </td>
+                    </tr>
+
+                    <% }); %>
+            </table>
+            <% }else{ %>
+                <!-- visitor layout -->
+
+                <h3>You don't have permission to browse this page😬</h3>
+                <!-- should store url session to nav back later -->
+
+                <!-- visitor layout -->
+
+                <% } %>
+
+                <% }else{ %>
+                    <!-- visitor layout -->
+
+                    <h3><a href="/login">Login <li class="tag__item" style="cursor: pointer;"><i
+                                    class="fas fa-sign-in-alt mr-2"></i></li></a> to admin account to browse users list
+                    </h3>
+                    <!-- should store url session to nav back later -->
+
+                    <!-- visitor layout -->
+                    <% } %>
+
+</body>
