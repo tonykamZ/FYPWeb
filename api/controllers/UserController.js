@@ -264,11 +264,11 @@ module.exports = {
         if (s < 10) {
             s = "0" + s;
         }
-        // DD/MM/YYYY HH:MM:SS
-        var dateString = day + "/" + month + "/" + year + " " + h + ":" + m + ":" + s
+        // YYYY-MM-DDTHH:MM:SS
+        var dateString = year + "-" + month + "-" + day + "T" + h + ":" + m + ":" + s;
 
+        memberLimit = parseInt(memberLimit);
         sails.log(title + ", " + description + ", " + memberLimit + ", " + attr);
-        sails.log("Date: " + date);
         sails.log("Date string: " + dateString);
 
         var db = sails.getDatastore().manager;
@@ -276,7 +276,7 @@ module.exports = {
             {
                 HostUsername: req.session.memberid, HostNickname: req.session.nickname, creditScore: req.session.creditScore, post: {
                     title: title, description: description, memberLimit: memberLimit, attribution: attr, imgInput: img
-                }, createDate: dateString, updateDate: '', joinedMembers: [], joinedHistory: [], comments: []
+                }, createDate: new Date(), createDateString: dateString, updateDate: new Date(), updateDateString: '', joinedMembers: [], joinedHistory: [], comments: []
             }
 
         )
@@ -292,15 +292,48 @@ module.exports = {
 
     home: async function (req, res) {
 
+        var keywords = req.query.keywords;
+        var range = req.query.range;
+        var date = req.query.date;
+
+        if (range) range = parseInt(range) + 1; // convert query string to integer
+        if (date) {
+            date = date + "T23:59:59";
+            date = new Date(date);
+        } else {
+            date = new Date();
+        }
+
+        sails.log(keywords + " " + range + " " + date);
+        var search = keywords || range || date;
+
         var db = sails.getDatastore().manager;
         db.collection('post', function (err, collection) {
-            collection.find().sort([['_id', -1]]).toArray(function (err, results) {
+            collection.find(
+                {
+                    $and: [
+                        {
+                            $or: [
+                                { "post.title": { $regex: keywords || "", $options: "$i" } },
+                                { "post.description": { $regex: keywords || "", $options: "$i" } },
+                            ]
+                        },
+                        {
+                            "post.memberLimit": { $lt: range || 101 }
+                        },
+                        {
+                            "createDate": { $lte: date }
+                        }
+                    ]
+                },
+
+            ).sort([['_id', -1]]).toArray(function (err, results) {
                 // get all posts from the DB
                 if (req.wantsJSON) {
                     sails.log("returning Home page json data");
                     return res.json(results);
                 }
-                return res.view('Home', { posts: results });
+                return res.view('Home', { posts: results, postCnt: results.length, search: search });
             })
 
         })
@@ -363,7 +396,71 @@ module.exports = {
             }
             return res.view('post/editPostForm', { post: result });
         } else {
-            sails.log("editing the post...");
+            var id = req.params.id;
+            var ObjectId = require('mongodb').ObjectId;
+            var o_id = new ObjectId(id);
+
+            var title = req.body.title;
+            var description = req.body.description.trim();
+            var memberLimit = req.body.memberLimit;
+            var attribution = req.body.attribution;
+            var attribution2 = req.body.attribution2;
+            var attribution3 = req.body.attribution3;
+            var attribution4 = req.body.attribution4;
+            var attribution5 = req.body.attribution5;
+            var img = req.body.imgInput;
+
+            var attr = [attribution] // define new array for storing links
+            // check if there exist additional attribution links
+            if (attribution2) {
+                attr.push(attribution2);
+                if (attribution3) {
+                    attr.push(attribution3);
+                    if (attribution4) {
+                        attr.push(attribution4);
+                        if (attribution5) {
+                            attr.push(attribution5);
+                        }
+                    }
+                }
+            }
+            var date = new Date();
+            var day = date.getDate();
+            var month = date.getMonth();
+            var year = date.getFullYear();
+            var h = date.getHours();
+            var m = date.getMinutes();
+            var s = date.getSeconds();
+            if (day < 10) {
+                day = "0" + day;
+            }
+            // it seems the date.getMonth() is wrong(?) Nov --> get 10 return
+            month = month + 1;
+            if (month < 10) {
+                month = "0" + month;
+            }
+            if (h < 10) {
+                h = "0" + h;
+            }
+            if (m < 10) {
+                m = "0" + m;
+            }
+            if (s < 10) {
+                s = "0" + s;
+            }
+            // YYYY-MM-DDTHH:MM:SS
+            var dateString = year + "-" + month + "-" + day + "T" + h + ":" + m + ":" + s;
+
+            memberLimit = parseInt(memberLimit);
+            sails.log("editing the post ("+id+")");
+            sails.log("updated time: " + dateString);
+
+            var db = sails.getDatastore().manager;
+            var result = await db.collection('post').updateOne(
+                { "_id": o_id },
+                { $set: { 'post.title': title, 'post.description': description, 'post.memberLimit': memberLimit, 'post.attribution': attr, 'post.imgInput': img, updateDate: new Date(), updateDateString: dateString }
+                }
+            )
 
             res.redirect("/manage");
         }
@@ -604,6 +701,14 @@ module.exports = {
             })
 
         })
+    },
+
+
+    test: function (req, res) {
+
+
+        return res.view('test');
+
     },
 
 

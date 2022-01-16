@@ -478,8 +478,20 @@
 
     }
 
-    .custom {
+    .custom-nav {
       background-image: linear-gradient(15deg, #d68dd8 0%, #851894 100%);
+    }
+
+    .custom-nav-2 {
+      background-image: linear-gradient(15deg, #253f94 0%, #6cb5c2 100%);
+    }
+
+    .custom-footer {
+      background-image: linear-gradient(15deg, #851894 0%, #d68dd8 100%);
+    }
+
+    .custom-footer-2 {
+      background-image: linear-gradient(15deg, #f5dbf8 0%, #121097 100%);
     }
 
     .custom-admin {
@@ -490,9 +502,7 @@
       background-image: linear-gradient(15deg, #26fc0a 0%, #0431fc 100%);
     }
 
-    .custom-2 {
-      background-image: linear-gradient(15deg, #851894 0%, #d68dd8 100%);
-    }
+
 
     .text-custom {
       background: -webkit-linear-gradient(rgb(2, 40, 255), rgb(0, 252, 176));
@@ -545,10 +555,14 @@
       background-image: linear-gradient(15deg, #ffa600 0%, #ff0000 100%);
     }
 
-    .fa-user-shield{
-      font-size:xx-large;
+    .fa-user-shield {
+      font-size: xx-large;
       color: #73f3d7;
       text-shadow: 0 0 15px rgb(89, 109, 69);
+    }
+
+    #navBar {
+      z-index: 99;
     }
   </style>
 
@@ -571,7 +585,7 @@
           <a class="nav-link" href="/search">Search</a>
         </li -->
         <% if(req.session.memberid){ %>
-          <% if(req.session.memberid == "admin"){ %>
+          <% if(req.session.memberid=="admin" ){ %>
             <li class="nav-item">
               <a class="nav-link" href="/userlist">Users</a>
             </li>
@@ -581,16 +595,16 @@
             </li>
             <% }else{ %>
 
-          <li class="nav-item">
-            <a class="nav-link" href="/post">Post</a>
-          </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/post">Post</a>
+              </li>
 
 
-          <li class="nav-item">
-            <a class="nav-link" href="/manage">Manage</a>
-          </li>
-          <% } %>
-          <% } %>
+              <li class="nav-item">
+                <a class="nav-link" href="/manage">Manage</a>
+              </li>
+              <% } %>
+                <% } %>
 
       </ul>
 
@@ -602,27 +616,27 @@
           <% if(req.session.memberid){ %>
             <h6 id="welcome">Welcome, <%= req.session.memberid %>
             </h6>
-            <% if(req.session.memberid == "admin"){ %>
+            <% if(req.session.memberid=="admin" ){ %>
               <a id="profile" class="tooltip-bottom" data-tooltip="view admin profile"
-              href="/read/profile?username=admin">
-              <i class="fa fa-user-shield"></i>
-            </a>
+                href="/read/profile?username=admin">
+                <i class="fa fa-user-shield"></i>
+              </a>
               <% }else{ %>
-            <a id="profile" class="tooltip-bottom" data-tooltip="view personal profile"
-              href="/read/profile?username=<%= req.session.memberid %>">
-              <i class="far fa-user-circle"></i>
-            </a>
-            <% } %>
-            <% } %>
-              <% if(!req.session.memberid){ %>
-                <a class="btn btn-success" href="/signup">Sign up</a>
-                <a class="btn btn-primary" href="/login" style="margin-right: 5px;">Log in</a>
+                <a id="profile" class="tooltip-bottom" data-tooltip="view personal profile"
+                  href="/read/profile?username=<%= req.session.memberid %>">
+                  <i class="far fa-user-circle"></i>
+                </a>
                 <% } %>
+                  <% } %>
+                    <% if(!req.session.memberid){ %>
+                      <a class="btn btn-success" href="/signup">Sign up</a>
+                      <a class="btn btn-primary" href="/login" style="margin-right: 5px;">Log in</a>
+                      <% } %>
 
-                  <li class="nav-item">
-                    <a class="navbar-brand" id="txt" style="color: rgb(255,255,255);">Today</a>
+                        <li class="nav-item">
+                          <a class="navbar-brand" id="txt" style="color: rgb(255,255,255);">Today</a>
 
-                  </li>
+                        </li>
         </ul>
       </div>
 
@@ -633,7 +647,7 @@
   <div class="container">
     <%- body %>
   </div>
-  <footer id="footer" class="text-center text-white fixed-bottom" style="background-color: #21081a;">
+  <footer id="footer" class="text-center text-white fixed-bottom">
 
 
     <!-- Copyright -->
@@ -681,19 +695,19 @@
   }
 
   var sessionKey = "<%= req.session.memberid %>";
-  if(sessionKey){
-    if(sessionKey == "admin"){
+  if (sessionKey) {
+    if (sessionKey == "admin") {
       document.getElementById('navBar').className += ' custom-admin';
       document.getElementById('footer').className += ' custom-admin-2';
-    }else{
-      document.getElementById('navBar').className += ' custom';
-      document.getElementById('footer').className += ' custom-2';
+    } else {
+      document.getElementById('navBar').className += ' custom-nav';
+      document.getElementById('footer').className += ' custom-footer';
     }
-  }else{
-    document.getElementById('navBar').className += ' custom';
-    document.getElementById('footer').className += ' custom-2';
+  } else {
+    document.getElementById('navBar').className += ' custom-nav-2';
+    document.getElementById('footer').className += ' custom-footer-2';
   }
-  
+
 
 </script>
 

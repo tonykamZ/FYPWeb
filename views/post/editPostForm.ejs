@@ -27,7 +27,9 @@
 
 <body>
 
-
+    <% if(!post){ %>
+        <h1>No result!</h1><small>Please make sure the id field in the path is correct!</small>
+        <% }else{ %>
     <div class="container">
         <h3 class="text-custom-create"><b>Edit the post</b></h3>
         <form method="POST" action="/manage/post/<%= post._id %>">
@@ -98,7 +100,7 @@
 
         </form>
     </div>
-
+    <% } %>
 </body>
 
 <script>

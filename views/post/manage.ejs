@@ -39,7 +39,8 @@
                                 </a></h1>
                             <div class="postcard__subtitle small">
                                 <i class="fas fa-calendar-alt mr-2"></i>
-                                <%= post.createDate %>
+                                <% var dateStr = post.createDateString.split("T"); %>
+                                <%= dateStr[0] %> <%= dateStr[1] %>
                             </div>
                             <div class="postcard__bar"></div>
                             <div class="postcard__preview-txt">
@@ -50,11 +51,10 @@
                                             <% } %>
                             </div>
                             <ul class="postcard__tagbox">
-                                <% var dateAndTime = post.createDate.split(" "); %>
-                                <% var DDMMYYYY = dateAndTime[0].split("/"); %>
-                                <% if(DDMMYYYY[2] == year){ %>
-                                    <% if(DDMMYYYY[1] == month){ %>
-                                        <% if(DDMMYYYY[0] == day){ %>
+                                <% var YYYYMMDD = dateStr[0].split("-"); %>
+                                <% if(YYYYMMDD[0] == year){ %>
+                                    <% if(YYYYMMDD[1] == month){ %>
+                                        <% if(YYYYMMDD[2] == day){ %>
                                 <li class="tag__item blink gradientRed">
                                     NEW
                                 </li>
@@ -89,7 +89,8 @@
                                     </a></h1>
                                 <div class="postcard__subtitle small">
                                     <i class="fas fa-calendar-alt mr-2"></i>
-                                    <%= post.createDate %>
+                                    <% var dateStr = post.createDateString.split("T"); %>
+                                    <%= dateStr[0] %> <%= dateStr[1] %>
                                 </div>
                                 <div class="postcard__bar"></div>
                                 <div class="postcard__preview-txt">
@@ -100,11 +101,10 @@
                                                 <% } %>
                                 </div>
                                 <ul class="postcard__tagbox">
-                                    <% var dateAndTime = post.createDate.split(" "); %>
-                                    <% var DDMMYYYY = dateAndTime[0].split("/"); %>
-                                    <% if(DDMMYYYY[2] == year){ %>
-                                        <% if(DDMMYYYY[1] == month){ %>
-                                            <% if(DDMMYYYY[0] == day){ %>
+                                    <% var YYYYMMDD = dateStr[0].split("-"); %>
+                                <% if(YYYYMMDD[0] == year){ %>
+                                    <% if(YYYYMMDD[1] == month){ %>
+                                        <% if(YYYYMMDD[2] == day){ %>
                                     <li class="tag__item blink gradientRed">
                                         NEW
                                     </li>
