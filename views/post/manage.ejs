@@ -30,11 +30,11 @@
                 <% if(cnt%2==1){ %>
                     <!-- Dark card -->
                     <article class="postcard dark red">
-                        <a class="postcard__img_link" href="/manage/post/<%= post._id %>">
+                        <a class="postcard__img_link" href="/read/post/<%= post._id %>">
                             <img class="postcard__img" src="<%= post.post.imgInput %>" alt="Image Title" />
                         </a>
                         <div class="postcard__text">
-                            <h1 class="postcard__title red"><a href="/manage/post/<%= post._id %>">
+                            <h1 class="postcard__title red"><a href="/read/post/<%= post._id %>">
                                     <%= post.post.title %>
                                 </a></h1>
                             <div class="postcard__subtitle small">
@@ -62,7 +62,7 @@
                                 <li class="tag__item"><i class="fas fa-users mr-2"></i>
                                     <%= post.joinedMembers.length + 1 %>/<%= post.post.memberLimit %>
                                 </li>
-                                <li class="tag__item"><i class="fas fa-user-secret mr-2"></i>Host by:
+                                <li class="tag__item"><i class="fas fa-user-secret mr-2"></i>Host:
                                     <% if(post.post.HostNickname){ %>
                                         <a href="/read/profile?username=<%= post.HostUsername %>">
                                             <%= post.post.HostNickname %>
@@ -80,11 +80,11 @@
                     <% }else{ %>
                         <!-- Light card -->
                         <article class="postcard light red">
-                            <a class="postcard__img_link" href="/manage/post/<%= post._id %>">
+                            <a class="postcard__img_link" href="/read/post/<%= post._id %>">
                                 <img class="postcard__img" src="<%= post.post.imgInput %>" alt="Image Title" />
                             </a>
                             <div class="postcard__text t-dark">
-                                <h1 class="postcard__title red"><a href="/manage/post/<%= post._id %>">
+                                <h1 class="postcard__title red"><a href="/read/post/<%= post._id %>">
                                         <%= post.post.title %>
                                     </a></h1>
                                 <div class="postcard__subtitle small">
@@ -112,7 +112,7 @@
                                     <li class="tag__item"><i class="fas fa-users mr-2"></i>
                                         <%= post.joinedMembers.length + 1 %>/<%= post.post.memberLimit %>
                                     </li>
-                                    <li class="tag__item"><i class="fas fa-user-secret mr-2"></i>Host by:
+                                    <li class="tag__item"><i class="fas fa-user-secret mr-2"></i>Host:
                                         <% if(post.post.HostNickname){ %>
                                             <a href="/read/profile?username=<%= post.HostUsername %>">
                                                 <%= post.post.HostNickname %>

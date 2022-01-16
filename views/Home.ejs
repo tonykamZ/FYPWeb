@@ -306,7 +306,8 @@
                                 <li class="tag__item"><i class="fas fa-users mr-2"></i>
                                     <%= post.joinedMembers.length + 1 %>/<%= post.post.memberLimit %>
                                 </li>
-                                <li class="tag__item"><i class="fas fa-user-secret mr-2"></i>Host by:
+                                <li class="tag__item"><i class="fas fa-user-secret mr-2"></i>Host:
+                                    <b>
                                     <% if(post.post.HostNickname){ %>
                                         <a href="/read/profile?username=<%= post.HostUsername %>">
                                             <%= post.post.HostNickname %>
@@ -316,6 +317,7 @@
                                                 <%= post.HostUsername %>
                                             </a>
                                             <% } %>
+                                    </b>
                                 </li>
                                 <li class="tag__item play red">
                                     <% if(req.session.memberid){ %>
@@ -335,7 +337,7 @@
                                             <a href="/join/<%= post._id %>"><i class="fas fa-hand-o-right mr-2"></i>Join</a>
                                             <% } %>
                                             <% }else { %>
-                                                <a href="#"><i class="fas fa-edit mr-2"></i>Manage</a>
+                                                <a href="/manage/post/<%= post._id %>"><i class="fas fa-edit mr-2"></i>Manage</a>
                                                 <% } %>
                                                 <% } %>
                                         <% }else{ %>
@@ -382,7 +384,8 @@
                                     <li class="tag__item"><i class="fas fa-users mr-2"></i>
                                         <%= post.joinedMembers.length + 1 %>/<%= post.post.memberLimit %>
                                     </li>
-                                    <li class="tag__item"><i class="fas fa-user-secret mr-2"></i>Host by:
+                                    <li class="tag__item"><i class="fas fa-user-secret mr-2"></i>Host:
+                                        <b>
                                         <% if(post.post.HostNickname){ %>
                                             <a href="/read/profile?username=<%= post.HostUsername %>">
                                                 <%= post.post.HostNickname %>
@@ -392,6 +395,7 @@
                                                     <%= post.HostUsername %>
                                                 </a>
                                                 <% } %>
+                                         </b>       
                                     </li>
                                     <li class="tag__item play red">
                                         <% if(req.session.memberid){ %>
@@ -411,7 +415,7 @@
                                                 <a href="/join/<%= post._id %>"><i class="fas fa-hand-o-right mr-2"></i>Join</a>
                                                 <% } %>
                                             <% }else { %>
-                                                <a href="#"><i class="fas fa-edit mr-2"></i>Manage</a>
+                                                <a href="/manage/post/<%= post._id %>"><i class="fas fa-edit mr-2"></i>Manage</a>
                                                 <% } %>
                                                 <% } %>
                                             <% }else{ %>

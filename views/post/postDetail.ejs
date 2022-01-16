@@ -484,7 +484,8 @@
                             </a></h1>
                         <div class="postcard__subtitle small">
                             <i class="fas fa-calendar-alt mr-2"></i>
-                            <%= post.createDate %>
+                            <% var CdateStr = post.createDateString.split("T"); %>
+                            <%= CdateStr[0] %> <%= CdateStr[1] %>
                         </div>
                         <div class="postcard__bar"></div>
                         <div class="postcard__preview-txt">
@@ -499,7 +500,7 @@
                             <li class="tag__item"><i class="fas fa-users mr-2"></i>
                                 <%= post.joinedMembers.length + 1 %>/<%= post.post.memberLimit %>
                             </li>
-                            <li class="tag__item"><i class="fas fa-user-secret mr-2"></i>Host by:
+                            <li class="tag__item"><i class="fas fa-user-secret mr-2"></i>Host:
                                 <% if(post.post.HostNickname){ %>
                                     <a href="/read/profile?username=<%= post.HostUsername %>">
                                         <%= post.post.HostNickname %>
@@ -532,8 +533,8 @@
                                                                                 class="fas fa-hand-o-right mr-2"></i>Join</a>
                                                                         <% } %>
                                                                             <% }else { %>
-                                                                                <a href="#"><i
-                                                                                        class="fas fa-edit mr-2"></i>Manage</a>
+                                                                                <a href="/manage/post/<%= post._id %>"><i
+                                                                                        class="fas fa-edit mr-2"></i>Edit</a>
                                                                                 <% } %> <% } %>
                                                                                     <% }else{ %>
                                                                                         <a href="/login"><i
@@ -548,6 +549,8 @@
                 </article>
 
                 <div>
+                    <% var dateStr = post.updateDateString.split("T"); %>
+                    <h6 style="float: right;"><small>Last modified: <%= dateStr[0] %> <%= dateStr[1] %></small></h6>
                     <b>Joined members: </b>
                     <a href="/read/profile?username=<%= post.HostUsername %>">
                         <% if(post.post.HostNickname){ %>
