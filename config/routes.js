@@ -61,6 +61,8 @@ module.exports.routes = {
   'POST /editProfile' :  'UserController.editProfile',
   'GET /read/profile': 'UserController.userDetail',
 
+  'GET /member/vip': 'UserController.vip',
+
   'GET /test': 'UserController.test',
 
   'GET /api/v1/auth/google': { controller: 'PassportController', action: 'googleAuth' },

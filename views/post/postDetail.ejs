@@ -529,7 +529,7 @@
                                                                     <a onclick="window.scrollTo(0, document.body.scrollHeight);" style="cursor: pointer;"><i
                                                                             class="fas fa-comments mr-2"></i>Chat</a>
                                                                     <% }else{ %>
-                                                                        <a href="/join/<%= post._id %>"><i
+                                                                        <a onclick="checkValidJoin('<%= post._id %>','<%= post.joinedMembers.length %>','<%= post.post.memberLimit %>')" style="cursor: pointer;"><i
                                                                                 class="fas fa-hand-o-right mr-2"></i>Join</a>
                                                                         <% } %>
                                                                             <% }else { %>
@@ -857,6 +857,18 @@
             var msg = response.statusText;
             alert("Error in sending message:\n\"" + y + "\"\n" + msg);
             location.reload();
+        }
+    }
+
+     function checkValidJoin(id, joinedMembers, maxMembers){
+
+        joinedMembers = parseInt(joinedMembers)+1;
+        maxMembers = parseInt(maxMembers);
+
+        if(joinedMembers >= maxMembers){
+            alert("Fail to join the post!\nReason: The quota for joining this post is full! ("+joinedMembers+"/"+maxMembers+")");
+        }else{
+            window.location.replace("/join/"+id);
         }
     }
 </script>

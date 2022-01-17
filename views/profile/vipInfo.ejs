@@ -1,0 +1,277 @@
+<head>
+    <style>
+        @import url(https://fonts.googleapis.com/css?family=Open+Sans);
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            color: #666;
+        }
+
+        /* STRUCTURE */
+
+        .wrapper {
+            padding: 5px;
+            max-width: 960px;
+            width: 95%;
+            margin: 20px auto;
+        }
+
+        header {
+            padding: 0 15px;
+        }
+
+        .columns {
+            display: flex;
+            flex-flow: row wrap;
+            justify-content: center;
+            margin: 5px 0;
+        }
+
+        .column {
+            flex: 1;
+            border: 1px solid gray;
+            margin: 2px;
+            padding: 10px;
+
+        }
+
+        footer {
+            padding: 0 15px;
+        }
+
+
+        @media screen and (max-width: 980px) {
+            .columns .column {
+                margin-bottom: 5px;
+                flex-basis: 40%;
+            }
+        }
+
+        @media screen and (max-width: 680px) {
+            .columns .column {
+                flex-basis: 100%;
+                margin: 0 0 5px 0;
+            }
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        @import 'https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300';
+
+
+        .container-4 {
+            background: #9888A5;
+            position: absolute;
+            bottom: 36%;
+        }
+
+        .container-5 {
+            background: #7B6D8D;
+            position: absolute;
+            bottom: 36%;
+        }
+
+        .container-6 {
+            background: #565554;
+            position: absolute;
+            bottom: 36%;
+        }
+
+        /*
+ BUTTON STYLING
+*/
+
+        .btn {
+            position: relative;
+            color: white;
+            width: 256px;
+            height: 64px;
+            line-height: 64px;
+            transition: all 0.3s;
+        }
+
+        .btn::before,
+        .btn::after {
+            content: '';
+            position: absolute;
+            transition: all 0.3s;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+
+
+        .btn-four:hover span {
+            transform: scale(1.2, 1.2);
+        }
+
+        .btn-four::before {
+            opacity: 0;
+            background: rgba(255, 255, 255, 0.1);
+            transform: scale(0.1, 0.1);
+        }
+
+        .btn-four:hover::before {
+            opacity: 1;
+            transform: scale(1, 1);
+        }
+
+        .btn-four::after {
+            transition: all 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .btn-four:hover::after {
+            transform: scale(0, 0);
+            opacity: 0;
+        }
+
+        /* BTN FIVE */
+        .btn-five::before {
+            transition: transform 0.15s, 0.15s border-radius 0.15s;
+            opacity: 0;
+            background: rgba(255, 255, 255, 0.1);
+            transform: scale(0.1, 0.1);
+            border-radius: 50%;
+        }
+
+        .btn-five:hover::before {
+            opacity: 1;
+            transform: scale(1, 1);
+            border-radius: 0;
+        }
+
+        .btn-five::after {
+            transition: all 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-five:hover::after {
+            opacity: 0;
+        }
+
+        /* BTN SIX */
+        .btn-six::before {
+            opacity: 0;
+            background: rgba(255, 255, 255, 0.1);
+            transform: scale(1.3, 1.3);
+        }
+
+        .btn-six:hover::before {
+            opacity: 1;
+            transform: scale(1, 1);
+        }
+
+        .btn-six::after {
+            transition: all 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .btn-six:hover::after {
+            transform: scale(0, 0);
+            opacity: 0;
+        }
+    </style>
+</head>
+
+
+<body>
+    <div class="wrapper">
+
+        <header>
+            <h1> <a class="navbar-brand" style="font-size: 32px; text-shadow: 0 0 3.6px rgb(3, 0, 0);" href="/">
+                    <span style="color: #effc38">Happy</span>
+                    <span style="color: #ffb671">Share:)</span>
+                </a> Premium: Chose your plan</h1>
+        </header>
+
+        <section class="columns">
+
+            <div class="column">
+                <h2>Gold VIP</h2>
+                <p>
+                    <li>
+                        Unlimited post quota
+                    </li>
+                </p>
+                <div class="container-4">
+                    <div class="btn btn-four">
+                        <span>Join VIP</span>
+                    </div>
+                </div>
+
+
+            </div>
+
+            <div class="column">
+                <h2>Platinum VIP</h2>
+                <p>
+                    <li>
+                        Unlimited post quota
+                    </li>
+                    <li>
+                        Post pinned to top
+                    </li>
+                    <li>
+                        Superior user icon
+                    </li>
+                </p>
+
+                <div class="container-5">
+                    <div class="btn btn-five">
+                        <span>Join VIP</span>
+                    </div>
+                </div>
+
+
+            </div>
+
+            <div class="column">
+                <h2>Diamond VIP</h2>
+                <p>
+                    <li>
+                        Unlimited post quota
+                    </li>
+                    <li>
+                        Post pinned to top
+                    </li>
+                    <li>
+                        Superior user icon
+                    </li>
+                    <li>
+                        Unlimted Edit post
+                    </li>
+                    <li>
+                        Received fastest notification when someone joined your post
+                    </li>
+                </p>
+                <div class="container-6">
+                    <div class="btn btn-six">
+                        <span>Join VIP</span>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+        <footer>
+            <h3>Why upgrade to Premium?</h3>
+            <p>Enjoy a more superior and user-friendly environment when using our platform! </p>
+        </footer>
+
+    </div>
+</body>
+
+
+<script>
+
+</script>

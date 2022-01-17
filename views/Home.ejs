@@ -212,6 +212,12 @@
             margin-top: -7px;
             cursor: pointer;
         }
+
+        .wrapBrand{
+            position: absolute;
+            top: 15px;
+            left: 15px;
+        }
     </style>
 
 </head>
@@ -221,6 +227,10 @@
     <header class="page-header">
         <nav>
             <div class="trigger-menu-wrapper">
+                <a class="navbar-brand wrapBrand" href="/">
+                    <span style="color: #effc38">Happy</span>
+                    <span style="color: #ffb671">Share:)</span>
+                  </a>
                 <div class="form-row trigger-menu">
                     <div class="form-group col-md-4">
                         <label style="color: rgb(5, 45, 177); "><b>Search by</b></label>
@@ -334,7 +344,7 @@
                                                 <% if(duplicated){ %>
                                                     <a href="/read/post/<%= post._id %>#chat"><i class="fas fa-comments mr-2"></i>Chat</a>
                                                     <% }else{ %>
-                                            <a href="/join/<%= post._id %>"><i class="fas fa-hand-o-right mr-2"></i>Join</a>
+                                            <a onclick="checkValidJoin('<%= post._id %>','<%= post.joinedMembers.length %>','<%= post.post.memberLimit %>')" style="cursor: pointer;"><i class="fas fa-hand-o-right mr-2"></i>Join</a>
                                             <% } %>
                                             <% }else { %>
                                                 <a href="/manage/post/<%= post._id %>"><i class="fas fa-edit mr-2"></i>Manage</a>
@@ -412,7 +422,7 @@
                                                     <% if(duplicated){ %>
                                                         <a href="/read/post/<%= post._id %>#chat"><i class="fas fa-comments mr-2"></i>Chat</a>
                                                         <% }else{ %>
-                                                <a href="/join/<%= post._id %>"><i class="fas fa-hand-o-right mr-2"></i>Join</a>
+                                                <a onclick="checkValidJoin('<%= post._id %>','<%= post.joinedMembers.length %>','<%= post.post.memberLimit %>')" style="cursor: pointer;"><i class="fas fa-hand-o-right mr-2"></i>Join</a>
                                                 <% } %>
                                             <% }else { %>
                                                 <a href="/manage/post/<%= post._id %>"><i class="fas fa-edit mr-2"></i>Manage</a>
@@ -493,4 +503,18 @@
         label.innerHTML = value;
     });
 
+</script>
+
+<script>
+    function checkValidJoin(id, joinedMembers, maxMembers){
+
+        joinedMembers = parseInt(joinedMembers)+1;
+        maxMembers = parseInt(maxMembers);
+
+        if(joinedMembers >= maxMembers){
+            alert("Fail to join the post!\nReason: The quota for joining this post is full! ("+joinedMembers+"/"+maxMembers+")");
+        }else{
+            window.location.replace("/join/"+id);
+        }
+    }
 </script>

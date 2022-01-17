@@ -711,6 +711,13 @@ module.exports = {
 
     },
 
+    vip: function (req, res) {
+
+
+        return res.view('profile/vipInfo');
+
+    },
+
 
 };
 

@@ -1,197 +1,136 @@
 <head>
     <style>
-        .trigger-menu-wrapper {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 2;
-            padding-top: 47px;
-            padding-left: 25px;
-            background-color: transparent;
-            transition: transform 0.4s;
+        @import 'https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300';
+
+
+        .container-4 {
+            background: #9888A5;
         }
 
-        .page-header .trigger-menu {
-            display: flex;
-            align-items: center;
-            font-size: 1.3rem;
-            color: #fcfcfc;
-            letter-spacing: 0.2em;
+        .container-5 {
+            background: #7B6D8D;
         }
 
-        .page-header .trigger-menu svg {
-            fill: #fcfcfc;
-            margin-right: 8px;
-            transition: transform 0.3s;
+        .container-6 {
+            background: #565554;
         }
 
-        .page-header .menu {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            display: none;
-            text-align: center;
-            padding: 15vh 0 5vh;
-            overflow: auto;
-            z-index: 1;
-            background: #3ffad1;
-        }
+        /*
+ BUTTON STYLING
+*/
 
-        .page-header .menu a {
-            font-size: 3rem;
-        }
-
-        .page-header .sub-menu a {
-            font-size: 1.5rem;
-        }
-
-        .lottie-wrapper {
-            position: fixed;
-            bottom: 50px;
-            right: 25px;
-            z-index: 1;
-            padding: 5px;
-            border-radius: 5px;
-        }
-
-        .page-main section {
+        .btn {
             position: relative;
-            background-repeat: no-repeat;
-            background-position: center;
-            background-size: cover;
-            height: 100vh;
+            color: white;
+            width: 256px;
+            height: 64px;
+            line-height: 64px;
+            transition: all 0.3s;
         }
 
-        .page-main section::before {
-            content: "";
+        .btn::before,
+        .btn::after {
+            content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
+            transition: all 0.3s;
             bottom: 0;
-            background: rgba(0, 0, 0, 0.25);
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
         }
 
+      
 
-        /* BODY CLASSES
-–––––––––––––––––––––––––––––––––––––––––––––––––– */
-        .menu-open {
-            overflow: hidden;
+        .btn-four:hover span {
+            transform: scale(1.2, 1.2);
         }
 
-        .menu-open .trigger-menu-wrapper {
-            background: transparent;
+        .btn-four::before {
+            opacity: 0;
+            background: rgba(255, 255, 255, 0.1);
+            transform: scale(0.1, 0.1);
         }
 
-        .menu-open .page-header .menu {
-            display: block;
+        .btn-four:hover::before {
+            opacity: 1;
+            transform: scale(1, 1);
         }
 
-        .menu-open .page-header svg {
-            transform: rotate(45deg);
-        }
-        
-
-        .scroll-down .trigger-menu-wrapper {
-            transform: translate3d(0, -100%, 0);
+        .btn-four::after {
+            transition: all 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.5);
         }
 
-        .scroll-up .trigger-menu-wrapper {
-            transform: none;
+        .btn-four:hover::after {
+            transform: scale(0, 0);
+            opacity: 0;
         }
 
-        .scroll-up:not(.menu-open) .trigger-menu-wrapper {
-            background: #49f7bd;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.35);
+        /* BTN FIVE */
+        .btn-five::before {
+            transition: transform 0.15s, 0.15s border-radius 0.15s;
+            opacity: 0;
+            background: rgba(255, 255, 255, 0.1);
+            transform: scale(0.1, 0.1);
+            border-radius: 50%;
         }
-        
+
+        .btn-five:hover::before {
+            opacity: 1;
+            transform: scale(1, 1);
+            border-radius: 0;
+        }
+
+        .btn-five::after {
+            transition: all 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-five:hover::after {
+            opacity: 0;
+        }
+
+        /* BTN SIX */
+        .btn-six::before {
+            opacity: 0;
+            background: rgba(255, 255, 255, 0.1);
+            transform: scale(1.3, 1.3);
+        }
+
+        .btn-six:hover::before {
+            opacity: 1;
+            transform: scale(1, 1);
+        }
+
+        .btn-six::after {
+            transition: all 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .btn-six:hover::after {
+            transform: scale(0, 0);
+            opacity: 0;
+        }
     </style>
 </head>
 
 <body>
-    <header class="page-header">
-        <nav>
-            <div class="trigger-menu-wrapper">
-                    <form method="POST" action="/search" >
-                        <div class="form-row trigger-menu">
-                            <div class="form-group col-md-4">
-                                <label><b>Keywords</b></label>
-                                <input type="string" class="form-control" name="keywords" placeholder="Keywords">
-                            </div>
-            
-                            <div class="form-group col-md-2">
-                                <label><b>Member limit</b></label>
-                                <input type="number" class="form-control" name="memberLimit" min=1 max=100 placeholder="Max. member">
-                            </div>
-            
-                            <div class="form-group col-md-2">
-                                <label><b>Date before</b></label>
-                                <input type="date" class="form-control" name="date">
-                            </div>
-                            <div>
-                                <button class="btn btn-outline-primary" style="margin-top: 32px;" type="submit"><i class="fas fa-search"></i></button>
-                            </div>
-                            
-                        </div>
-            
-                    </form>
+        <div class="container-4">
+            <div class="btn btn-four">
+                <span>BUTTON FOUR</span>
             </div>
-        </nav>
-    </header>
+        </div>
 
-    <a href="" role="button" aria-label="Toggle menu" class="lottie-wrapper">
-        <lottie-player src="https://assets10.lottiefiles.com/datafiles/9gIwZ2uiiKglyb0/data.json"
-            style="width: 60px; height: 60px;"></lottie-player>
-    </a>
+        <div class="container-5">
+            <div class="btn btn-five">
+                <span>BUTTON FIVE</span>
+            </div>
+        </div>
 
-    <main class="page-main">
-        <section style="background-image:url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/162656/freedom.jpg);">
-        </section>
-        <section style="background-image:url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/162656/travel.jpg);">
-        </section>
-        <section style="background-image:url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/162656/holidays.jpg);">
-        </section>
-    </main>
-
-    <footer class="page-footer">
-        <span>made by </span>
-        <a href="https://georgemartsoukos.com/" target="_blank">
-            <img width="24" height="24" src="https://assets.codepen.io/162656/george-martsoukos-small-logo.svg"
-                alt="George Martsoukos logo">
-        </a>
-    </footer>
+        <div class="container-6">
+            <div class="btn btn-six">
+                <span>BUTTON SIX</span>
+            </div>
+        </div>
 </body>
-
-
-<script>
-    const body = document.body;
-    const scrollUp = "scroll-up";
-    const scrollDown = "scroll-down";
-    let lastScroll = 0;
-
-    window.addEventListener("scroll", () => {
-        const currentScroll = window.pageYOffset;
-        if (currentScroll <= 0) {
-            body.classList.remove(scrollUp);
-            return;
-        }
-
-        if (currentScroll > lastScroll && !body.classList.contains(scrollDown)) {
-            // down
-            body.classList.remove(scrollUp);
-            body.classList.add(scrollDown);
-        } else if (
-            currentScroll < lastScroll &&
-            body.classList.contains(scrollDown)
-        ) {
-            // up
-            body.classList.remove(scrollDown);
-            body.classList.add(scrollUp);
-        }
-        lastScroll = currentScroll;
-    });
-    
-</script>
