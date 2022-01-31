@@ -135,7 +135,7 @@ module.exports = {
 
         db.collection('user').insertOne(
             {
-                username: username, password: password, connectedGmail: req.session.useremail, connectedGmailID: req.session.userid, creditScore: 100, profile: {
+                username: username, password: password, connectedGmail: req.session.useremail, connectedGmailID: req.session.userid, creditScore: 100, pendingReport: [], reportHistory: [], profile: {
                     description: '',
                     nickname: '',
                 }
@@ -165,6 +165,25 @@ module.exports = {
         req.session.description = null;
         return res.redirect('/');
 
+    },
+
+    report: async function (req, res) {
+        var content = req.body.content;
+        var evidence = req.body.evidence || "";
+        var reportUser = req.body.reportUser;
+
+        // update user's pofile (add report pending)
+        
+        var db = sails.getDatastore().manager;
+        var result = await db.collection('post').updateOne(
+            { "_id": o_id },
+            { $set: { 'post.title': title, 'post.description': description, 'post.memberLimit': memberLimit, 'post.attribution': attr, 'post.imgInput': img, updateDate: new Date(), updateDateString: dateString }
+            }
+        )
+
+        sails.log("content: "+content);
+
+        return res.redirect("/read/profile?username="+reportUser);
     },
 
     disconnectGmail: function (req, res) {
