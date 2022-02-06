@@ -93,6 +93,10 @@
         #info {
             display: none;
         }
+
+        textarea[name=evidence] {
+            resize: none;
+        }
     </style>
 
 </head>
@@ -101,122 +105,144 @@
 
 
     <div class="container">
-        <div class="row">
-            <!-- member layout -->
-            <% if(req.session.memberid){ %>
-                <div class="column1">
-                    <% if(user.username=="admin" ){ %>
-                        <h2>Admin User</h2>
-                        <% }else{ %>
-                            <form action="/editProfile" method="POST">
-                                <!-- image -->
-                                <div>
-                                    <input type="image" readonly style="display: none;">
-                                </div>
+        <% if(!user){ %>
+            <b>It seems that the user doesn't exist!</b>
+            <br><br>
+            <button class="btn btn-outline-secondary"
+            type="button"
+            onclick="window.history.back()">Back</button>
+            <% }else{ %>
+                <div class="row">
+                    <!-- member layout -->
+                    <% if(req.session.memberid){ %>
+                        <div class="column1">
+                            <% if(user.username=="admin" ){ %>
+                                <h2>Admin User</h2>
+                                <% }else{ %>
+                                    <form action="/editProfile" method="POST">
+                                        <!-- image -->
+                                        <div>
+                                            <input type="image" readonly style="display: none;">
+                                        </div>
 
-                                <!-- User info -->
-                                <div>
-                                    <h2><b> User information</b> <i class="fas fa-user-circle"></i></h2>
+                                        <!-- User info -->
+                                        <div>
+                                            <h2><b> User information</b> <i class="fas fa-user-circle"></i></h2>
 
-                                    <br>
+                                            <br>
 
-                                    <div class="form-group col-md-10">
-                                        <label><b>User name:</b> <a href="/member/vip"><i
-                                                    class="fas fa-user-check"></i></a></label>
-                                        <input class="form-control" value="<%= user.username %>" readonly>
-                                        <p><small>Connected to Gmail: <span class="iconify"
-                                                    data-icon="logos:google-gmail"></span>
-                                                <b style="color: blue;">
-                                                    <%= user.connectedGmail %>
-                                                </b></small></p>
-                                    </div>
-
-                                    <div class="form-group col-md-10">
-                                        <label><b>Credit Score</b></label>
-                                        <input class="form-control" type="number" value="<%= user.creditScore %>"
-                                            readonly>
-                                    </div>
-
-
-                                    <div class="form-group col-md-10">
-                                        <label><b>Nick Name</b></label>
-                                        <input class="form-control" type="text" id="nickname" name="nickname"
-                                            value="<%= user.profile.nickname %>" readonly>
-                                    </div>
-
-                                    <div class="form-group col-md-10">
-                                        <label><b>personal description</b></label>
-                                        <textarea rows="5" id="description" name="description" class="form-control"
-                                            readonly><%= user.profile.description %></textarea>
-                                    </div>
-
-                                </div>
-                                <% if(user.username==req.session.memberid){ %>
-                                    <!-- personal layout -->
-                                    <div class="button-group">
-                                        <button id="editButton" class="btn btn-outline-info" type="button"
-                                            onclick="showEdit()">Edit
-                                            profile</button>
-
-                                        <button id="confirmButton" class="btn btn-outline-success"
-                                            type="submit">Confirm</button>
-                                        <button id="cancelButton" class="btn btn-outline-secondary" type="button"
-                                            onclick="cancelEdit()">Cancel</button>
-
-                                        <a class="btn btn-outline-danger" href="/logout">Log out</a>
-                                    </div>
-                                    <!-- personal layout -->
-                                    <% }else if(req.session.memberid=="admin" ){ %>
-
-                                        <% }else{ %>
-                                            <!-- read others layout -->
-                                            <button class="btn btn-outline-danger" type="button"
-                                                onclick="show()">Report</button>
-                                            <!-- read others layout -->
-
-                                            <% } %>
-                            </form>
-                            <% } %>
-                                <!-- member layout -->
-                                <div id="popup">
-                                    <form id="form" method="POST" action="/report">
-                                        <i class="fa fa-times" id="close" onclick="hide()"></i>
-                                        <input name="reportUser" value="<%= user.username %>" disabled hidden>
-                                        <div class="form-row">
-                                            <label><b>⚠️Report @</b><b style="color: blue;"><%= user.username %></b></label>
-                                            <div class="form-group col-md-12">
-                                                <input type="string" class="form-control" name="content" placeholder="feedbacks to this user profile..."
-                                                    required>
+                                            <div class="form-group col-md-10">
+                                                <label><b>User name:</b> <a href="/member/vip"><i
+                                                            class="fas fa-user-check"></i></a></label>
+                                                <input class="form-control" value="<%= user.username %>" readonly>
+                                                <p><small>Connected to Gmail: <span class="iconify"
+                                                            data-icon="logos:google-gmail"></span>
+                                                        <b style="color: blue;">
+                                                            <%= user.connectedGmail %>
+                                                        </b></small></p>
                                             </div>
-                                        </div>
-                                        <div class="form-row">
-                                            <label><b>Evidence (img link)</b></label>
-                                            <input type="url" class="form-control" name="evidence">
-                                            <small>reference: <a href="https://www.linkpicture.com/" target="_blank">https://www.linkpicture.com/</a></small>
-                                        </div>
-                                        <br>
+
+                                            <div class="form-group col-md-10">
+                                                <label><b>Credit Score</b></label>
+                                                <input class="form-control" type="number"
+                                                    value="<%= user.creditScore %>" readonly>
+                                            </div>
 
 
-                                        <a id="confirm" class="btn btn-outline-info"
-                                            onclick="confirm()">Confirm</a>
-                                        <small id="info">*Double check the information that you provided.
-                                            This may help us identify malicious activities.</small>
-                                        <button id="submit" class="btn btn-outline-success"
-                                            type="submit">Submit</button>
+                                            <div class="form-group col-md-10">
+                                                <label><b>Nick Name</b></label>
+                                                <input class="form-control" type="text" id="nickname" name="nickname"
+                                                    value="<%= user.profile.nickname %>" readonly>
+                                            </div>
+
+                                            <div class="form-group col-md-10">
+                                                <label><b>personal description</b></label>
+                                                <textarea rows="5" id="description" name="description"
+                                                    class="form-control"
+                                                    readonly><%= user.profile.description %></textarea>
+                                            </div>
+
+                                        </div>
+                                        <% if(user.username==req.session.memberid){ %>
+                                            <!-- personal layout -->
+                                            <div class="button-group">
+                                                <button id="editButton" class="btn btn-outline-info" type="button"
+                                                    onclick="showEdit()">Edit
+                                                    profile</button>
+
+                                                <button id="confirmButton" class="btn btn-outline-success"
+                                                    type="submit">Confirm</button>
+                                                <button id="cancelButton" class="btn btn-outline-secondary"
+                                                    type="button" onclick="cancelEdit()">Cancel</button>
+
+                                                <a class="btn btn-outline-danger" href="/logout">Log out</a>
+                                            </div>
+                                            <!-- personal layout -->
+                                            <% }else if(req.session.memberid=="admin" ){ %>
+
+                                                <% }else{ %>
+                                                    <!-- read others layout -->
+                                                    <button class="btn btn-outline-danger" type="button"
+                                                        onclick="show()">Report</button>
+                                                    <!-- read others layout -->
+
+                                                    <% } %>
                                     </form>
-                                </div>
-                </div>
+                                    <% } %>
+                                        <!-- member layout -->
+                                        <div id="popup">
+                                            <form id="form" method="POST" action="/report">
+                                                <i class="fa fa-times" id="close" onclick="hide()"></i>
+                                                <input name="reportUser" value="<%= user.username %>" hidden>
+                                                <div class="form-row">
+                                                    <label><b>⚠️Report @</b><b style="color: blue;">
+                                                            <%= user.username %>
+                                                        </b></label>
+                                                    <div class="form-group col-md-12">
+                                                        <select name="content" class="form-control"
+                                                            onchange='CheckOther(this.value);' required>
+                                                            <option value="" style="color: rgba(114, 114, 114, 0.582);"
+                                                                disabled selected>Reason for reporting</option>
+                                                            <option value="misinformation">Misinformation</option>
+                                                            <option value="hate">Hate speech, violence, or threats
+                                                            </option>
+                                                            <option value="other">others</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <input type="text" class="form-control" name="otherContent"
+                                                            id="otherContent" style='display:none;'
+                                                            placeholder="Please specify" />
+                                                    </div>
+                                                </div>
+                                                <div class="form-row">
+                                                    <label><b>Detail evidence</b></label>
+                                                    <textarea rows="5" name="evidence" class="form-control"
+                                                        placeholder="Provide more info to us" required></textarea>
+                                                </div>
+                                                <br>
 
-                <div class="column2">
-                    <% if(user.username=="admin" ){ %>
-                        <a class="btn btn-outline-danger" href="/logout">Log out</a>
-                        <% }else{ %>
-                            <% if(user.username==req.session.memberid){ %>
-                                <% var cnt=0; %>
-                                    <% var today=new Date(); %>
-                                        <% var year=today.getFullYear(); %>
-                                            <% var month=today.getMonth()+1; %>
-                                                <% var day=today.toString().split(' ')[2]; %>
+
+                                                <a id="confirm" class="btn btn-outline-info"
+                                                    onclick="confirm()">Confirm</a>
+                                                <small id="info">*Double check the information that you provided.
+                                                    This may help us identify malicious activities.</small>
+                                                <button id="submit" class="btn btn-outline-success"
+                                                    type="submit">Submit</button>
+                                            </form>
+                                        </div>
+                        </div>
+
+                        <div class="column2">
+                            <% if(user.username=="admin" ){ %>
+                                <a class="btn btn-outline-danger" href="/logout">Log out</a>
+                                <% }else{ %>
+                                    <% if(user.username==req.session.memberid){ %>
+                                        <% var cnt=0; %>
+                                            <% var today=new Date(); %>
+                                                <% var year=today.getFullYear(); %>
+                                                    <% var month=today.getMonth()+1; %>
+                                                        <% var day=today.toString().split(' ')[2]; %>
                                 <h2 style="color: brown;"><b>Joined Posts</b></h2>
                                 <section class="card-container">
                     <% joinedPosts.forEach(function(post){ %>
@@ -280,24 +306,27 @@
 
                                         <% if(cnt == 0){ %>
                                             <b>you haven' t joined any post yet😐</b>
-                                                    <% } %>
-                                                        <% }else{ %>
-                                                            <button class="btn btn-outline-secondary" type="button"
-                                                                onclick="window.history.back()">Back</button>
                                                             <% } %>
-                                                                <% } %>
+                                                                <% }else{ %>
+                                                                    <button class="btn btn-outline-secondary"
+                                                                        type="button"
+                                                                        onclick="window.history.back()">Back</button>
+                                                                    <% } %>
+                                                                        <% } %>
 
+                        </div>
+                        <% }else{ %>
+                            <!-- visitor layout -->
+
+                            <h3><a href="/login">Login <li class="tag__item" style="cursor: pointer;"><i
+                                            class="fas fa-sign-in-alt mr-2"></i></li></a> to browse user' s information
+                            </h3>
+                            <!-- should store url session to nav back later -->
+
+                            <!-- visitor layout -->
+                            <% } %>
                 </div>
-                <% }else{ %>
-                    <!-- visitor layout -->
-
-                    <h3><a href="/login">Login <li class="tag__item" style="cursor: pointer;"><i
-                                    class="fas fa-sign-in-alt mr-2"></i></li></a> to browse user' s information</h3>
-                    <!-- should store url session to nav back later -->
-
-                    <!-- visitor layout -->
-                    <% } %>
-        </div>
+                <% } %>
     </div>
 
 </body>
@@ -341,5 +370,17 @@
         document.getElementById("confirm").style.display = "none";
         document.getElementById("info").style.display = "block";
         document.getElementById("submit").style.display = "block";
+    }
+
+    function CheckOther(val) {
+        var element = document.getElementById('otherContent');
+        var otherContent = document.getElementById('otherContent');
+        if (val == 'other') {
+            element.style.display = 'block';
+            otherContent.required = true;
+        } else {
+            element.style.display = 'none';
+            otherContent.required = false;
+        }
     }
 </script>

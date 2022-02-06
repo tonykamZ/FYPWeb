@@ -1,0 +1,107 @@
+<head>
+    <title>Report list</title>
+    <style>
+
+    </style>
+
+</head>
+
+
+<body>
+    <% if(req.session.memberid){ %>
+        <% if(req.session.memberid=="admin" ){ %>
+            <br>
+            <form>
+                <div class="form-row">
+                    <div class="form-group col-md-3">
+                        <select class="form-control" name="status" id="status">
+                            <option value="" disabled selected></option>
+                            <option value="pending">Pending</option>
+                            <option value="approved">Approved</option>
+                            <option value="rejected">Rejected</option>
+                            <option value="furtherInvest">Further Investigation</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group col-md-4">
+                        <input class="form-control" type="string" name="category" id="category"
+                            placeholder="misinformation/Hate speech/others...">
+                    </div>
+                    <button class="btn btn-info" style="margin-bottom: 20px;" onclick="findReport()">Find</button>
+                </div>
+
+            </form>
+
+            <b>There are total <%= reportCnt %> reports</b>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th><b style="color: red;">Report User</b></th>
+                        <th>Content</th>
+                        <th>Detail</th>
+                        <th>Reported By</th>
+                        <th>Status</th>
+                        <th>Report date</th>
+                    </tr>
+                </thead>
+                <% reports.forEach(function(report){ %>
+                    <tr>
+                        <td><a href="/read/profile?username=<%= report.reportUser %>">
+                                <%= report.reportUser %>
+                            </a></td>
+                        <td>
+                            <%= report.content %>
+                        </td>
+                        <td>
+                            <%= report.evidence %>
+                        </td>
+                        <td>
+                            <a href="/read/profile?username=<%= report.reportedBy %>">
+                                <%= report.reportedBy %>
+                            </a>
+                        </td>
+                        <td>
+                            <%= report.status %>
+                        </td>
+                        <td>
+                            <% var str=report.createDateString.split("T"); %>
+                                <%= str[0] %>
+                                    <%= str[1] %>
+                        </td>
+                    </tr>
+
+                    <% }); %>
+            </table>
+            <% }else{ %>
+                <!-- visitor layout -->
+
+                <h3>You don't have permission to browse this page😬</h3>
+                <!-- should store url session to nav back later -->
+
+                <!-- visitor layout -->
+
+                <% } %>
+
+                    <% }else{ %>
+                        <!-- visitor layout -->
+
+                        <h3><a href="/login">Login <li class="tag__item" style="cursor: pointer;"><i
+                                        class="fas fa-sign-in-alt mr-2"></i></li></a> to admin account to browse report
+                            list
+                        </h3>
+                        <!-- should store url session to nav back later -->
+
+                        <!-- visitor layout -->
+                        <% } %>
+
+</body>
+
+
+<script>
+    function findReport() {
+        var s = document.getElementById("status").value;
+        var cat = document.getElementById("category").value;
+
+        window.location.replace("/reporthandle?status=" + s + "&category=" + cat);
+    }
+</script>

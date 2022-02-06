@@ -133,12 +133,41 @@ module.exports = {
             return res.view('SignupForm', { status: '', ExisitingUser: newUser });
         }
 
+        var date = new Date();
+        var day = date.getDate();
+        var month = date.getMonth();
+        var year = date.getFullYear();
+        var h = date.getHours();
+        var m = date.getMinutes();
+        var s = date.getSeconds();
+        if (day < 10) {
+            day = "0" + day;
+        }
+        // it seems the date.getMonth() is wrong(?) Nov --> get 10 return
+        month = month + 1;
+        if (month < 10) {
+            month = "0" + month;
+        }
+        if (h < 10) {
+            h = "0" + h;
+        }
+        if (m < 10) {
+            m = "0" + m;
+        }
+        if (s < 10) {
+            s = "0" + s;
+        }
+        // YYYY-MM-DDTHH:MM:SS
+        var dateString = year + "-" + month + "-" + day + "T" + h + ":" + m + ":" + s;
+        sails.log("Created a new user at " + dateString);
+
+        var db = sails.getDatastore().manager;
         db.collection('user').insertOne(
             {
-                username: username, password: password, connectedGmail: req.session.useremail, connectedGmailID: req.session.userid, creditScore: 100, pendingReport: [], reportHistory: [], profile: {
+                username: username, password: password, connectedGmail: req.session.useremail, connectedGmailID: req.session.userid, creditScore: 100, profile: {
                     description: '',
                     nickname: '',
-                }
+                }, createDate: new Date(), createDateString: dateString
             }
         )
 
@@ -169,21 +198,79 @@ module.exports = {
 
     report: async function (req, res) {
         var content = req.body.content;
+        var otherContent = req.body.otherContent;
         var evidence = req.body.evidence || "";
         var reportUser = req.body.reportUser;
 
-        // update user's pofile (add report pending)
-        
+        if (content == "other") content = otherContent;
+        var date = new Date();
+        var day = date.getDate();
+        var month = date.getMonth();
+        var year = date.getFullYear();
+        var h = date.getHours();
+        var m = date.getMinutes();
+        var s = date.getSeconds();
+        if (day < 10) {
+            day = "0" + day;
+        }
+        // it seems the date.getMonth() is wrong(?) Nov --> get 10 return
+        month = month + 1;
+        if (month < 10) {
+            month = "0" + month;
+        }
+        if (h < 10) {
+            h = "0" + h;
+        }
+        if (m < 10) {
+            m = "0" + m;
+        }
+        if (s < 10) {
+            s = "0" + s;
+        }
+        // YYYY-MM-DDTHH:MM:SS
+        var dateString = year + "-" + month + "-" + day + "T" + h + ":" + m + ":" + s;
+        sails.log("reported a user (" + reportUser + ") at " + dateString);
+
         var db = sails.getDatastore().manager;
-        var result = await db.collection('post').updateOne(
-            { "_id": o_id },
-            { $set: { 'post.title': title, 'post.description': description, 'post.memberLimit': memberLimit, 'post.attribution': attr, 'post.imgInput': img, updateDate: new Date(), updateDateString: dateString }
+        await db.collection('report').insertOne(
+            {
+                reportUser: reportUser, content: content, evidence: evidence, reportedBy: req.session.memberid, status: 'pending',
+                createDate: new Date(), createDateString: dateString, updateDate: new Date(), updateDateString: ''
             }
         )
 
-        sails.log("content: "+content);
+        return res.redirect("/read/profile?username=" + reportUser);
+    },
 
-        return res.redirect("/read/profile?username="+reportUser);
+    reportHandle: function (req, res) {
+
+        var status = req.query.status || ""; // 'pending', 'approved', 'rejected', 'further investigation'
+        var category = req.query.category || ""; // 'misinfo', 'hate speech', 'others'...
+
+        var db = sails.getDatastore().manager;
+        db.collection('report', function (err, collection) {
+            collection.find(
+                {
+                    $and: [{
+                        'status': { $regex: status || "", $options: "$i" }
+                    },
+                    { 'content': { $regex: category || "", $options: "$i" }}
+                ]
+                   
+
+                },
+
+            ).sort([['_id', -1]]).toArray(function (err, results) {
+                // get all posts from the DB
+                if (req.wantsJSON) {
+                    sails.log("returning reporthandling page json data");
+                    return res.json(results);
+                }
+                return res.view('reportHandle', { reports: results, reportCnt: results.length });
+            })
+
+        })
+
     },
 
     disconnectGmail: function (req, res) {
@@ -471,13 +558,14 @@ module.exports = {
             var dateString = year + "-" + month + "-" + day + "T" + h + ":" + m + ":" + s;
 
             memberLimit = parseInt(memberLimit);
-            sails.log("editing the post ("+id+")");
+            sails.log("editing the post (" + id + ")");
             sails.log("updated time: " + dateString);
 
             var db = sails.getDatastore().manager;
             var result = await db.collection('post').updateOne(
                 { "_id": o_id },
-                { $set: { 'post.title': title, 'post.description': description, 'post.memberLimit': memberLimit, 'post.attribution': attr, 'post.imgInput': img, updateDate: new Date(), updateDateString: dateString }
+                {
+                    $set: { 'post.title': title, 'post.description': description, 'post.memberLimit': memberLimit, 'post.attribution': attr, 'post.imgInput': img, updateDate: new Date(), updateDateString: dateString }
                 }
             )
 
@@ -495,25 +583,28 @@ module.exports = {
 
         }
         var db = sails.getDatastore().manager;
-        // username is the unique key
-        var result = await db.collection('user').findOne({ "username": username });
+        // find all post that the user joined
+        var userJoinedPosts = await db.collection('post').find({ "joinedMembers": username }).toArray();
 
-        // also find all joined post of such user
-        await db.collection('post').find({ "joinedMembers": username }).toArray(function (err, results) {
+        // find the user
 
-            if (result) {
-                if (req.wantsJSON) {
-                    sails.log("returning user profile page json data");
-                    sails.log("stringgify result: " + JSON.stringify(result));
-                    return res.json({
-                        userDetail: result,
-                        joinedPosts: results
-                    });
-                }
-                return res.view('profile/profile', { user: result, joinedPosts: results });
+        await db.collection('user').find({ "username": username }).toArray(function (err, userDetail) {
+
+
+            if (req.wantsJSON) {
+                sails.log("returning user profile page json data");
+                sails.log("stringgify result: " + JSON.stringify(userDetail));
+                return res.json({
+                    userDetail: userDetail,
+                    joinedPosts: userJoinedPosts
+                });
             }
+            return res.view('profile/profile', { user: userDetail[0], joinedPosts: userJoinedPosts });
+
 
         });
+
+
 
     },
 

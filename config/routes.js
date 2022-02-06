@@ -63,6 +63,8 @@ module.exports.routes = {
 
   'POST /report' :  'UserController.report',
 
+  'GET /reporthandle': 'UserController.reportHandle',
+
   'GET /member/vip': 'UserController.vip',
 
   'GET /test': 'UserController.test',
