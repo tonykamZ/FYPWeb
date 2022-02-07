@@ -4,7 +4,7 @@
 
         .container {
             padding-top: 20px;
-            font-family: "SERIF FONT FAMILY", 'Lucida Bright';
+            font-family: "CURSIVE FONT FAMILY", 'Comic Sans MS';
             font-size: 16px;
             text-rendering: optimizeLegibility;
             font-weight: initial;
@@ -234,7 +234,7 @@
                   </a>
                 <div class="form-row trigger-menu">
                     <div class="form-group col-md-4">
-                        <label style="color: rgb(5, 45, 177); "><b>Search by</b></label>
+                        <label style="color: rgb(5, 45, 177); "><b>Filter by</b></label>
                         <input type="string" class="form-control" name="keywords" id="keywords" placeholder="Keywords">
                     </div>
 
@@ -269,6 +269,9 @@
         <% if(search){ %>
             <h3 class="text-custom">Search results: (<%= postCnt %>)</h3>
             <% }else{ %>
+                
+                
+
                 <h3 class="text-custom">Latest posts (<%= postCnt %>)</h3>
                 <% } %>
                 <% if(postCnt == 0){ %>

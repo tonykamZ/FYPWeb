@@ -406,8 +406,6 @@ module.exports = {
         if (date) {
             date = date + "T23:59:59";
             date = new Date(date);
-        } else {
-            date = new Date();
         }
 
         sails.log(keywords + " " + range + " " + date);
@@ -428,7 +426,7 @@ module.exports = {
                             "post.memberLimit": { $lt: range || 101 }
                         },
                         {
-                            "createDate": { $lte: date }
+                            "createDate": { $lte: date || new Date() }
                         }
                     ]
                 },
