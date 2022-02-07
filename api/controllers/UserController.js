@@ -388,7 +388,7 @@ module.exports = {
         )
 
 
-        return res.redirect('/');
+        return res.redirect('/home');
         //return res.json(result);
 
 

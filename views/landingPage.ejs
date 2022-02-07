@@ -1,10 +1,7 @@
 <head>
     <style>
         /*General Styles*/
-
-
-
-        html {
+        body {
             font-size: 16px;
             font-family: "Raleway", sans-serif;
             color: #555;
@@ -306,7 +303,8 @@
     <body>
         <!-- Forked from a template on Tutorialzine: https://tutorialzine.com/2016/06/freebie-landing-page-template-with-flexbox -->
         <header>
-            <h2><a href="/" style="color: blue;">Happy Share :)</a></h2>
+            <h2><a href="/" style="color: rgb(214, 211, 40);">Happy </a><a href="/"
+                    style="color: rgb(255, 115, 0);">Share :)</a></h2>
         </header>
 
         <section class="hero">
@@ -378,18 +376,21 @@
         <section class="contact">
             <br>
             <h6 class="title">Let's get a taste for HappyShare:)</h6>
+            <% if(req.session.memberid){ %>
+                <a href="/home" class="btn">Home Page</a>
+                <% }else{ %>
             <div>
-                
                 <a class="btn" href="signup" style="background-color: rgb(95, 255, 47);">Sign up</a>
                 <a class="btn" href="login" style="background-color: rgb(21, 152, 228);">Log in</a>
             </div>
+            <% } %>
             <br><br><br>
 
             <h3 class="title">Learn more</h3>
             <p>Want to know more about this project? Contact our staffs via the social media.
-                Don't forget to Like and Subscribe our page. 
+                Don't forget to Like and Subscribe our page.
             </p>
-              <ul>
+            <ul>
                 <li><a href="#" style="color:rgb(4, 4, 161)"><i class="fa fa-twitter-square fa-2x"></i></a></li>
                 <li><a href="#" style="color:rgb(4, 4, 161)"><i class="fa fa-facebook-square fa-2x"></i></a></li>
                 <li><a href="#" style="color:rgb(200, 216, 58)"><i class="fa fa-snapchat-square fa-2x"></i></a></li>
@@ -404,7 +405,7 @@
         <footer>
             <p>Service provided by <a href="/" style="color: rgba(0, 255, 255, 0.705);">HappyShare:) </a></p>
             <p>Copyright © 2022 HappyShare:). All Rights Reserved.</p>
-          
+
         </footer>
 
     </body>

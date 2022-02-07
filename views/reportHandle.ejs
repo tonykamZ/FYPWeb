@@ -15,7 +15,7 @@
                 <div class="form-row">
                     <div class="form-group col-md-3">
                         <select class="form-control" name="status" id="status">
-                            <option value="" disabled selected></option>
+                            <option value="" disabled selected>Status</option>
                             <option value="pending">Pending</option>
                             <option value="approved">Approved</option>
                             <option value="rejected">Rejected</option>
@@ -61,7 +61,10 @@
                             </a>
                         </td>
                         <td>
-                            <%= report.status %>
+                            <b style="color: grey;">
+                                <%= report.status %>
+                            </b>
+                            
                         </td>
                         <td>
                             <% var str=report.createDateString.split("T"); %>

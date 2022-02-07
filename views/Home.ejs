@@ -4,10 +4,7 @@
 
         .container {
             padding-top: 20px;
-            font-family: "CURSIVE FONT FAMILY", 'Comic Sans MS';
             font-size: 16px;
-            text-rendering: optimizeLegibility;
-            font-weight: initial;
         }
 
         #Top {
@@ -270,7 +267,9 @@
             <h3 class="text-custom">Search results: (<%= postCnt %>)</h3>
             <% }else{ %>
                 
-                
+                <h6 style="color: grey;">Here are the latest posts on the platform. You can filter the post by any keywords,
+                    the limitation of member count, and the post created date. Let's find your favorite discount/offer here!
+                </h6>
 
                 <h3 class="text-custom">Latest posts (<%= postCnt %>)</h3>
                 <% } %>
@@ -305,7 +304,7 @@
                                 <% if(post.post.description){ %>
                                     <%= post.post.description %>
                                         <% }else{ %>
-                                            <span style="font-family: cursive;">*No description😳</span>
+                                            <span>*No description😳</span>
                                             <% } %>
                             </div>
                             <ul class="postcard__tagbox">
