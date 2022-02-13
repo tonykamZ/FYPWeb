@@ -34,7 +34,7 @@ module.exports.routes = {
   ***************************************************************************/
 
 
-  'GET /': {view: 'landingPage'},
+  'GET /': { view: 'landingPage' },
   'GET /home': 'UserController.Home',
   'GET /login': 'UserController.login',
   'POST /login': 'UserController.login',
@@ -57,14 +57,18 @@ module.exports.routes = {
   'GET /manage/post/:id': 'UserController.editPostForm',
   'POST /manage/post/:id': 'UserController.editPostForm',
 
-  
-  'GET /editProfile' :  'UserController.editProfile',
-  'POST /editProfile' :  'UserController.editProfile',
+
+  'GET /editProfile': 'UserController.editProfile',
+  'POST /editProfile': 'UserController.editProfile',
   'GET /read/profile': 'UserController.userDetail',
 
-  'POST /report' :  'UserController.report',
+  'GET /report': 'UserController.report',
+  'POST /report': 'UserController.reportUpload',
 
+  // admin
   'GET /reporthandle': 'UserController.reportHandle',
+  'GET /read/report/:id': 'UserController.viewReport',
+  'GET /admin/report/delete/:id': 'UserController.deleteReport',
 
   'GET /member/vip': 'UserController.vip',
 

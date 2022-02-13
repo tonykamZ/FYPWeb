@@ -108,9 +108,7 @@
         <% if(!user){ %>
             <b>It seems that the user doesn't exist!</b>
             <br><br>
-            <button class="btn btn-outline-secondary"
-            type="button"
-            onclick="window.history.back()">Back</button>
+            <button class="btn btn-outline-secondary" type="button" onclick="window.history.back()">Back</button>
             <% }else{ %>
                 <div class="row">
                     <!-- member layout -->
@@ -182,8 +180,8 @@
 
                                                 <% }else{ %>
                                                     <!-- read others layout -->
-                                                    <button class="btn btn-outline-danger" type="button"
-                                                        onclick="show()">Report</button>
+                                                    <a class="btn btn-outline-danger"
+                                                        href="/report?username=<%= user.username %>">Report</a>
                                                     <!-- read others layout -->
 
                                                     <% } %>
@@ -220,6 +218,12 @@
                                                     <textarea rows="5" name="evidence" class="form-control"
                                                         placeholder="Provide more info to us" required></textarea>
                                                 </div>
+                                                <div class="form-row">
+                                                    <label><b>Photo proof</b></label>
+                                                    <input type="file" accept=".jpg" name="filename"
+                                                        class="form-control" required>
+                                                </div>
+
                                                 <br>
 
 

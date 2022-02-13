@@ -1,0 +1,38 @@
+<head>
+    <title>View report detail</title>
+</head>
+
+<body>
+    <img src="images/8a380401-1bad-4363-8135-47f64578b171.jpg">
+    <ul>
+        <li>Report User: <b>
+                <%= report.reportUser %>
+            </b></li>
+        <li>Content: <b>
+                <%= report.content %>
+            </b></li>
+        <li>Evidence: <b>
+                <%= report.evidence %>
+            </b></li>
+
+        <% report.photoPath.forEach(function(photo){ %>
+            <li>
+                <% var str = photo.split("\\") %>
+                <% var img = str[str.length-1] %>
+                <%= img %>
+                <img src="/images/8a380401-1bad-4363-8135-47f64578b171.jpg" />
+
+            </li>
+            <% }); %>
+
+                <li>Status: <b>
+                        <%= report.status %>
+                    </b></li>
+                <li>Create Date: <b>
+                        <%= report.createDateString %>
+                    </b></li>
+                <li>Reported By: <b>
+                        <%= report.reportedBy %>
+                    </b></li>
+    </ul>
+</body>
