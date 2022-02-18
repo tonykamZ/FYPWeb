@@ -61,9 +61,8 @@ module.exports.routes = {
   'GET /editProfile': 'UserController.editProfile',
   'POST /editProfile': 'UserController.editProfile',
   'GET /read/profile': 'UserController.userDetail',
-
-  'GET /report': 'UserController.report',
-  'POST /report': 'UserController.reportUpload',
+  
+  'POST /report': 'UserController.report',
 
   // admin
   'GET /reporthandle': 'UserController.reportHandle',

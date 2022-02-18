@@ -1,0 +1,43 @@
+<head>
+    <title>Successful Report</title>
+</head>
+
+<body>
+
+
+    <br><br>
+    <h5>Successfully Reported a User: <b>
+            <%= reportUser %>
+        </b></h5>
+    <p>Thank you for your feedback on this user!🙌 </p>
+    <p>We will investigate the report as soon as possible and give
+        corresponding penalty to relevant user (if applicable).
+    </p>
+
+    <br>
+    <h6>Redirecting to user profile in <b id="sec">10</b> seconds...</h6>
+    <a class="btn btn-outline-info" href="/read/profile?username=<%= reportUser %>">Redirect</a>
+
+</body>
+
+
+<script>
+    countDown();
+    function countDown() {
+        var sec = document.getElementById('sec');
+        var num = sec.innerHTML;
+        var realNum = parseInt(num);
+        realNum = realNum - 1;
+        sec.innerHTML = "";
+        sec.innerHTML += realNum;
+
+
+        setTimeout(countDown, 1000);
+    }
+
+
+</script>
+
+<script type="text/javascript">
+	setTimeout('location.href="http://127.0.0.1:1337/read/profile?username=<%= reportUser %>"',10000);
+</script>

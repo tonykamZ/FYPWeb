@@ -55,7 +55,11 @@
                             <%= report.content %>
                         </td>
                         <td>
-                            <%= report.evidence %>
+                            <% if(report.evidence.length> 12){ %>
+                                <%= report.evidence.substring(0,11) %>...
+                                    <% }else{ %>
+                                        <%= report.evidence %>
+                                            <% } %>
                         </td>
                         <td>
                             <a href="/read/profile?username=<%= report.reportedBy %>">
@@ -66,7 +70,7 @@
                             <b style="color: grey;">
                                 <%= report.status %>
                             </b>
-                            
+
                         </td>
                         <td>
                             <% var str=report.createDateString.split("T"); %>

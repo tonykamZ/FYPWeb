@@ -181,7 +181,7 @@
                                                 <% }else{ %>
                                                     <!-- read others layout -->
                                                     <a class="btn btn-outline-danger"
-                                                        href="/report?username=<%= user.username %>">Report</a>
+                                                        onclick="show()">Report</a>
                                                     <!-- read others layout -->
 
                                                     <% } %>
@@ -215,16 +215,15 @@
                                                 </div>
                                                 <div class="form-row">
                                                     <label><b>Detail evidence</b></label>
-                                                    <textarea rows="5" name="evidence" class="form-control"
+                                                    <textarea rows="3" name="evidence" class="form-control"
                                                         placeholder="Provide more info to us" required></textarea>
                                                 </div>
                                                 <div class="form-row">
-                                                    <label><b>Photo proof</b></label>
-                                                    <input type="file" accept=".jpg" name="filename"
+                                                    <label><b>Photo proof (link)</b></label>
+                                                    <small>reference: <a href="https://www.linkpicture.com/" target="_blank">https://www.linkpicture.com/</a></small>
+                                                    <input type="url" name="photoLink"
                                                         class="form-control" required>
                                                 </div>
-
-                                                <br>
 
 
                                                 <a id="confirm" class="btn btn-outline-info"

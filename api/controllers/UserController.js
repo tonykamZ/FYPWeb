@@ -196,113 +196,11 @@ module.exports = {
 
     },
 
-    report: function (req, res) {
-
-        var username = req.query.username;
-        if (username && req.session.memberid) {
-            res.writeHead(200, { 'content-type': 'text/html' });
-            res.end(
-                '<form method="POST" action="/report" enctype="multipart/form-data">' +
-
-                '   <label><b>You are reporting user @</b><b style="color: blue;">' +
-                username +
-                ' </b></label>' +
-                '<input type="string" name="reportUser" value="' + username + '" hidden>' +
-
-                '<div class="form-row">' +
-                '<label>Report reason:</label>' +
-                '<div class="form-group col-md-5">' +
-                '<input type="text" class="form-control" name="content"' +
-                'placeholder="Report reason" required />' +
-                '</div>' +
-                '</div><br>' +
-
-                '<div class="form-row">' +
-                '<label><b>Detail evidence: </b></label>' +
-                '<textarea rows="5" name="evidence" class="form-control"' +
-                'placeholder="Provide more info to us" required></textarea>' +
-                '</div><br>' +
-
-                '<div class="form-row">' +
-                '<label><b>Photo proof: </b></label>' +
-                '<input type="file" accept=".jpg" name="filename"  multiple="multiple"' +
-                'class="form-control" required>' +
-                '</div><br>' +
-
-                '<small id="info">*Double check the information that you provided.' +
-                'This may help us identify malicious activities.</small><br>' +
-                ' <button id="submit" class="btn btn-outline-success"' +
-                '    type="submit">Submit</button>' +
-                '</form>'
-            )
-        } else {
-            return res.redirect('/');
-        }
-    },
-    reportUpload: async function (req, res) {
-        req.file('filename').upload({
-            dirname: require('path').resolve(sails.config.appPath, 'assets/images'),
-        }, async function (err, files) {
-            if (err)
-                return res.serverError(err);
-
-            var content = req.body.content;
-            var evidence = req.body.evidence;
-            var reportUser = req.body.reportUser;
-
-            var date = new Date();
-            var day = date.getDate();
-            var month = date.getMonth();
-            var year = date.getFullYear();
-            var h = date.getHours();
-            var m = date.getMinutes();
-            var s = date.getSeconds();
-            if (day < 10) {
-                day = "0" + day;
-            }
-            // it seems the date.getMonth() is wrong(?) Nov --> get 10 return
-            month = month + 1;
-            if (month < 10) {
-                month = "0" + month;
-            }
-            if (h < 10) {
-                h = "0" + h;
-            }
-            if (m < 10) {
-                m = "0" + m;
-            }
-            if (s < 10) {
-                s = "0" + s;
-            }
-            // YYYY-MM-DDTHH:MM:SS
-            var dateString = year + "-" + month + "-" + day + "T" + h + ":" + m + ":" + s;
-            sails.log("reported a user (" + reportUser + ") at " + dateString);
-
-            var photoPathArray = [];
-            for (var i = 0; i < files.length; i++) {
-                photoPathArray.push(files[i].fd);
-            }
-            sails.log("photoPathArray: " + photoPathArray);
-
-            var db = sails.getDatastore().manager;
-            await db.collection('report').insertOne(
-                {
-                    reportUser: reportUser, content: content, evidence: evidence, reportedBy: req.session.memberid, status: 'pending',
-                    photoPath: photoPathArray, createDate: new Date(), createDateString: dateString, updateDate: new Date(), updateDateString: ''
-                }
-            )
-            return res.json({
-                message: files.length + ' file(s) uploaded successfully!',
-                files: files
-            });
-        });
-    },
-
-
-    /*report: async function (req, res) {
+    report: async function (req, res) {
         var content = req.body.content;
         var otherContent = req.body.otherContent;
-        var evidence = req.body.evidence || "";
+        var evidence = req.body.evidence;
+        var photoLink = req.body.photoLink;
         var reportUser = req.body.reportUser;
 
         if (content == "other") content = otherContent;
@@ -337,13 +235,12 @@ module.exports = {
         var db = sails.getDatastore().manager;
         await db.collection('report').insertOne(
             {
-                reportUser: reportUser, content: content, evidence: evidence, reportedBy: req.session.memberid, status: 'pending',
+                reportUser: reportUser, content: content, evidence: evidence, photoLink: photoLink, reportedBy: req.session.memberid, status: 'pending',
                 createDate: new Date(), createDateString: dateString, updateDate: new Date(), updateDateString: ''
             }
         )
-
-        return res.redirect("/read/profile?username=" + reportUser);
-    }, */
+        return res.view('report/successReport', { reportUser: reportUser })
+    },
 
     reportHandle: function (req, res) {
 
@@ -384,13 +281,17 @@ module.exports = {
 
         var db = sails.getDatastore().manager;
         var result = await db.collection('report').findOne({ "_id": o_id });
+        var reportUser = await db.collection('user').findOne({ "username": result.reportUser });
+        var reportedBy = await db.collection('user').findOne({ "username": result.reportedBy });
 
         if (req.wantsJSON) {
             sails.log("returning detail page json data");
-            sails.log("stringgify result: " + JSON.stringify(result));
+            sails.log("stringgify result: " + JSON.stringify(result, reportUser, reportedBy));
             return res.json(result);
         }
-        return res.view('report/detail', { report: result });
+
+
+        return res.view('report/detail', { report: result, reportedBy: reportedBy, reportUser: reportUser });
 
 
     },
@@ -933,15 +834,15 @@ module.exports = {
         })
     },
 
-    deleteReport:  async function (req, res) {
+    deleteReport: async function (req, res) {
         var id = req.params.id;
         var ObjectId = require('mongodb').ObjectId;
         var o_id = new ObjectId(id);
-        
-        var db = await sails.getDatastore().manager;
-        await db.collection('report').remove({'_id':o_id});
 
-        sails.log("deleted report ("+id+")");
+        var db = await sails.getDatastore().manager;
+        await db.collection('report').remove({ '_id': o_id });
+
+        sails.log("deleted report (" + id + ")");
 
         return res.redirect("/reporthandle");
     },

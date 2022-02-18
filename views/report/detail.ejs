@@ -1,38 +1,195 @@
 <head>
     <title>View report detail</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <style>
+        .row {
+            display: flex;
+            padding-top: 30px;
+        }
+
+        .column1 {
+            flex: 55%;
+        }
+
+        .column2 {
+            flex: 45%;
+        }
+
+        div {
+            clear: both;
+        }
+
+        label {
+            width: 200px;
+            border-radius: 3px;
+            border: 1px solid #D1D3D4
+        }
+
+        /* hide input */
+        input.radio:empty {
+            margin-left: -999px;
+        }
+
+        /* style label */
+        input.radio:empty~label {
+            position: relative;
+            float: left;
+            line-height: 2.5em;
+            text-indent: 3.25em;
+            margin-top: 2em;
+            cursor: pointer;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        input.radio:empty~label:before {
+            position: absolute;
+            display: block;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            content: '';
+            width: 2.5em;
+            background: #D1D3D4;
+            border-radius: 3px 0 0 3px;
+        }
+
+        /* toggle hover */
+        input.radio:hover:not(:checked)~label:before {
+            content: '\2714';
+            text-indent: .9em;
+            color: #C2C2C2;
+        }
+
+        input.radio:hover:not(:checked)~label {
+            color: rgb(0, 196, 131);
+        }
+
+        /* toggle on */
+        input.radio:checked~label:before {
+            content: '\2714';
+            text-indent: .9em;
+            color: #9CE2AE;
+            background-color: #4DCB6D;
+        }
+
+        input.radio:checked~label {
+            color: rgb(0, 214, 0);
+        }
+
+        /* radio focus */
+        input.radio:focus~label:before {
+            box-shadow: 0 0 0 3px #999;
+        }
+
+        #sub {
+            display: none;
+        }
+    </style>
 </head>
 
 <body>
-    <img src="images/8a380401-1bad-4363-8135-47f64578b171.jpg">
-    <ul>
-        <li>Report User: <b>
-                <%= report.reportUser %>
-            </b></li>
-        <li>Content: <b>
-                <%= report.content %>
-            </b></li>
-        <li>Evidence: <b>
-                <%= report.evidence %>
-            </b></li>
+    <div class="row">
 
-        <% report.photoPath.forEach(function(photo){ %>
-            <li>
-                <% var str = photo.split("\\") %>
-                <% var img = str[str.length-1] %>
-                <%= img %>
-                <img src="/images/8a380401-1bad-4363-8135-47f64578b171.jpg" />
-
-            </li>
-            <% }); %>
+        <div class="column1">
+            <ul>
+                <li><b style="color: red;">Report User</b>: <b>
+                        <a href="/read/profile?username=<%= report.reportUser %>">
+                            <%= report.reportUser %>
+                        </a>
+                    </b></li>
+                <li>Content: <b>
+                        <%= report.content %>
+                    </b></li>
+                <li>Evidence: <b>
+                        <%= report.evidence %>
+                    </b></li>
 
                 <li>Status: <b>
                         <%= report.status %>
                     </b></li>
-                <li>Create Date: <b>
+                <li>Report Date: <b>
                         <%= report.createDateString %>
                     </b></li>
                 <li>Reported By: <b>
-                        <%= report.reportedBy %>
+                        <a href="/read/profile?username=<%= report.reportedBy %>">
+                            <%= report.reportedBy %>
+                        </a>
                     </b></li>
-    </ul>
+                <li>
+                    Picture provided:
+                </li>
+            </ul>
+            <img src="<%= report.photoLink %>" alt="" class="image" height="180px" />
+
+        </div>
+
+        <div class="column2">
+
+            <div>
+                <h3>Action: </h3>
+                <input type="radio" name="radio" id="approve" class="radio" value="1" onchange="showEdit()" />
+                <label for="approve">Approve</label>
+            </div>
+
+            <div>
+                <input type="radio" name="radio" id="reject" class="radio" value="2" onchange="showEdit()" />
+                <label for="reject">Reject</label>
+            </div>
+
+            <div>
+                <input type="radio" name="radio" id="fi" class="radio" value="3" onchange="showEdit()" />
+                <label for="fi">Further investigate</label>
+            </div>
+
+            <br><br><br>
+            <div id="sub">
+                <h3>Subsequent Action:</h3>
+                <h6>Credit Score Deduction @ User (credit score)</h6>
+                <div class="form-row">
+                    <div class="form-group col-md-3">
+                        <b>@ <%= report.reportUser %> (<%= reportUser.creditScore %>)</b> <input type="number"
+                            class="form-control" id="reportUserCSD" name="reportUserCSD" min=0
+                            max="<%= reportUser.creditScore %>" readonly>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-3">
+                        <b>@ <%= report.reportedBy %> (<%= reportedBy.creditScore %>)</b> <input type="number"
+                            class="form-control" id="reportedByCSD" name="reportedByCSD" min=0
+                            max="<%= reportedBy.creditScore %>" readonly>
+                    </div>
+                </div>
+
+                <h5>Message: </h5>
+                <div class="form-row">
+                    <textarea class="form-control" rows="4" placeholder="Reasons for taking this action"></textarea>
+                </div>
+
+                <br>
+                <button class="btn btn-primary" id="done">DONE</button>
+                <button class="btn btn-secondary" id="cancelButton" onclick="window.location.reload();">CANCEL</button>
+
+            </div>
+
+        </div>
+
+
+
+    </div>
 </body>
+
+<script>
+    function showEdit() {
+        // enable input fields 
+        document.getElementById("reportUserCSD").readOnly = false;
+        document.getElementById("reportedByCSD").readOnly = false;
+
+        // show confirm button & cancel button
+        document.getElementById("sub").style.display = "inline";
+    }
+</script>
