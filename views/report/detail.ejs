@@ -93,6 +93,8 @@
 </head>
 
 <body>
+    <% if(req.session.memberid){ %>
+        <% if(req.session.memberid=="admin" ){ %>
     <div class="row">
 
         <div class="column1">
@@ -129,67 +131,96 @@
         </div>
 
         <div class="column2">
+            <form action="/update/report/<%= report._id %>" method="post">
+                <div>
+                    <h3>Action: </h3>
+                    <input type="radio" name="radio" id="approve" class="radio" value="Approved" onchange="showEdit(this.value)" />
+                    <label for="approve">Approve</label>
+                </div>
 
-            <div>
-                <h3>Action: </h3>
-                <input type="radio" name="radio" id="approve" class="radio" value="1" onchange="showEdit()" />
-                <label for="approve">Approve</label>
-            </div>
+                <div>
+                    <input type="radio" name="radio" id="reject" class="radio" value="Rejected" onchange="showEdit(this.value)" />
+                    <label for="reject">Reject</label>
+                </div>
 
-            <div>
-                <input type="radio" name="radio" id="reject" class="radio" value="2" onchange="showEdit()" />
-                <label for="reject">Reject</label>
-            </div>
+                <div>
+                    <input type="radio" name="radio" id="fi" class="radio" value="Further investigation" onchange="showEdit(this.value)" />
+                    <label for="fi">Further investigate</label>
+                </div>
 
-            <div>
-                <input type="radio" name="radio" id="fi" class="radio" value="3" onchange="showEdit()" />
-                <label for="fi">Further investigate</label>
-            </div>
-
-            <br><br><br>
-            <div id="sub">
-                <h3>Subsequent Action:</h3>
-                <h6>Credit Score Deduction @ User (credit score)</h6>
-                <div class="form-row">
-                    <div class="form-group col-md-3">
-                        <b>@ <%= report.reportUser %> (<%= reportUser.creditScore %>)</b> <input type="number"
-                            class="form-control" id="reportUserCSD" name="reportUserCSD" min=0
-                            max="<%= reportUser.creditScore %>" readonly>
+                <br><br><br>
+                <div id="sub">
+                    <h3>Subsequent Action:</h3>
+                    <h6>Credit Score Deduction @ User (credit score)</h6>
+                    <div class="form-row">
+                        <div class="form-group col-md-3">
+                            <b>@ <%= report.reportUser %> (<%= reportUser.creditScore %>)</b> <input type="number"
+                                class="form-control" id="reportUserCSD" name="reportUserCSD" min=0
+                                max="<%= reportUser.creditScore %>" readonly>
+                        </div>
                     </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group col-md-3">
-                        <b>@ <%= report.reportedBy %> (<%= reportedBy.creditScore %>)</b> <input type="number"
-                            class="form-control" id="reportedByCSD" name="reportedByCSD" min=0
-                            max="<%= reportedBy.creditScore %>" readonly>
+                    <div class="form-row">
+                        <div class="form-group col-md-3">
+                            <b>@ <%= report.reportedBy %> (<%= reportedBy.creditScore %>)</b> <input type="number"
+                                class="form-control" id="reportedByCSD" name="reportedByCSD" min=0
+                                max="<%= reportedBy.creditScore %>" readonly>
+                        </div>
                     </div>
-                </div>
 
-                <h5>Message: </h5>
-                <div class="form-row">
-                    <textarea class="form-control" rows="4" placeholder="Reasons for taking this action"></textarea>
-                </div>
+                    <h5>Message: </h5>
+                    <div class="form-row">
+                        <textarea class="form-control" rows="4" name="message" placeholder="Reasons for taking this action"></textarea>
+                    </div>
 
-                <br>
-                <button class="btn btn-primary" id="done">DONE</button>
-                <button class="btn btn-secondary" id="cancelButton" onclick="window.location.reload();">CANCEL</button>
-
-            </div>
-
+                    <br>
+                    <input id="status" name="status" value="" readonly hidden>
+                    <input name="reportID" value="<%= report.reportID %>" readonly hidden>
+                    <input name="reportUser" value="<%= report.reportUser %>" readonly hidden>
+                    <input name="reportUserCS" value="<%= reportUser.creditScore %>" readonly hidden>
+                    <input name="reportedBy" value="<%= report.reportedBy %>" readonly hidden>
+                    <input name="reportedByCS" value="<%= reportedBy.creditScore %>" readonly hidden>
+                    <button class="btn btn-primary" id="done" type="submit">DONE</button>
+                    <button class="btn btn-secondary" id="cancelButton" type="button"
+                        onclick="window.location.reload();">CANCEL</button>
+            </form>
         </div>
 
-
-
     </div>
+
+    <% }else{ %>
+        <!-- normal member layout -->
+
+        <h3>You don't have permission to browse this page😬</h3>
+        <!-- should store url session to nav back later -->
+
+        <!-- normal member layout -->
+
+        <% } %>
+
+        <% }else{ %>
+            <!-- visitor layout -->
+
+            <h3><a href="/login">Login <li class="tag__item" style="cursor: pointer;"><i
+                            class="fas fa-sign-in-alt mr-2"></i></li></a> to admin account to browse report
+                list
+            </h3>
+            <!-- should store url session to nav back later -->
+
+            <!-- visitor layout -->
+            <% } %>
+
 </body>
 
 <script>
-    function showEdit() {
+    function showEdit(status) {
         // enable input fields 
         document.getElementById("reportUserCSD").readOnly = false;
         document.getElementById("reportedByCSD").readOnly = false;
 
         // show confirm button & cancel button
         document.getElementById("sub").style.display = "inline";
+
+        // update status input
+        document.getElementById("status").value = status;
     }
 </script>

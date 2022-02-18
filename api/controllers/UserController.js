@@ -164,7 +164,7 @@ module.exports = {
         var db = sails.getDatastore().manager;
         db.collection('user').insertOne(
             {
-                username: username, password: password, connectedGmail: req.session.useremail, connectedGmailID: req.session.userid, creditScore: 100, profile: {
+                username: username, password: password, connectedGmail: req.session.useremail, connectedGmailID: req.session.userid, creditScore: 100, notification: [], profile: {
                     description: '',
                     nickname: '',
                 }, createDate: new Date(), createDateString: dateString
@@ -232,14 +232,16 @@ module.exports = {
         var dateString = year + "-" + month + "-" + day + "T" + h + ":" + m + ":" + s;
         sails.log("reported a user (" + reportUser + ") at " + dateString);
 
+        var num = Math.floor(Math.random() * 90000) + 10000;
+
         var db = sails.getDatastore().manager;
         await db.collection('report').insertOne(
             {
-                reportUser: reportUser, content: content, evidence: evidence, photoLink: photoLink, reportedBy: req.session.memberid, status: 'pending',
+                reportID: num, reportUser: reportUser, content: content, evidence: evidence, photoLink: photoLink, reportedBy: req.session.memberid, status: 'pending',
                 createDate: new Date(), createDateString: dateString, updateDate: new Date(), updateDateString: ''
             }
         )
-        return res.view('report/successReport', { reportUser: reportUser })
+        return res.view('report/successReport', { reportUser: reportUser, reportID: num })
     },
 
     reportHandle: function (req, res) {
@@ -846,6 +848,119 @@ module.exports = {
 
         return res.redirect("/reporthandle");
     },
+
+    updateReportStatus: async function (req, res) {
+
+        var id = req.params.id;
+        var ObjectId = require('mongodb').ObjectId;
+        var o_id = new ObjectId(id);
+
+        var status = req.body.status;
+        var reportID = req.body.reportID;
+        var reportUser = req.body.reportUser;
+        var reportUserCS = req.body.reportUserCS;
+        var reportedBy = req.body.reportedBy;
+        var reportedByCS = req.body.reportedByCS;
+        var reportUserCSD = req.body.reportUserCSD;
+        var reportedByCSD = req.body.reportedByCSD;
+        var message = req.body.message;
+
+        var db = await sails.getDatastore().manager;
+        await db.collection('report').updateOne(
+            { "_id": o_id },
+            {
+                $set: { 'status': status }
+            }
+        );
+
+        // send notification
+        var notificationToReportUser = "";
+        var notificationToReportedBy = "";
+        if (status == "Approve") {
+            var score = parseInt(reportUserCS) - parseInt(reportUserCSD);
+            notificationToReportUser += "[SYSTEM MESSAGE]You are reported by other user. " +
+                "The penalty is " + reportUserCSD + " marks deduction of your credit score. " +
+                "Original score: " + reportUserCS + " Score after deduction: " + score +
+                "[SYSTEM MESSAGE] " +
+                "Message from the admin: ";
+            notificationToReportUser += message;
+
+            await db.collection('user').updateOne(
+                { "username": reportUser },
+                {
+                    $push: {
+                        'notification': {
+                            message: notificationToReportUser, date: new Date()
+                        }
+                    }
+                }
+            );
+
+            // send to reported by user
+            notificationToReportedBy += "[SYSTEM MESSAGE]Your report (#" + reportID + ") is approved. " +
+                "The penalty for user@" + reportUser + " is " + reportedByCSD + " marks deduction of the credit score. " +
+                "[SYSTEM MESSAGE] " +
+                "Message from the admin: ";
+            notificationToReportedBy += message;
+
+            await db.collection('user').updateOne(
+                { "username": reportedBy },
+                {
+                    $push: { 'notification': {
+                        message: notificationToReportedBy, date: new Date()
+                    } }
+                }
+            );
+
+
+        } else if (status == "Reject") {
+            notificationToReportedBy += "[SYSTEM MESSAGE]Your report (#" + reportID + ") is rejected. ";
+
+            if (reportedByCSD) {
+                if (reportUserCSD > 0) {
+                    var score = parseInt(reportedByCS) - parseInt(reportedByCSD);
+                    notificationToReportedBy += "The penalty is " + reportedByCSD + " marks deduction of your credit score. " +
+                        "Original score: " + reportedByCS + " Score after deduction: " + score;
+                }
+            }
+
+            notificationToReportedBy += "[SYSTEM MESSAGE] " +
+                "Message from the admin: ";
+            notificationToReportedBy += message;
+
+            await db.collection('user').updateOne(
+                { "username": reportedBy },
+                {
+                    $push: { 'notification': {
+                        message: notificationToReportedBy, date: new Date()
+                    } }
+                }
+            );
+        } else {
+            notificationToReportedBy += "[SYSTEM MESSAGE]Your report (#" + reportID + ") need further investigation. " +
+                "[SYSTEM MESSAGE] " +
+                "Message from the admin: ";
+            notificationToReportedBy += message;
+
+            await db.collection('user').updateOne(
+                { "username": reportedBy },
+                {
+                    $push: { 'notification': {
+                        message: notificationToReportedBy, date: new Date()
+                    } }
+                }
+            );
+        }
+
+
+        sails.log("updated report (" + id + ") status to be " + status);
+        sails.log("Report User @" + reportUser + " has been deducted " + reportUserCSD + " (Original:" + reportUserCS + ")");
+        sails.log("Reported by @" + reportedBy + " has been deducted " + reportedByCSD + " (Original:" + reportedByCS + ")");
+        sails.log("Message: " + message);
+
+        return res.redirect("/read/report/" + id);
+    },
+
 
 
     test: function (req, res) {
