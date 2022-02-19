@@ -89,125 +89,192 @@
         #sub {
             display: none;
         }
+
+        #statusBar {
+            background: rgb(255, 255, 255);
+            border-radius: 2px;
+            display: inline-block;
+            margin: 1rem;
+            position: relative;
+            height: 30px;
+            width: 131px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+            transition: all 0.3s cubic-bezier(.25, .8, .25, 1);
+        }
+
+        #statusBar:hover {
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+        }
     </style>
 </head>
 
 <body>
     <% if(req.session.memberid){ %>
         <% if(req.session.memberid=="admin" ){ %>
-    <div class="row">
+            <div class="row">
 
-        <div class="column1">
-            <ul>
-                <li><b style="color: red;">Report User</b>: <b>
-                        <a href="/read/profile?username=<%= report.reportUser %>">
-                            <%= report.reportUser %>
-                        </a>
-                    </b></li>
-                <li>Content: <b>
-                        <%= report.content %>
-                    </b></li>
-                <li>Evidence: <b>
-                        <%= report.evidence %>
-                    </b></li>
-
-                <li>Status: <b>
-                        <%= report.status %>
-                    </b></li>
-                <li>Report Date: <b>
-                        <%= report.createDateString %>
-                    </b></li>
-                <li>Reported By: <b>
-                        <a href="/read/profile?username=<%= report.reportedBy %>">
-                            <%= report.reportedBy %>
-                        </a>
-                    </b></li>
-                <li>
-                    Picture provided:
-                </li>
-            </ul>
-            <img src="<%= report.photoLink %>" alt="" class="image" height="180px" />
-
-        </div>
-
-        <div class="column2">
-            <form action="/update/report/<%= report._id %>" method="post">
-                <div>
-                    <h3>Action: </h3>
-                    <input type="radio" name="radio" id="approve" class="radio" value="Approved" onchange="showEdit(this.value)" />
-                    <label for="approve">Approve</label>
-                </div>
-
-                <div>
-                    <input type="radio" name="radio" id="reject" class="radio" value="Rejected" onchange="showEdit(this.value)" />
-                    <label for="reject">Reject</label>
-                </div>
-
-                <div>
-                    <input type="radio" name="radio" id="fi" class="radio" value="Further investigation" onchange="showEdit(this.value)" />
-                    <label for="fi">Further investigate</label>
-                </div>
-
-                <br><br><br>
-                <div id="sub">
-                    <h3>Subsequent Action:</h3>
-                    <h6>Credit Score Deduction @ User (credit score)</h6>
-                    <div class="form-row">
-                        <div class="form-group col-md-3">
-                            <b>@ <%= report.reportUser %> (<%= reportUser.creditScore %>)</b> <input type="number"
-                                class="form-control" id="reportUserCSD" name="reportUserCSD" min=0
-                                max="<%= reportUser.creditScore %>" readonly>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group col-md-3">
-                            <b>@ <%= report.reportedBy %> (<%= reportedBy.creditScore %>)</b> <input type="number"
-                                class="form-control" id="reportedByCSD" name="reportedByCSD" min=0
-                                max="<%= reportedBy.creditScore %>" readonly>
-                        </div>
-                    </div>
-
-                    <h5>Message: </h5>
-                    <div class="form-row">
-                        <textarea class="form-control" rows="4" name="message" placeholder="Reasons for taking this action"></textarea>
+                <div class="column1">
+                    <h5>(Report ID#<%= report.reportID %>)</h5>
+                    <div id="statusBar">
+                        Status:
+                        <% if(report.status=="Pending" ){ %>
+                            <b>
+                                <%= report.status %>
+                            </b>
+                            <% }else if(report.status=="Approved" ){ %>
+                                <b style="color: #61ff89;">
+                                    <%= report.status %>
+                                </b>
+                                <% }else if(report.status=="Rejected" ){ %>
+                                    <b style="color: red;">
+                                        <%= report.status %>
+                                    </b>
+                                    <% }else{ %>
+                                        <b style="color: #7208eb;">
+                                            <%= report.status %>
+                                        </b>
+                                        <% } %>
                     </div>
 
                     <br>
-                    <input id="status" name="status" value="" readonly hidden>
-                    <input name="reportID" value="<%= report.reportID %>" readonly hidden>
-                    <input name="reportUser" value="<%= report.reportUser %>" readonly hidden>
-                    <input name="reportUserCS" value="<%= reportUser.creditScore %>" readonly hidden>
-                    <input name="reportedBy" value="<%= report.reportedBy %>" readonly hidden>
-                    <input name="reportedByCS" value="<%= reportedBy.creditScore %>" readonly hidden>
-                    <button class="btn btn-primary" id="done" type="submit">DONE</button>
-                    <button class="btn btn-secondary" id="cancelButton" type="button"
-                        onclick="window.location.reload();">CANCEL</button>
-            </form>
-        </div>
+                    <ul>
+                        <li><b style="color: red;">Report User</b>: <b>
+                                <a href="/read/profile?username=<%= report.reportUser %>">
+                                    <%= report.reportUser %>
+                                </a>
+                            </b></li>
+                        <li>Content: <b>
+                                <%= report.content %>
+                            </b></li>
+                        <li>Evidence: <b>
+                                <%= report.evidence %>
+                            </b></li>
+                        <li>Report Date: <b>
+                                <%= report.createDateString %>
+                            </b></li>
+                        <li>Reported By: <b>
+                                <a href="/read/profile?username=<%= report.reportedBy %>">
+                                    <%= report.reportedBy %>
+                                </a>
+                            </b></li>
+                        <li>
+                            Picture provided:
+                        </li>
+                    </ul>
+                    <img src="<%= report.photoLink %>" alt="" class="image" height="180px" />
 
-    </div>
+                </div>
 
-    <% }else{ %>
-        <!-- normal member layout -->
+                <div class="column2">
+                    <% if(report.status=="Pending"||report.status=="pending" || report.status=="Further investigate" ){ %>
+                        <form action="/update/report/<%= report._id %>" method="post">
+                            <div>
+                                <h3>Action: </h3>
+                                <input type="radio" name="radio" id="approve" class="radio" value="Approved"
+                                    onchange="showEdit(this.value)" />
+                                <label for="approve">Approve</label>
+                            </div>
 
-        <h3>You don't have permission to browse this page😬</h3>
-        <!-- should store url session to nav back later -->
+                            <div>
+                                <input type="radio" name="radio" id="reject" class="radio" value="Rejected"
+                                    onchange="showEdit(this.value)" />
+                                <label for="reject">Reject</label>
+                            </div>
 
-        <!-- normal member layout -->
+                            <div>
+                                <input type="radio" name="radio" id="fi" class="radio" value="Further investigation"
+                                    onchange="showEdit(this.value)" />
+                                <label for="fi">Further investigate</label>
+                            </div>
 
-        <% } %>
+                            <br><br><br>
+                            <div id="sub">
+                                <h3>Subsequent Action:</h3>
+                                <h6>Credit Score Deduction @ User (credit score)</h6>
+                                <div class="form-row">
+                                    <div class="form-group col-md-3">
+                                        <b>@ <%= report.reportUser %> (<%= reportUser.creditScore %>)</b> <input
+                                            type="number" class="form-control" id="reportUserCSD" name="reportUserCSD"
+                                            min=0 max="<%= reportUser.creditScore %>" readonly>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-md-3">
+                                        <b>@ <%= report.reportedBy %> (<%= reportedBy.creditScore %>)</b> <input
+                                            type="number" class="form-control" id="reportedByCSD" name="reportedByCSD"
+                                            min=0 max="<%= reportedBy.creditScore %>" readonly>
+                                    </div>
+                                </div>
 
-        <% }else{ %>
-            <!-- visitor layout -->
+                                <h5>Message: </h5>
+                                <div class="form-row">
+                                    <textarea class="form-control" rows="4" name="message"
+                                        placeholder="Reasons for taking this action"></textarea>
+                                </div>
 
-            <h3><a href="/login">Login <li class="tag__item" style="cursor: pointer;"><i
-                            class="fas fa-sign-in-alt mr-2"></i></li></a> to admin account to browse report
-                list
-            </h3>
-            <!-- should store url session to nav back later -->
+                                <br>
+                                <input id="status" name="status" value="" readonly hidden>
+                                <input name="reportID" value="<%= report.reportID %>" readonly hidden>
+                                <input name="reportUser" value="<%= report.reportUser %>" readonly hidden>
+                                <input name="reportUserCS" value="<%= reportUser.creditScore %>" readonly hidden>
+                                <input name="reportedBy" value="<%= report.reportedBy %>" readonly hidden>
+                                <input name="reportedByCS" value="<%= reportedBy.creditScore %>" readonly hidden>
+                                <button class="btn btn-primary" id="done" type="submit">DONE</button>
+                                <button class="btn btn-secondary" id="cancelButton" type="button"
+                                    onclick="window.location.reload();">CANCEL</button>
+                        </form>
+                        <% }else{ %>
+                            <!-- approved/rejected layout -->
+                            <form action="/send/noti" method="post">
+                                <h3>Additional Action (optional):</h3>
+                                <h6>Send message to user:</h6>
 
-            <!-- visitor layout -->
-            <% } %>
+                                <div class="form-row">
+                                    <div class="form-group col-md-7">
+                                        <b>Send to @ <%= report.reportUser %> (<%= reportUser.creditScore %>)</b>
+                                        <textarea class="form-control" name="reportUserMS" rows="4"
+                                            placeholder="message here..."></textarea>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-md-7">
+                                        <b>Send to @ <%= report.reportedBy %> (<%= reportedBy.creditScore %>)</b>
+                                        <textarea class="form-control" name="reportedByMS" rows="4"
+                                            placeholder="message here..."></textarea>
+                                    </div>
+                                </div>
+
+                                <input name="reportUser" value="<%= report.reportUser %>" readonly hidden>
+                                <input name="reportedBy" value="<%= report.reportedBy %>" readonly hidden>
+                                <button class="btn btn-outline-warning" type="submit">Send</button>
+                            </form>
+
+                            <% } %>
+                </div>
+
+            </div>
+
+            <% }else{ %>
+                <!-- normal member layout -->
+
+                <h3>You don't have permission to browse this page😬</h3>
+                <!-- should store url session to nav back later -->
+
+                <!-- normal member layout -->
+
+                <% } %>
+
+                    <% }else{ %>
+                        <!-- visitor layout -->
+
+                        <h3><a href="/login">Login <li class="tag__item" style="cursor: pointer;"><i
+                                        class="fas fa-sign-in-alt mr-2"></i></li></a> to admin account to browse report
+                            list
+                        </h3>
+                        <!-- should store url session to nav back later -->
+
+                        <!-- visitor layout -->
+                        <% } %>
 
 </body>
 

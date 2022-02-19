@@ -66,6 +66,8 @@ module.exports.routes = {
 
   'POST /update/report/:id': 'UserController.updateReportStatus',
 
+  'POST /send/noti' : 'UserController.sendNotification',
+
   // admin
   'GET /reporthandle': 'UserController.reportHandle',
   'GET /read/report/:id': 'UserController.viewReport',

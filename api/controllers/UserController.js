@@ -237,7 +237,7 @@ module.exports = {
         var db = sails.getDatastore().manager;
         await db.collection('report').insertOne(
             {
-                reportID: num, reportUser: reportUser, content: content, evidence: evidence, photoLink: photoLink, reportedBy: req.session.memberid, status: 'pending',
+                reportID: num, reportUser: reportUser, content: content, evidence: evidence, photoLink: photoLink, reportedBy: req.session.memberid, status: 'Pending',
                 createDate: new Date(), createDateString: dateString, updateDate: new Date(), updateDateString: ''
             }
         )
@@ -961,6 +961,19 @@ module.exports = {
         return res.redirect("/read/report/" + id);
     },
 
+    sendNotification: async function (req, res) {
+
+        var reportUser = req.body.reportUser;
+        var reportedBy = req.body.reportedBy;
+
+        var reportUserMS = req.body.reportUserMS;
+        var reportedByMS = req.body.reportedByMS;
+
+        sails.log("to "+reportUser+": "+reportUserMS);
+        sails.log("to "+reportedBy+": "+reportedByMS);
+
+        return res.redirect("/reporthandle");
+    },
 
 
     test: function (req, res) {
