@@ -1,0 +1,65 @@
+<head>
+    <title>Notification List</title>
+    <style>
+        .card {
+            background: rgb(250, 250, 250);
+            border-radius: 2px;
+            display: inline-block;
+            margin: 1rem;
+            position: relative;
+            height: 150px;
+            width: 700px;
+            padding: 24px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+            transition: all 0.3s cubic-bezier(.25, .8, .25, 1);
+        }
+
+        .card:hover {
+            box-shadow: 0 5px 22px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+        }
+
+        h1 {
+            font: 72px "Amatic SC", sans-serif;
+            text-shadow: 2px 2px rgba(0, 0, 0, 0.3);
+            margin-bottom: 15px;
+        }
+
+        #cross{
+            position: absolute;
+            cursor: pointer;
+            top: 2%;
+            left: 95%;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css?family=Amatic+SC|Raleway" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+
+<body>
+    <br>
+    <h1>Notification</h1>
+    <% notiList.forEach(function(n){ %>
+        <div class="card" id="<%= n.date %>">
+            <h6>
+                <%= n.message %>
+            </h6>
+            <small>
+               <%= n.date %>
+            </small>
+
+            <form>
+                <input value="<%= n.date %>" name="index" readonly hidden>
+                <button id="cross" class="btn btn-outline-danger" onclick="del(this.form)"> <i class="fa fa-times"></i></button>
+            </form>
+           
+        </div>
+
+        <% }); %>
+</body>
+
+<script>
+    function del(form){
+        alert(form['index'].value);
+    }
+</script>

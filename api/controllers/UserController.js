@@ -45,7 +45,8 @@ module.exports = {
                     DBcreditScore = results[0].creditScore;
                     DBdesc = results[0].profile.description;
                     DBnickname = results[0].profile.nickname;
-                    DBconnectedGmail = results[0].connectedGmail; //typo here
+                    DBconnectedGmail = results[0].connectedGmail; 
+                    DBnotification = results[0].notification;
 
 
                     sails.log("user: " + DBusername);
@@ -67,6 +68,7 @@ module.exports = {
                         req.session.creditScore = DBcreditScore;
                         req.session.nickname = DBnickname;
                         req.session.description = DBdesc;
+                        req.session.notification = DBnotification;
 
 
                     } else {
@@ -192,6 +194,7 @@ module.exports = {
         req.session.creditScore = null;
         req.session.nickname = null;
         req.session.description = null;
+        req.session.notification = null;
         return res.redirect('/');
 
     },
@@ -419,6 +422,18 @@ module.exports = {
 
 
 
+    },
+
+    notiList: async function (req, res) {
+        var db = sails.getDatastore().manager;
+        var result = await db.collection('user').findOne({ "username": req.session.memberid });
+
+        if (req.wantsJSON) {
+            sails.log("returning detail page json data");
+            sails.log("stringgify result: " + JSON.stringify(result));
+            return res.json(result);
+        }
+        return res.view('profile/notiList', { notiList: result.notification  });
     },
 
     home: async function (req, res) {
@@ -865,6 +880,34 @@ module.exports = {
         var reportedByCSD = req.body.reportedByCSD;
         var message = req.body.message;
 
+        var date = new Date();
+        var day = date.getDate();
+        var month = date.getMonth();
+        var year = date.getFullYear();
+        var h = date.getHours();
+        var m = date.getMinutes();
+        var s = date.getSeconds();
+        if (day < 10) {
+            day = "0" + day;
+        }
+        // it seems the date.getMonth() is wrong(?) Nov --> get 10 return
+        month = month + 1;
+        if (month < 10) {
+            month = "0" + month;
+        }
+        if (h < 10) {
+            h = "0" + h;
+        }
+        if (m < 10) {
+            m = "0" + m;
+        }
+        if (s < 10) {
+            s = "0" + s;
+        }
+        // DD/MM/YYYY HH:MM:SS
+        var dateString = day + "/" + month + "/" + year + " " + h + ":" + m + ":" + s
+
+
         var db = await sails.getDatastore().manager;
         await db.collection('report').updateOne(
             { "_id": o_id },
@@ -876,13 +919,13 @@ module.exports = {
         // send notification
         var notificationToReportUser = "";
         var notificationToReportedBy = "";
-        if (status == "Approve") {
+        if (status == "Approved") {
             var score = parseInt(reportUserCS) - parseInt(reportUserCSD);
             notificationToReportUser += "[SYSTEM MESSAGE]You are reported by other user. " +
                 "The penalty is " + reportUserCSD + " marks deduction of your credit score. " +
                 "Original score: " + reportUserCS + " Score after deduction: " + score +
-                "[SYSTEM MESSAGE] " +
-                "Message from the admin: ";
+                "[SYSTEM MESSAGE]\n\r " +
+                "\n\rMessage from the admin: ";
             notificationToReportUser += message;
 
             await db.collection('user').updateOne(
@@ -890,7 +933,7 @@ module.exports = {
                 {
                     $push: {
                         'notification': {
-                            message: notificationToReportUser, date: new Date()
+                            message: notificationToReportUser, date: dateString
                         }
                     }
                 }
@@ -898,55 +941,55 @@ module.exports = {
 
             // send to reported by user
             notificationToReportedBy += "[SYSTEM MESSAGE]Your report (#" + reportID + ") is approved. " +
-                "The penalty for user@" + reportUser + " is " + reportedByCSD + " marks deduction of the credit score. " +
-                "[SYSTEM MESSAGE] " +
-                "Message from the admin: ";
+                "The penalty for user@" + reportUser + " is " + reportUserCSD + " marks deduction of the credit score. " +
+                "[SYSTEM MESSAGE]\n\r" +
+                "\n\rMessage from the admin: ";
             notificationToReportedBy += message;
 
             await db.collection('user').updateOne(
                 { "username": reportedBy },
                 {
                     $push: { 'notification': {
-                        message: notificationToReportedBy, date: new Date()
+                        message: notificationToReportedBy, date: dateString
                     } }
                 }
             );
 
 
-        } else if (status == "Reject") {
+        } else if (status == "Rejected") {
             notificationToReportedBy += "[SYSTEM MESSAGE]Your report (#" + reportID + ") is rejected. ";
 
             if (reportedByCSD) {
-                if (reportUserCSD > 0) {
+                if (reportedByCSD > 0) {
                     var score = parseInt(reportedByCS) - parseInt(reportedByCSD);
                     notificationToReportedBy += "The penalty is " + reportedByCSD + " marks deduction of your credit score. " +
                         "Original score: " + reportedByCS + " Score after deduction: " + score;
                 }
             }
 
-            notificationToReportedBy += "[SYSTEM MESSAGE] " +
-                "Message from the admin: ";
+            notificationToReportedBy += "[SYSTEM MESSAGE]\n\r " +
+                "\n\rMessage from the admin: ";
             notificationToReportedBy += message;
 
             await db.collection('user').updateOne(
                 { "username": reportedBy },
                 {
                     $push: { 'notification': {
-                        message: notificationToReportedBy, date: new Date()
+                        message: notificationToReportedBy, date: dateString
                     } }
                 }
             );
         } else {
             notificationToReportedBy += "[SYSTEM MESSAGE]Your report (#" + reportID + ") need further investigation. " +
-                "[SYSTEM MESSAGE] " +
-                "Message from the admin: ";
+                "[SYSTEM MESSAGE]\n\r" +
+                "\n\rMessage from the admin: ";
             notificationToReportedBy += message;
 
             await db.collection('user').updateOne(
                 { "username": reportedBy },
                 {
                     $push: { 'notification': {
-                        message: notificationToReportedBy, date: new Date()
+                        message: notificationToReportedBy, date: dateString
                     } }
                 }
             );

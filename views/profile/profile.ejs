@@ -82,7 +82,6 @@
         #close {
             position: absolute;
             font-weight: bold;
-            font-size: 35px;
             cursor: pointer;
             color: rgb(231, 4, 4);
             margin-left: 246px;
@@ -323,38 +322,51 @@
 
                         </div>
 
-                        <div class="column3">
-                            <% if(user.username=="admin" ){ %>
 
-                                <% }else{ %>
-                                    <% if(user.username==req.session.memberid){ %>
+                        <% if(user.username=="admin" ){ %>
+                            <% }else{ %>
+                        <% if(user.username==req.session.memberid){ %>
+                            <div class="column3">
+                                <% if(user.notification.length> 0){ %>
+                                    <b>Notification: </b>
+                                    <div>
+                                        <%= user.notification.length %> messages
+                                            <a href="/read/profile/notification">View</a>
+                                            <% user.notification.forEach(function(n){ %>
 
-                                        <b>Notification: </b>
-                                        <div>
-                                            <%= user.notification.length %> messages
-                                                <% user.notification.forEach(function(n){ %>
+                                                <div><small>
+                                                        <%= n.date %>
+                                                    </small></div>
 
-                                                    <div><small>
-                                                            <%= n.date %>
-                                                        </small></div>
+                                                <% }); %>
 
-                                                    <% }); %>
-
+                                                    <% }else{ %>
+                                                        <b>No Notification </b>
                                                         <% } %>
-                                        </div>
+                                    </div>
+                            </div>
+                            <% }else{ %>
 
+                                <% } %><% } %>
+
+
+
+
+
+
+
+
+                                    <% }else{ %>
+                                        <!-- visitor layout -->
+
+                                        <h3><a href="/login">Login <li class="tag__item" style="cursor: pointer;"><i
+                                                        class="fas fa-sign-in-alt mr-2"></i></li></a> to browse user' s
+                                            information
+                                        </h3>
+                                        <!-- should store url session to nav back later -->
+
+                                        <!-- visitor layout -->
                                         <% } %>
-                        </div>
-                        <% }else{ %>
-                            <!-- visitor layout -->
-
-                            <h3><a href="/login">Login <li class="tag__item" style="cursor: pointer;"><i
-                                            class="fas fa-sign-in-alt mr-2"></i></li></a> to browse user' s information
-                            </h3>
-                            <!-- should store url session to nav back later -->
-
-                            <!-- visitor layout -->
-                            <% } %>
                 </div>
                 <% } %>
     </div>
