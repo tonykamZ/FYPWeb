@@ -661,9 +661,9 @@
 
                 <a href="/read/profile?username=<%= req.session.memberid %>" id="profile" class="tooltip-bottom"
                   data-tooltip="view personal profile">
-                  <% if(req.session.notification.length> 0){ %>
+                  <% if(req.session.notification > 0){ %>
                     <div class="number"><b class="numberNoti">
-                        <%= req.session.notification.length %>
+                        <%= req.session.notification %>
                       </b></div>
                     <% } %>
                       <i class="fas fa-user"></i>

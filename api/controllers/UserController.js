@@ -45,7 +45,7 @@ module.exports = {
                     DBcreditScore = results[0].creditScore;
                     DBdesc = results[0].profile.description;
                     DBnickname = results[0].profile.nickname;
-                    DBconnectedGmail = results[0].connectedGmail; 
+                    DBconnectedGmail = results[0].connectedGmail;
                     DBnotification = results[0].notification;
 
 
@@ -68,7 +68,7 @@ module.exports = {
                         req.session.creditScore = DBcreditScore;
                         req.session.nickname = DBnickname;
                         req.session.description = DBdesc;
-                        req.session.notification = DBnotification;
+                        req.session.notification = DBnotification.length;
 
 
                     } else {
@@ -428,12 +428,41 @@ module.exports = {
         var db = sails.getDatastore().manager;
         var result = await db.collection('user').findOne({ "username": req.session.memberid });
 
+        if (!result) {
+            result = 1; // call back value
+        }
         if (req.wantsJSON) {
             sails.log("returning detail page json data");
             sails.log("stringgify result: " + JSON.stringify(result));
             return res.json(result);
         }
-        return res.view('profile/notiList', { notiList: result.notification  });
+        return res.view('profile/notiList', { notiList: result.notification });
+    },
+
+    delNoti: async function (req, res) {
+
+        var id = req.query.id;
+
+        sails.log("ready to delete notification (" + id + ")");
+        var db = await sails.getDatastore().manager;
+        await db.collection('user').updateOne(
+            { "username": req.session.memberid },
+            {
+                $pull: {
+                    notification: {
+                        date: id
+                    }
+                }
+            }
+        )
+
+        req.session.notification = req.session.notification - 1;
+        sails.log("sessopn.noti = "+req.session.notification);
+
+        sails.log("deleted notification (" + id + ")");
+
+        return res.ok();
+
     },
 
     home: async function (req, res) {
@@ -921,11 +950,11 @@ module.exports = {
         var notificationToReportedBy = "";
         if (status == "Approved") {
             var score = parseInt(reportUserCS) - parseInt(reportUserCSD);
-            notificationToReportUser += "[SYSTEM MESSAGE]You are reported by other user. " +
+            notificationToReportUser += "***[SYSTEM MESSAGE]You are reported by other user. " +
                 "The penalty is " + reportUserCSD + " marks deduction of your credit score. " +
                 "Original score: " + reportUserCS + " Score after deduction: " + score +
-                "[SYSTEM MESSAGE]\n\r " +
-                "\n\rMessage from the admin: ";
+                "[SYSTEM MESSAGE]*** " +
+                "Message from the admin: ";
             notificationToReportUser += message;
 
             await db.collection('user').updateOne(
@@ -940,24 +969,26 @@ module.exports = {
             );
 
             // send to reported by user
-            notificationToReportedBy += "[SYSTEM MESSAGE]Your report (#" + reportID + ") is approved. " +
+            notificationToReportedBy += "***[SYSTEM MESSAGE]Your report (#" + reportID + ") is approved. " +
                 "The penalty for user@" + reportUser + " is " + reportUserCSD + " marks deduction of the credit score. " +
-                "[SYSTEM MESSAGE]\n\r" +
-                "\n\rMessage from the admin: ";
+                "[SYSTEM MESSAGE]***" +
+                "Message from the admin: ";
             notificationToReportedBy += message;
 
             await db.collection('user').updateOne(
                 { "username": reportedBy },
                 {
-                    $push: { 'notification': {
-                        message: notificationToReportedBy, date: dateString
-                    } }
+                    $push: {
+                        'notification': {
+                            message: notificationToReportedBy, date: dateString
+                        }
+                    }
                 }
             );
 
 
         } else if (status == "Rejected") {
-            notificationToReportedBy += "[SYSTEM MESSAGE]Your report (#" + reportID + ") is rejected. ";
+            notificationToReportedBy += "***[SYSTEM MESSAGE]Your report (#" + reportID + ") is rejected. ";
 
             if (reportedByCSD) {
                 if (reportedByCSD > 0) {
@@ -967,30 +998,34 @@ module.exports = {
                 }
             }
 
-            notificationToReportedBy += "[SYSTEM MESSAGE]\n\r " +
-                "\n\rMessage from the admin: ";
+            notificationToReportedBy += "[SYSTEM MESSAGE]*** " +
+                "Message from the admin: ";
             notificationToReportedBy += message;
 
             await db.collection('user').updateOne(
                 { "username": reportedBy },
                 {
-                    $push: { 'notification': {
-                        message: notificationToReportedBy, date: dateString
-                    } }
+                    $push: {
+                        'notification': {
+                            message: notificationToReportedBy, date: dateString
+                        }
+                    }
                 }
             );
         } else {
-            notificationToReportedBy += "[SYSTEM MESSAGE]Your report (#" + reportID + ") need further investigation. " +
-                "[SYSTEM MESSAGE]\n\r" +
-                "\n\rMessage from the admin: ";
+            notificationToReportedBy += "***[SYSTEM MESSAGE]Your report (#" + reportID + ") need further investigation. " +
+                "[SYSTEM MESSAGE]***" +
+                "Message from the admin: ";
             notificationToReportedBy += message;
 
             await db.collection('user').updateOne(
                 { "username": reportedBy },
                 {
-                    $push: { 'notification': {
-                        message: notificationToReportedBy, date: dateString
-                    } }
+                    $push: {
+                        'notification': {
+                            message: notificationToReportedBy, date: dateString
+                        }
+                    }
                 }
             );
         }
@@ -1012,8 +1047,8 @@ module.exports = {
         var reportUserMS = req.body.reportUserMS;
         var reportedByMS = req.body.reportedByMS;
 
-        sails.log("to "+reportUser+": "+reportUserMS);
-        sails.log("to "+reportedBy+": "+reportedByMS);
+        sails.log("to " + reportUser + ": " + reportUserMS);
+        sails.log("to " + reportedBy + ": " + reportedByMS);
 
         return res.redirect("/reporthandle");
     },

@@ -24,7 +24,7 @@
             margin-bottom: 15px;
         }
 
-        #cross{
+        #cross {
             position: absolute;
             cursor: pointer;
             top: 2%;
@@ -37,29 +37,69 @@
 </head>
 
 <body>
-    <br>
-    <h1>Notification</h1>
-    <% notiList.forEach(function(n){ %>
-        <div class="card" id="<%= n.date %>">
-            <h6>
-                <%= n.message %>
-            </h6>
-            <small>
-               <%= n.date %>
-            </small>
 
-            <form>
-                <input value="<%= n.date %>" name="index" readonly hidden>
-                <button id="cross" class="btn btn-outline-danger" onclick="del(this.form)"> <i class="fa fa-times"></i></button>
-            </form>
-           
+    <% if(req.session.memberid){ %>
+        <div>
+            <br>
+            <h1>Notification</h1>
+            <% if(notiList.length==0){ %>
+                <h3>There is no message here</h3>
+                <% }else{ %>
+                    <% notiList.forEach(function(n){ %>
+                        <div class="card" id="<%= n.date %>">
+
+
+                            <% var str=n.message.split("***") %>
+                                <h6>
+                                    <%= str[1] %>
+                                </h6>
+                                <h6 style="color: rgb(204, 0, 255); font-weight: bold;">
+                                    <%= str[2] %>
+                                </h6>
+                                <small>
+                                    <%= n.date %>
+                                </small>
+
+                                <form>
+                                    <input value="<%= n.date %>" name="index" readonly hidden>
+                                    <button id="cross" class="btn btn-outline-danger" type="button"
+                                        onclick="del(this.form)"> <i class="fa fa-times"></i></button>
+                                </form>
+
+                        </div>
+                        <% }); %>
+                            <% } %>
+
         </div>
 
-        <% }); %>
+        <% }else{ %>
+
+            <!-- visitor layout -->
+
+            <h3><a href="/login">Login <li class="tag__item" style="cursor: pointer;"><i
+                            class="fas fa-sign-in-alt mr-2"></i></li></a> to browse the notification
+                details
+            </h3>
+            <!-- should store url session to nav back later -->
+
+            <!-- visitor layout -->
+
+            <% } %>
+
 </body>
 
 <script>
-    function del(form){
-        alert(form['index'].value);
+    async function del(form) {
+        //alert(form['index'].value);
+        document.getElementById(form['index'].value).style.display = 'none';
+
+        var response = await fetch("/delete/notification?id=" + form['index'].value, { method: "POST" });
+
+
+        if (response.ok) {
+        } else {
+            var msg = response.statusText;
+            alert(msg);
+        }
     }
 </script>

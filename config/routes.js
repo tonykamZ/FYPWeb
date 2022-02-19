@@ -65,6 +65,7 @@ module.exports.routes = {
 
   'POST /report': 'UserController.report',
 
+  'POST /delete/notification': 'UserController.delNoti',
 
 
   // admin
