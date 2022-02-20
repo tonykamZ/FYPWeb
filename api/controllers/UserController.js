@@ -240,7 +240,7 @@ module.exports = {
         var db = sails.getDatastore().manager;
         await db.collection('report').insertOne(
             {
-                reportID: num, reportUser: reportUser, content: content, evidence: evidence, photoLink: photoLink, reportedBy: req.session.memberid, status: 'Pending',
+                reportID: num, reportUser: reportUser, content: content, evidence: evidence, photoLink: photoLink, reportedBy: req.session.memberid, status: 'Pending', actionTaken: {},
                 createDate: new Date(), createDateString: dateString, updateDate: new Date(), updateDateString: ''
             }
         )
@@ -359,6 +359,8 @@ module.exports = {
         var attribution4 = req.body.attribution4;
         var attribution5 = req.body.attribution5;
         var img = req.body.imgInput;
+        var method = req.body.method;
+        var cat = req.body.cat;
 
         var attr = [attribution] // define new array for storing links
         // check if there exist additional attribution links
@@ -402,14 +404,12 @@ module.exports = {
         var dateString = year + "-" + month + "-" + day + "T" + h + ":" + m + ":" + s;
 
         memberLimit = parseInt(memberLimit);
-        sails.log(title + ", " + description + ", " + memberLimit + ", " + attr);
-        sails.log("Date string: " + dateString);
 
         var db = sails.getDatastore().manager;
         var result = await db.collection('post').insertOne(
             {
                 HostUsername: req.session.memberid, HostNickname: req.session.nickname, creditScore: req.session.creditScore, post: {
-                    title: title, description: description, memberLimit: memberLimit, attribution: attr, imgInput: img
+                    title: title, cat: cat, description: description, memberLimit: memberLimit, attribution: attr, imgInput: img, method: method
                 }, createDate: new Date(), createDateString: dateString, updateDate: new Date(), updateDateString: '', joinedMembers: [], joinedHistory: [], comments: []
             }
 
@@ -457,11 +457,49 @@ module.exports = {
         )
 
         req.session.notification = req.session.notification - 1;
-        sails.log("sessopn.noti = "+req.session.notification);
+        sails.log("sessopn.noti = " + req.session.notification);
 
         sails.log("deleted notification (" + id + ")");
 
         return res.ok();
+
+    },
+
+    delPost: async function (req, res) {
+
+        var id = req.params.id;
+        var ObjectId = require('mongodb').ObjectId;
+        var o_id = new ObjectId(id);
+
+        var delReason = req.body.delReason;
+        var username = req.body.username;
+        var csd = req.body.csd;
+        
+
+        var db = sails.getDatastore().manager;
+        //await db.collection('post').remove({ '_id': o_id });
+        var post = await db.collection('post').findOne({ '_id': o_id });
+
+        var user =  await db.collection('user').findOne({'username':username});
+        var score = parseInt(user.creditScore) - csd;
+
+        delReason = "***[SYSTEM MESSAGE] Your post (title: "+post.post.title+") "+
+        "has been removed [SYSTEM MESSAGE]*** " + delReason;
+        await db.collection('user').updateOne(
+            { "username": username },
+            {
+                $push: {
+                    'notification': {
+                        message: delReason, date: dateString
+                    }
+                },
+                $set: {
+                    'creditScore': parseInt(score)
+                }
+            }
+        );
+
+        return res.redirect('/home');
 
     },
 
@@ -726,7 +764,7 @@ module.exports = {
                 s = "0" + s;
             }
             // DD/MM/YYYY HH:MM:SS
-            var dateString = day + "/" + month + "/" + year + " " + h + ":" + m + ":" + s;
+            var dateString = day + "-" + month + "-" + year + " " + h + ":" + m + ":" + s;
             var timing = dateString + " - " + req.session.memberid + " has joined";
             sails.log("timing = " + timing);
             //update user count: push current session user to that post
@@ -786,7 +824,7 @@ module.exports = {
             s = "0" + s;
         }
         // DD/MM/YYYY HH:MM:SS
-        var dateString = day + "/" + month + "/" + year + " " + h + ":" + m + ":" + s;
+        var dateString = day + "-" + month + "-" + year + " " + h + ":" + m + ":" + s;
         var timing = dateString + " - " + req.session.memberid + " has left";
         sails.log("timing = " + timing);
         // remove session user in the post
@@ -844,7 +882,7 @@ module.exports = {
             s = "0" + s;
         }
         // DD/MM/YYYY HH:MM:SS
-        var dateString = day + "/" + month + "/" + year + " " + h + ":" + m + ":" + s
+        var dateString = day + "-" + month + "-" + year + " " + h + ":" + m + ":" + s
 
         var db = sails.getDatastore().manager;
         var result = await db.collection('post').updateOne(
@@ -934,14 +972,21 @@ module.exports = {
             s = "0" + s;
         }
         // DD/MM/YYYY HH:MM:SS
-        var dateString = day + "/" + month + "/" + year + " " + h + ":" + m + ":" + s
+        var dateString = day + "-" + month + "-" + year + " " + h + ":" + m + ":" + s;
 
 
         var db = await sails.getDatastore().manager;
         await db.collection('report').updateOne(
             { "_id": o_id },
             {
-                $set: { 'status': status }
+                $set: {
+                    'status': status, 'actionTaken': {
+                        reportUserCSD: reportUserCSD,
+                        reportedByCSD: reportedByCSD,
+                        message: message,
+                        date: dateString
+                    }
+                }
             }
         );
 
@@ -964,6 +1009,9 @@ module.exports = {
                         'notification': {
                             message: notificationToReportUser, date: dateString
                         }
+                    },
+                    $set: {
+                        'creditScore': parseInt(score)
                     }
                 }
             );
@@ -990,9 +1038,10 @@ module.exports = {
         } else if (status == "Rejected") {
             notificationToReportedBy += "***[SYSTEM MESSAGE]Your report (#" + reportID + ") is rejected. ";
 
+            var score = parseInt(reportedByCS);
             if (reportedByCSD) {
                 if (reportedByCSD > 0) {
-                    var score = parseInt(reportedByCS) - parseInt(reportedByCSD);
+                    score = score - parseInt(reportedByCSD);
                     notificationToReportedBy += "The penalty is " + reportedByCSD + " marks deduction of your credit score. " +
                         "Original score: " + reportedByCS + " Score after deduction: " + score;
                 }
@@ -1009,6 +1058,9 @@ module.exports = {
                         'notification': {
                             message: notificationToReportedBy, date: dateString
                         }
+                    },
+                    $set: {
+                        'creditScore': parseInt(score)
                     }
                 }
             );
@@ -1046,6 +1098,65 @@ module.exports = {
 
         var reportUserMS = req.body.reportUserMS;
         var reportedByMS = req.body.reportedByMS;
+
+        var date = new Date();
+        var day = date.getDate();
+        var month = date.getMonth();
+        var year = date.getFullYear();
+        var h = date.getHours();
+        var m = date.getMinutes();
+        var s = date.getSeconds();
+        if (day < 10) {
+            day = "0" + day;
+        }
+        // it seems the date.getMonth() is wrong(?) Nov --> get 10 return
+        month = month + 1;
+        if (month < 10) {
+            month = "0" + month;
+        }
+        if (h < 10) {
+            h = "0" + h;
+        }
+        if (m < 10) {
+            m = "0" + m;
+        }
+        if (s < 10) {
+            s = "0" + s;
+        }
+        // DD/MM/YYYY HH:MM:SS
+        var dateString = day + "-" + month + "-" + year + " " + h + ":" + m + ":" + s;
+
+
+        var db = await sails.getDatastore().manager;
+
+        if (reportUserMS) {
+            var str = "*** ***" + reportUserMS;
+            await db.collection('user').updateOne(
+                { "username": reportUser },
+                {
+                    $push: {
+                        'notification': {
+                            message: str, date: dateString
+                        }
+                    }
+                }
+            );
+        }
+
+        if (reportedByMS) {
+            var str = "*** ***" + reportedByMS;
+            await db.collection('user').updateOne(
+                { "username": reportedBy },
+                {
+                    $push: {
+                        'notification': {
+                            message: str, date: dateString
+                        }
+                    }
+                }
+            );
+        }
+
 
         sails.log("to " + reportUser + ": " + reportUserMS);
         sails.log("to " + reportedBy + ": " + reportedByMS);

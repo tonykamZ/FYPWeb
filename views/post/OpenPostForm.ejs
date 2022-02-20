@@ -37,12 +37,25 @@
                     <input type="text" class="form-control" name="title" maxlength="30" required>
                 </div>
 
+                <div class="form-group col-md-3">
+                    <label><b>Category</b></label>
+                    <select class="form-control" name="cat" id="cat" required>
+                        <option value="" selected disabled>Please select one</option>
+                        <option value="fnd">Food&Drink</option>
+                        <option value="elect">Electronic</option>
+                        <option value="colthing">Colthing</option>
+                        <option value="necessity">Necessity</option>
+                        <option value="any">Any</option>
+                    </select>
+                </div>
+
             </div>
 
             <div class="form-row">
-                <div class="form-group col-md-4">
+                <div class="form-group col-md-6">
                     <label><b>Description</b></label>
-                    <textarea rows="5" id="description" name="description" class="form-control" maxlength="100" required></textarea>
+                    <textarea rows="5" id="description" name="description" class="form-control" maxlength="100"
+                        required></textarea>
                 </div>
             </div>
 
@@ -57,7 +70,7 @@
                     <button id="addInput" class="btn btn-info tooltip-top" data-tooltip="Add additional attribution"
                         type="button" onclick="AddExtraInput()"><i class="fa fa-plus"></i></button>
                     <button id="minusInput" class="btn btn-danger tooltip-top"
-                        data-tooltip="Reduce additional attribution"" type="button" onclick="MinusExtraInput()"><i
+                        data-tooltip="Reduce additional attribution"" type=" button" onclick="MinusExtraInput()"><i
                             class="fa fa-minus"></i></button>
                     <input type="url" class="form-control" name="attribution" required>
 
@@ -73,10 +86,27 @@
                     <label><b>Upload Image URL</b></label>
                     <input type="url" class="form-control" name="imgInput" id="imgInput" required>
                 </div>
-                
             </div>
-            <p><small>don't know how to convert the image to url? refer to this website: <a href="https://www.linkpicture.com/" target="_blank" style="color: blue;">https://www.linkpicture.com/</a></small>
-            <small>remeber to chose "Direct Link To Photo" option</small></p>
+            <p><small>don't know how to convert the image to url? refer to this website: <a
+                        href="https://www.linkpicture.com/" target="_blank"
+                        style="color: blue;">https://www.linkpicture.com/</a></small>
+                <small>remeber to chose "Direct Link To Photo" option</small>
+            </p>
+
+            <div class="form-row">
+                <div class="form-group col-md-3">
+                    <label><b>Payment Method</b></label>
+                    <select class="form-control" name="method" id="method" required>
+                        <option value="" selected disabled>Please select one</option>
+                        <option value="fps">FPS</option>
+                        <option value="epay">E-payment</option>
+                        <option value="cash">Cash</option>
+                        <option value="cash">Accept all</option>
+                    </select>
+                </div>
+            </div>
+
+
             <br>
             <div>
                 <% if(req.session.memberid){ %>

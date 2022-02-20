@@ -101,6 +101,10 @@
         textarea[name=evidence] {
             resize: none;
         }
+
+        .icons {
+            padding: 10px;
+        }
     </style>
 
 </head>
@@ -325,51 +329,59 @@
 
                         <% if(user.username=="admin" ){ %>
                             <% }else{ %>
-                        <% if(user.username==req.session.memberid){ %>
-                            <div class="column3">
-                                <% if(user.notification.length> 0){ %>
-                                    <b>Notification: </b>
-                                    <div>
-                                        <%= user.notification.length %> messages
-                                            <a href="/read/profile/notification">View</a>
-                                            <% user.notification.forEach(function(n){ %>
+                                <% if(user.username==req.session.memberid){ %>
+                                    <div class="column3">
+                                        <div class="icons">
+                                            <a href="/read/profile/notification"><i class="fas fa-envelope"
+                                                    style="font-size: xx-large;"></i></a>
+                                            Notification
 
-                                                <div><small>
-                                                        <%= n.date %>
-                                                    </small></div>
+                                        </div>
+                                        <div id="notiNum">
+                                            <% if(user.notification.length> 0){ %>
+                                                <b>(<%= user.notification.length %> messages)</b>
+                                                <% } %>
+                                        </div>
+                                        <div class="icons">
+                                            <a href="#"><i class="fas fa-exclamation-circle"
+                                                    style="font-size: xx-large;"></i>
+                                            </a>Report History
+                                        </div>
+                                        <div class="icons">
+                                            <a href="#"><i class="fas fa-magic" style="font-size: xx-large;"></i></a>
+                                            Premium
+                                        </div>
 
-                                                <% }); %>
 
-                                                    <% }else{ %>
-                                                        <b>No Notification </b>
-                                                        <% } %>
                                     </div>
-                            </div>
-                            <% }else{ %>
-
-                                <% } %><% } %>
-
-
-
-
-
-
-
-
-                                    <% }else{ %>
-                                        <!-- visitor layout -->
-
-                                        <h3><a href="/login">Login <li class="tag__item" style="cursor: pointer;"><i
-                                                        class="fas fa-sign-in-alt mr-2"></i></li></a> to browse user' s
-                                            information
-                                        </h3>
-                                        <!-- should store url session to nav back later -->
-
-                                        <!-- visitor layout -->
-                                        <% } %>
                 </div>
-                <% } %>
+                <% }else{ %>
+
+                    <% } %>
+                        <% } %>
+
+
+
+
+
+
+
+
+                            <% }else{ %>
+                                <!-- visitor layout -->
+
+                                <h3><a href="/login">Login <li class="tag__item" style="cursor: pointer;"><i
+                                                class="fas fa-sign-in-alt mr-2"></i></li></a> to
+                                    browse user' s
+                                    information
+                                </h3>
+                                <!-- should store url session to nav back later -->
+
+                                <!-- visitor layout -->
+                                <% } %>
     </div>
+    <% } %>
+        </div>
 
 </body>
 

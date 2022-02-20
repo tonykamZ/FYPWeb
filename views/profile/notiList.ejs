@@ -19,7 +19,7 @@
         }
 
         h1 {
-            font: 72px "Amatic SC", sans-serif;
+            font: 67px "Amatic SC", sans-serif;
             text-shadow: 2px 2px rgba(0, 0, 0, 0.3);
             margin-bottom: 15px;
         }
@@ -41,10 +41,11 @@
     <% if(req.session.memberid){ %>
         <div>
             <br>
-            <h1>Notification</h1>
+            <h1>Notification  <i class="fas fa-envelope-open"></i></h1>
             <% if(notiList.length==0){ %>
-                <h3>There is no message here</h3>
+                <h3>There is no message here <i class="fas fa-child stick"></i></h3>
                 <% }else{ %>
+                    <div id="cardContainer">
                     <% notiList.forEach(function(n){ %>
                         <div class="card" id="<%= n.date %>">
 
@@ -68,6 +69,10 @@
 
                         </div>
                         <% }); %>
+
+                    </div>
+
+                    <a class="btn btn-outline-primary" href="/read/profile?username=<%= req.session.memberid %>">Back to profile</a>
                             <% } %>
 
         </div>
@@ -101,5 +106,10 @@
             var msg = response.statusText;
             alert(msg);
         }
+
+        if( $('#cardContainer').is(':empty') ) {
+
+        }
     }
+    
 </script>

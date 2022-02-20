@@ -28,7 +28,7 @@
       padding-top: 10px;
     }
 
-    .fa-user {
+    #userP {
       padding-right: 7px;
       padding-top: 4px;
       font-size: xx-large;
@@ -553,7 +553,7 @@
       background-image: linear-gradient(15deg, #ffa600 0%, #ff0000 100%);
     }
 
-    .fa-user-shield {
+    #userA {
       font-size: xx-large;
       color: #73f3d7;
       text-shadow: 0 0 15px rgb(89, 109, 69);
@@ -618,6 +618,10 @@
         <% if(req.session.memberid){ %>
           <% if(req.session.memberid=="admin" ){ %>
             <li class="nav-item">
+              <a class="nav-link" href="/home">Home</a>
+            </li>
+
+            <li class="nav-item">
               <a class="nav-link" href="/userlist">Users</a>
             </li>
 
@@ -654,7 +658,7 @@
             <% if(req.session.memberid=="admin" ){ %>
               <a id="profile" class="tooltip-bottom" data-tooltip="view admin profile"
                 href="/read/profile?username=admin">
-                <i class="fa fa-user-shield"></i>
+                <i id="userA" class="fa fa-user-shield"></i>
               </a>
               <% }else{ %>
 
@@ -666,7 +670,7 @@
                         <%= req.session.notification %>
                       </b></div>
                     <% } %>
-                      <i class="fas fa-user"></i>
+                      <i id="userP" class="fas fa-user"></i>
                 </a>
                 <% } %>
                   <% } %>

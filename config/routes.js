@@ -66,16 +66,21 @@ module.exports.routes = {
   'POST /report': 'UserController.report',
 
   'POST /delete/notification': 'UserController.delNoti',
+  
 
 
   // admin
+  // report
   'GET /reporthandle': 'UserController.reportHandle',
   'GET /read/report/:id': 'UserController.viewReport',
   'GET /admin/report/delete/:id': 'UserController.deleteReport',
-
   'POST /update/report/:id': 'UserController.updateReportStatus',
 
+  // notification
   'POST /send/noti': 'UserController.sendNotification',
+
+  // delete post
+  'POST /delete/post/:id': 'UserController.delPost',
 
   'GET /member/vip': 'UserController.vip',
 

@@ -1,5 +1,8 @@
 <head>
     <title>Home Page</title>
+    <link href="https://fonts.googleapis.com/css?family=Amatic+SC|Raleway" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="assets/css/styles.css">
     <style>
 
         .container {
@@ -217,6 +220,63 @@
             top: 15px;
             left: 15px;
         }
+
+        .popup {
+            display: none;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            position: fixed;
+            background-color: rgba(112, 112, 112, 0.616);
+            z-index: 999;
+        }
+
+        #form {
+            position: relative;
+            background-color: #f5f5f5;
+            border: 1px solid #212121;
+            border-radius: 2px;
+            padding: 20px;
+            width: 300px;
+            left: 50%;
+            top: 30%;
+            margin-left: -150px;
+           
+        }
+
+        .intro {
+            font: bold 18px "Raleway", sans-serif;
+            background-image: linear-gradient(15deg, #3923ff 0%, #f11cf8 100%);
+            color: #ffffff;
+            padding: 20px;
+            opacity: 0.78;
+            border-radius: 5px;
+            display: inline-block;
+            margin: 1rem;
+            position: relative;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+            transition: all 0.3s cubic-bezier(.25, .8, .25, 1);
+        }
+
+        .intro:hover {
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+        }
+
+        #lets{
+            font: bold 30px "Amatic SC", sans-serif;
+            color: rgb(136, 255, 0);
+            margin-bottom: 15px;
+        }
+
+        #close {
+            position: absolute;
+            font-weight: bold;
+            cursor: pointer;
+            color: rgb(231, 4, 4);
+            margin-left: 788px;
+            margin-top: 145px;
+        }
     </style>
 
 </head>
@@ -231,28 +291,41 @@
                     <span style="color: #ffb671">Share:)</span>
                   </a>
                 <div class="form-row trigger-menu">
-                    <div class="form-group col-md-4">
+                    <div class="form-group col-md-3">
                         <label style="color: rgb(5, 45, 177); "><b>Filter by</b></label>
                         <input type="string" class="form-control" name="keywords" id="keywords" placeholder="Keywords">
                     </div>
 
                     <div class="form-group col-md-3">
-                           <select class="form-control">
-                               <option value="" selected disabled>Payment method</option>
-                               <option value="credit">Credit Card</option>
+                        <label style="color: rgb(5, 45, 177); "><b>Payment Method</b></label>
+                           <select class="form-control" name="method" id="method">
+                               <option value="" selected disabled>Please select one</option>
+                               <option value="fps">FPS</option>
                                <option value="epay">E-payment</option>
                                <option value="cash">Cash</option>
                            </select>   
                     </div>
 
                     <div class="form-group col-md-2">
+                        <label style="color: rgb(5, 45, 177); "><b>Category</b></label>
+                        <select class="form-control" name="cat" id="cat">
+                            <option value="" selected disabled>Please select one</option>
+                            <option value="fnd">Food&Drink</option>
+                            <option value="elect">Electronic</option>
+                            <option value="colthing">Colthing</option>
+                            <option value="necessity">Necessity</option>
+                            <option value="any">Any</option>
+                        </select>   
+                 </div>
+
+                    <!-- div class="form-group col-md-2">
                         <label style="color: rgb(4, 160, 139);"><b>Date before</b></label>
                         <input type="date" class="form-control" name="date" id="date">
-                    </div>
+                    </div !-->
                     
                     <div>
                         <button type="button" class="btn btn-outline-primary" style="margin-top: 23px;"
-                            onclick="window.location='?keywords='+document.getElementById('keywords').value+'&range='+document.getElementById('range').value+'&date='+document.getElementById('date').value"><i
+                            onclick="window.location='?keywords='+document.getElementById('keywords').value+'&method='+document.getElementById('method').value+'&cat='+document.getElementById('cat').value"><i
                                 class="fas fa-search"></i></button>
                     </div>
 
@@ -270,9 +343,10 @@
             <h3 class="text-custom">Search results: (<%= postCnt %>)</h3>
             <% }else{ %>
                 
-                <h6 style="color: grey;">Here are the latest posts on the platform. You can filter the post by any keywords,
-                    the limitation of member count, and the post created date. Let's find your favorite discount/offer here!
-                </h6>
+                <div class="intro"><i class="fas fa-megaphone"></i>Here are the latest posts on the platform. You can filter the post by any keywords,
+                    the limitation of member count, and the post created date. 
+                </div>
+                <h6 id="lets">Let's find your favorite discount/offer here!</h6>
 
                 <h3 class="text-custom">Latest posts (<%= postCnt %>)</h3>
                 <% } %>
@@ -335,11 +409,14 @@
                                             <% } %>
                                     </b>
                                 </li>
+                                <% if(req.session.memberid == "admin"){ %>
+                                    <form>
+                                        <input value="<%= cnt %>" name="popupIndex" readonly hidden>
+                                         <button class="btn btn-danger" type="button" onclick="show(this.form)" style="cursor: pointer;"><i class="fas fa-ban mr-2"></i>DELETE</button>
+                                    </form>
+                                    <% }else{ %>
                                 <li class="tag__item play red">
                                     <% if(req.session.memberid){ %>
-                                        <% if(req.session.memberid == "admin"){ %>
-                                            <a href="#"><i class="fas fa-edit mr-2"></i>Edit</a>
-                                            <% }else{ %>
                                         <% if(post.HostUsername != req.session.memberid){ %>
                                             <% var duplicated = false; %>
                                             <% post.joinedMembers.forEach(function(member){ %>
@@ -355,16 +432,55 @@
                                             <% }else { %>
                                                 <a href="/manage/post/<%= post._id %>"><i class="fas fa-edit mr-2"></i>Manage</a>
                                                 <% } %>
-                                                <% } %>
+                                               
                                         <% }else{ %>
                                             <a href="/login"><i class="fas fa-sign-in-alt mr-2"></i>Login to Join</a>
                                             <!-- should store url session to nav back later -->
                                             <% } %>
                                 </li>
+                                <% } %>
                             </ul>
                         </div>
                     </article>
                     <!-- Dark card -->
+                    <div class="popup" id="popup-<%= cnt %>">
+                        <form>
+                            <input value="<%= cnt %>" name="popupIndex" readonly hidden>
+                             <button id="close" type="button" onclick="hide(this.form)" style="cursor: pointer;"> <i class="fa fa-times"></i></button>
+                        </form>
+                        
+                        <form id="form" method="POST" action="/delete/post/<%= post._id %>">
+                           
+                            
+                                <h6><b>⚠️Delete #</b><b style="color: blue;">
+                                    <%= post._id %>
+                                    </b></h6>
+                                    <h6><b>Host: @</b><b style="color: blue;">
+                                        <%= post.HostUsername %>
+                                        </b></h6>
+                                        <h6><b>Title: </b><b style="color: blue;">
+                                            <% if(post.post.title.length > 20){ %>
+                                                <%= post.post.title.substring(0,19) %>...
+                                                <% }else{ %>
+                                                    <%= post.post.title %>
+                                                    <% } %>
+                                            </b></h6>
+                                   <div class="form-row">         
+                                <div class="form-group col-md-12">
+                                    <input type="text" class="form-control" name="delReason"
+                                        placeholder="delete reason" />
+                                </div>
+                                <div class="form-group col-md-12">
+                                    <label><b style="color: red;">Penalty</b></label>
+                                    <input type="number" class="form-control" name="csd"
+                                        placeholder="Credit score deduction" min=0 max=100 />
+                                </div>
+                                <input name="username" value="<%= post.HostUsername %>" hidden readonly/>
+                            </div>
+                            <button class="btn btn-outline-success"
+                                type="submit">Confirm</button>
+                        </form>
+                    </div>
                     <% }else{ %>
                         <!-- Light card -->
                         <article class="postcard light red">
@@ -413,11 +529,14 @@
                                                 <% } %>
                                          </b>       
                                     </li>
+                                    <% if(req.session.memberid == "admin"){ %>
+                                        <form>
+                                            <input value="<%= cnt %>" name="popupIndex" readonly hidden>
+                                             <button class="btn btn-danger" type="button" onclick="show(this.form)" style="cursor: pointer;"><i class="fas fa-ban mr-2"></i>DELETE</button>
+                                        </form>
+                                        <% }else{ %>
                                     <li class="tag__item play red">
                                         <% if(req.session.memberid){ %>
-                                            <% if(req.session.memberid == "admin"){ %>
-                                                <a href="#"><i class="fas fa-edit mr-2"></i>Edit</a>
-                                                <% }else{ %>
                                              <% if(post.HostUsername != req.session.memberid){ %>
                                                 <% var duplicated = false; %>
                                                 <% post.joinedMembers.forEach(function(member){ %>
@@ -433,17 +552,56 @@
                                             <% }else { %>
                                                 <a href="/manage/post/<%= post._id %>"><i class="fas fa-edit mr-2"></i>Manage</a>
                                                 <% } %>
-                                                <% } %>
+                                               
                                             <% }else{ %>
                                                 <a href="/login"><i class="fas fa-sign-in-alt mr-2"></i>Login to
                                                     Join</a>
                                                 <% } %>
                                                 
                                     </li>
+                                     <% } %>
                                 </ul>
                             </div>
                         </article>
                         <!-- Light card -->
+                        <div class="popup" id="popup-<%= cnt %>">
+                            <form>
+                                <input value="<%= cnt %>" name="popupIndex" readonly hidden>
+                                 <button id="close" type="button" onclick="hide(this.form)" style="cursor: pointer;"> <i class="fa fa-times"></i></button>
+                            </form>
+                            
+                            <form id="form" method="POST" action="/delete/post/<%= post._id %>">
+                               
+                                
+                                    <h6><b>⚠️Delete #</b><b style="color: blue;">
+                                        <%= post._id %>
+                                        </b></h6>
+                                        <h6><b>Host: @</b><b style="color: blue;">
+                                            <%= post.HostUsername %>
+                                            </b></h6>
+                                            <h6><b>Title: </b><b style="color: blue;">
+                                                <% if(post.post.title.length > 20){ %>
+                                                    <%= post.post.title.substring(0,19) %>...
+                                                    <% }else{ %>
+                                                        <%= post.post.title %>
+                                                        <% } %>
+                                                </b></h6>
+                                       <div class="form-row">         
+                                    <div class="form-group col-md-12">
+                                        <input type="text" class="form-control" name="delReason"
+                                            placeholder="delete reason" />
+                                    </div>
+                                    <div class="form-group col-md-12">
+                                        <label><b style="color: red;">Penalty</b></label>
+                                        <input type="number" class="form-control" name="csd"
+                                            placeholder="Credit score deduction" min=0 max=100 />
+                                    </div>
+                                    <input name="username" value="<%= post.HostUsername %>" hidden readonly/>
+                                </div>
+                                <button class="btn btn-outline-success"
+                                    type="submit">Confirm</button>
+                            </form>
+                        </div>
                         <% } %>
                             <% cnt=cnt + 1; %>
 
@@ -522,5 +680,12 @@
         }else{
             window.location.replace("/join/"+id);
         }
+    }
+
+    function show(form) {
+        document.getElementById("popup-"+form['popupIndex'].value).style.display = "block";
+    }
+    function hide(form) {
+        document.getElementById("popup-"+form['popupIndex'].value).style.display = "none";
     }
 </script>

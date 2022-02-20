@@ -106,7 +106,7 @@
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
         }
 
-        #back{
+        #back {
             float: right;
             margin-right: 100px;
         }
@@ -120,7 +120,7 @@
 
                 <div class="column1">
                     <h5>(Report ID#<%= report.reportID %>)</h5>
-                    <button id="back" class="btn btn-outline-secondary" type="button" onclick="window.history.back()">Back</button>
+                    <a id="back" class="btn btn-outline-secondary" href="/reporthandle">Back</a>
                     <div id="statusBar">
                         Status:
                         <% if(report.status=="Pending" ){ %>
@@ -156,8 +156,9 @@
                                 <%= report.evidence %>
                             </b></li>
                         <li>Report Date: <b>
-                                <% var dateStr = report.createDateString.split("T"); %>
-                                <%= dateStr[0] %> <%= dateStr[1] %>
+                                <% var dateStr=report.createDateString.split("T"); %>
+                                    <%= dateStr[0] %>
+                                        <%= dateStr[1] %>
                             </b></li>
                         <li>Reported By: <b>
                                 <a href="/read/profile?username=<%= report.reportedBy %>">
@@ -170,10 +171,34 @@
                     </ul>
                     <img src="<%= report.photoLink %>" alt="" class="image" height="180px" />
 
+                    <% if(report.actionTaken.date){ %>
+                        <br><br>
+                        <h3>Action Taken:</h3>
+
+                        <% if(report.actionTaken.reportUserCSD){ %>
+                        <h6>@<%= report.reportUser %> - <%= report.actionTaken.reportUserCSD %></h6>
+                        <% }else{ %>
+                            <h6>@<%= report.reportUser %> : No mark deducted</h6>
+                            <% } %>
+
+                            <% if(report.actionTaken.reportedByCSD){ %>
+                                <h6>@<%= report.reportedBy %> - <%= report.actionTaken.reportedByCSD %></h6>
+                                <% }else{ %>
+                                    <h6>@<%= report.reportedBy %> : No mark deducted</h6>
+                                    <% } %>
+
+                                    <h6>Mesage from the admin:</h6>
+                                    <h6 style="color: #7208eb;"><%= report.actionTaken.message %></h6>
+                                    <br>
+                                    <h6>Report handled date: <%= report.actionTaken.date %></h6>
+
+                        <% } %>
+
                 </div>
 
                 <div class="column2">
-                    <% if(report.status=="Pending"||report.status=="pending" || report.status=="Further investigation" ){ %>
+                    <% if(report.status=="Pending" ||report.status=="pending" || report.status=="Further investigation"
+                        ){ %>
                         <form action="/update/report/<%= report._id %>" method="post">
                             <div>
                                 <h3>Action: </h3>
