@@ -192,7 +192,11 @@
 
                                                 <% }else{ %>
                                                     <!-- read others layout -->
+                                                    <% if(req.session.report.indexOf(user.username) != -1){ %>
+                                                        <a class="btn btn-outline-danger" href="#">You've reported this user</a>
+                                                    <% }else{ %>    
                                                     <a class="btn btn-outline-danger" onclick="show()">Report</a>
+                                                    <% } %>
                                                     <!-- read others layout -->
 
                                                     <% } %>

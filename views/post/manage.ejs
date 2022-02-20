@@ -1,7 +1,11 @@
 <head>
     <title>Home Page</title>
     <style>
-        
+        .text-custom-manage{
+            font: bold 48px "Amatic SC", sans-serif;
+            color: rgb(132, 0, 255);
+            text-shadow: 2px 1px rgba(151, 151, 151, 0.527);
+        }
     </style>
 
 </head>
@@ -14,7 +18,7 @@
             <% if(posts.length==0 ){ %>
                 <h3>Nothing here😐</h3>
                 <% }else { %>
-                    <h3 class="text-custom">Manage your posts</h3>
+                    <h3 class="text-custom-manage">Manage your posts</h3>
                     <% var cnt=1; %>
                         <% var today=new Date(); %>
                             <% var year=today.getFullYear(); %>

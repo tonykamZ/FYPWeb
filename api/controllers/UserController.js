@@ -69,6 +69,7 @@ module.exports = {
                         req.session.nickname = DBnickname;
                         req.session.description = DBdesc;
                         req.session.notification = DBnotification.length;
+                        req.session.report = [];
 
 
                     } else {
@@ -195,6 +196,7 @@ module.exports = {
         req.session.nickname = null;
         req.session.description = null;
         req.session.notification = null;
+        req.session.report = null;
         return res.redirect('/');
 
     },
@@ -244,6 +246,8 @@ module.exports = {
                 createDate: new Date(), createDateString: dateString, updateDate: new Date(), updateDateString: ''
             }
         )
+        // store report user in session key. if user want to report the same person again, take some action.
+        req.session.report.push(reportUser);
         return res.view('report/successReport', { reportUser: reportUser, reportID: num })
     },
 
@@ -477,10 +481,14 @@ module.exports = {
         
 
         var db = sails.getDatastore().manager;
-        //await db.collection('post').remove({ '_id': o_id });
         var post = await db.collection('post').findOne({ '_id': o_id });
 
         var user =  await db.collection('user').findOne({'username':username});
+        if(!user){
+            // if user doesn't exist, delete anyway
+            await db.collection('post').remove({ '_id': o_id });
+            return res.redirect('/home');
+        }
         var score = parseInt(user.creditScore) - csd;
 
         var date = new Date();
@@ -510,6 +518,7 @@ module.exports = {
         // YYYY-MM-DDTHH:MM:SS
         var dateString = year + "-" + month + "-" + day + "T" + h + ":" + m + ":" + s;
 
+        await db.collection('post').remove({ '_id': o_id });
         delReason = "***[SYSTEM MESSAGE] Your post (title: "+post.post.title+") "+
         "has been removed. "+csd+" credit score deducted [SYSTEM MESSAGE]*** " + delReason;
         await db.collection('user').updateOne(
@@ -790,8 +799,8 @@ module.exports = {
             if (s < 10) {
                 s = "0" + s;
             }
-            // DD/MM/YYYY HH:MM:SS
-            var dateString = day + "-" + month + "-" + year + " " + h + ":" + m + ":" + s;
+            
+            var dateString = year + "-" + month + "-" + day + "T" + h + ":" + m + ":" + s;
             var timing = dateString + " - " + req.session.memberid + " has joined";
             sails.log("timing = " + timing);
             //update user count: push current session user to that post
@@ -850,8 +859,7 @@ module.exports = {
         if (s < 10) {
             s = "0" + s;
         }
-        // DD/MM/YYYY HH:MM:SS
-        var dateString = day + "-" + month + "-" + year + " " + h + ":" + m + ":" + s;
+        var dateString = year + "-" + month + "-" + day + "T" + h + ":" + m + ":" + s;
         var timing = dateString + " - " + req.session.memberid + " has left";
         sails.log("timing = " + timing);
         // remove session user in the post
@@ -908,8 +916,7 @@ module.exports = {
         if (s < 10) {
             s = "0" + s;
         }
-        // DD/MM/YYYY HH:MM:SS
-        var dateString = day + "-" + month + "-" + year + " " + h + ":" + m + ":" + s
+        var dateString = year + "-" + month + "-" + day + "T" + h + ":" + m + ":" + s;
 
         var db = sails.getDatastore().manager;
         var result = await db.collection('post').updateOne(
@@ -998,8 +1005,7 @@ module.exports = {
         if (s < 10) {
             s = "0" + s;
         }
-        // DD/MM/YYYY HH:MM:SS
-        var dateString = day + "-" + month + "-" + year + " " + h + ":" + m + ":" + s;
+        var dateString = year + "-" + month + "-" + day + "T" + h + ":" + m + ":" + s;
 
 
         var db = await sails.getDatastore().manager;
@@ -1150,8 +1156,7 @@ module.exports = {
         if (s < 10) {
             s = "0" + s;
         }
-        // DD/MM/YYYY HH:MM:SS
-        var dateString = day + "-" + month + "-" + year + " " + h + ":" + m + ":" + s;
+        var dateString = year + "-" + month + "-" + day + "T" + h + ":" + m + ":" + s;
 
 
         var db = await sails.getDatastore().manager;

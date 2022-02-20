@@ -1,8 +1,5 @@
 <head>
     <title>Home Page</title>
-    <link href="https://fonts.googleapis.com/css?family=Amatic+SC|Raleway" rel="stylesheet">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="assets/css/styles.css">
     <style>
 
         .container {
@@ -379,7 +376,11 @@
                             <div class="postcard__bar"></div>
                             <div class="postcard__preview-txt">
                                 <% if(post.post.description){ %>
+                                    <% if(post.post.description.length > 40){ %>
+                                        <%= post.post.description.substring(0,39) %>...
+                                        <% }else{ %>
                                     <%= post.post.description %>
+                                    <% } %>
                                         <% }else{ %>
                                             <span>*No description😳</span>
                                             <% } %>
@@ -499,7 +500,11 @@
                                 <div class="postcard__bar"></div>
                                 <div class="postcard__preview-txt">
                                     <% if(post.post.description){ %>
+                                        <% if(post.post.description.length > 40){ %>
+                                            <%= post.post.description.substring(0,39) %>...
+                                            <% }else{ %>
                                         <%= post.post.description %>
+                                        <% } %>
                                             <% }else{ %>
                                                 No description😳
                                                 <% } %>
