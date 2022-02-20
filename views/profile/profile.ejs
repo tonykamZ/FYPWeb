@@ -105,6 +105,10 @@
         .icons {
             padding: 10px;
         }
+
+        #notiNum{
+            margin-left: 45px;
+        }
     </style>
 
 </head>
@@ -339,7 +343,12 @@
                                         </div>
                                         <div id="notiNum">
                                             <% if(user.notification.length> 0){ %>
+                                                <% if(user.notification.length> 1){ %>
                                                 <b>(<%= user.notification.length %> messages)</b>
+                                                <% }else{ %>
+                                                    <b>(<%= user.notification.length %> message)</b>
+                                                    <% } %>
+                                                
                                                 <% } %>
                                         </div>
                                         <div class="icons">

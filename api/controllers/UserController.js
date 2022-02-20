@@ -483,8 +483,35 @@ module.exports = {
         var user =  await db.collection('user').findOne({'username':username});
         var score = parseInt(user.creditScore) - csd;
 
+        var date = new Date();
+        var day = date.getDate();
+        var month = date.getMonth();
+        var year = date.getFullYear();
+        var h = date.getHours();
+        var m = date.getMinutes();
+        var s = date.getSeconds();
+        if (day < 10) {
+            day = "0" + day;
+        }
+        // it seems the date.getMonth() is wrong(?) Nov --> get 10 return
+        month = month + 1;
+        if (month < 10) {
+            month = "0" + month;
+        }
+        if (h < 10) {
+            h = "0" + h;
+        }
+        if (m < 10) {
+            m = "0" + m;
+        }
+        if (s < 10) {
+            s = "0" + s;
+        }
+        // YYYY-MM-DDTHH:MM:SS
+        var dateString = year + "-" + month + "-" + day + "T" + h + ":" + m + ":" + s;
+
         delReason = "***[SYSTEM MESSAGE] Your post (title: "+post.post.title+") "+
-        "has been removed [SYSTEM MESSAGE]*** " + delReason;
+        "has been removed. "+csd+" credit score deducted [SYSTEM MESSAGE]*** " + delReason;
         await db.collection('user').updateOne(
             { "username": username },
             {
