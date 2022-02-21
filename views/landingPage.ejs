@@ -1,4 +1,5 @@
 <head>
+    <script src="jquery-3.5.1.min.js"></script>
     <style>
         /*General Styles*/
         body {
@@ -76,8 +77,8 @@
 
         header {
             position: absolute;
-            padding-top: 110px;
-            padding-left: 460px;
+            left: 41.5%;
+            top: 12%;
             animation: 1s fadein 0.5s forwards;
             opacity: 0;
             color: #fff;
@@ -101,20 +102,10 @@
             position: relative;
             justify-content: center;
             text-align: center;
-            min-height: 100vh;
             color: #fff;
         }
 
-        .hero .background-image {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 91%;
-            background-image: url("https://www.wallpapertip.com/wmimgs/67-670409_better-together-backgrounds.jpg");
-            z-index: -1;
-            background-color: #80a3db;
-        }
+
 
         .hero h1 {
             font: 72px "Amatic SC", sans-serif;
@@ -123,15 +114,15 @@
         }
 
         .hero h3 {
-            font: 28px "Raleway", sans-serif;
+            font: bold 42px "Amatic SC", sans-serif;
             font-weight: 300;
+            color: rgb(0, 0, 0);
             text-shadow: 2px 2px rgba(0, 0, 0, 0.3);
             margin-bottom: 40px;
         }
 
         .hero-content-area {
             opacity: 0;
-            margin-top: 100px;
             animation: 1s slidefade 1s forwards;
         }
 
@@ -157,38 +148,7 @@
 
         }
 
-        /*Destinations Section*/
 
-        .destinations .grid li {
-            height: 350px;
-            background-clip: content-box;
-            background-size: cover;
-            background-position: center;
-        }
-
-        .destinations .grid li.small {
-            flex-basis: 30%;
-        }
-
-        .destinations .grid li.large {
-            flex-basis: 70%;
-        }
-
-        @media (max-width: 600px) {
-
-            .destinations .grid li.small,
-            .destinations .grid li.large {
-                flex-basis: 50%;
-            }
-        }
-
-        @media (max-width: 600px) {
-
-            .destinations .grid li.small,
-            .destinations .grid li.large {
-                flex-basis: 100%;
-            }
-        }
 
         /*Packages Section*/
 
@@ -278,6 +238,58 @@
                 margin-bottom: 20px;
             }
         }
+
+        /*Statistic Section*/
+        .statistic-section {
+            font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+            padding-top: 70px;
+            padding-bottom: 70px;
+            background: #00c6ff;
+            /* fallback for old browsers */
+            background: -webkit-linear-gradient(to right, #0072ff, #00c6ff);
+            background: linear-gradient(to right, #0072ff, #00c6ff);
+        }
+
+        .count-title {
+            font-size: 50px;
+            font-weight: normal;
+            margin-top: 10px;
+            margin-bottom: 0;
+            text-align: center;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .stats-text {
+            font-size: 15px;
+            font-weight: normal;
+            margin-top: 15px;
+            margin-bottom: 0;
+            text-align: center;
+            color: #fff;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        .stats-line-black {
+            margin: 12px auto 0;
+            width: 55px;
+            height: 2px;
+            background-color: #fff;
+        }
+
+        .stats-icon {
+            font-size: 175px;
+            margin: 0 auto;
+            float: none;
+            color: #fff;
+        }
+
+        @media (max-width: 992px) {
+            .counter {
+                margin-bottom: 40px;
+            }
+        }
     </style>
     <link href="https://fonts.googleapis.com/css?family=Amatic+SC|Raleway" rel="stylesheet">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -292,11 +304,52 @@
                 :)</a></h2>
     </header>
 
+    <br><br><br>
     <section class="hero">
-        <div class="background-image"></div>
         <div class="hero-content-area">
-            <h1>Share Is Caring</h1>
-            <h3>Share your favorite discounts/offers to others with our platform~</h3>
+            <h3>A platform to share your favorite discounts/offers to others</h3>
+        </div>
+    </section>
+
+
+
+    <section id="statistic" class="statistic-section one-page-section">
+        <div class="container">
+            <div class="row text-center">
+                <div class="col-xs-12 col-md-3">
+                    <div class="counter">
+                        <i class="fa fa-coffee fa-2x stats-icon"></i>
+                        <h2 class="timer count-title count-number">999</h2>
+                        <div class="stats-line-black"></div>
+                        <p class="stats-text">Coffee Cups</p>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-md-3">
+                    <div class="counter">
+                        <i class="fa fa-code fa-2x stats-icon"></i>
+                        <h2 class="timer count-title count-number">10000
+                        </h2>
+                        <div class="stats-line-black"></div>
+                        <p class="stats-text">Line Code</p>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-md-3">
+                    <div class="counter">
+                        <i class="fa fa-clock-o fa-2x stats-icon"></i>
+                        <h2 class="timer count-title count-number">6</h2>
+                        <div class="stats-line-black"></div>
+                        <p class="stats-text">Years Experience</p>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-md-3">
+                    <div class="counter">
+                        <i class="fa fa-laptop fa-2x stats-icon"></i>
+                        <h2 class="timer count-title count-number">12</h2>
+                        <div class="stats-line-black"></div>
+                        <p class="stats-text">Project</p>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -307,13 +360,6 @@
             with your friends. The biggest goal is to save your money by enjoying the discount with anyone in this
             platform.</p>
         <hr>
-
-        <ul class="grid">
-            <li class="large image-1"></li>
-        </ul>
-        <br>
-
-        <br>
     </section>
 
     <section class="packages">
@@ -413,3 +459,13 @@
     </footer>
 
 </body>
+
+
+<script type="text/javascript">
+    $(document).ready(function ($) {
+        $('.count-number').counterUp({
+            delay: 10,
+            time: 10000
+        });
+    });
+</script>
