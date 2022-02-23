@@ -47,10 +47,10 @@
                     <label><b>Category</b></label>
                     <select class="form-control" name="cat" id="cat" required>
                         <option value="" selected disabled>Please select one</option>
-                        <option value="fnd">Food&Drink</option>
-                        <option value="elect">Electronic</option>
-                        <option value="colthing">Colthing</option>
-                        <option value="necessity">Necessity</option>
+                        <option value="Food&Drink">Food&Drink</option>
+                        <option value="Electronic">Electronic</option>
+                        <option value="Colthing">Colthing</option>
+                        <option value="Necessity">Necessity</option>
                         <option value="any">Any</option>
                     </select>
                 </div>
@@ -65,18 +65,73 @@
                 </div>
             </div>
 
+
+
             <div class="form-row">
                 <div class="form-group col-md-2">
                     <label><b>Member limit</b></label>
                     <input type="number" class="form-control" name="memberLimit" min=2 max=100 required>
                 </div>
 
+                <div class="form-group col-md-2">
+                    <label><b>Discount Type</b></label>
+                    <select class="form-control" name="dType" id="dType" required onchange="display(this.value)">
+                        <option value="" selected disabled>Please select one</option>
+                        <option value="BuyXgetYfree">Buy X get Y free</option>
+                        <option value="Percentage">Percentage</option>
+                        <option value="PromoCode">Promo Code</option>
+                        <option value="CashBack">Cash Back</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+
+                <!-- hidden input -->
+                <div class="form-group col-md-1" id="x" style="display: none;">
+                    <label><b>X:</b></label>
+                    <input type="number" class="form-control" name="x" min="1" id="inputX">
+                </div>
+                <div class="form-group col-md-1" id="y" style="display: none;">
+                    <label><b>Y:</b></label>
+                    <input type="number" class="form-control" name="y" min="1" id="inputY">
+                </div>
+                <div class="form-group col-md-2" id="precentage" style="display: none;">
+                    <label><b>Precentage:</b></label>
+                    <input type="number" class="form-control" name="precentage" min="1" max="100" id="inputPrecentage">
+                </div>
+                <div class="form-group col-md-2" id="spend" style="display: none;">
+                    <label><b>Spend:</b></label>
+                    <input type="number" class="form-control" name="spend" min="1" id="inputSpend">
+                </div>
+                <div class="form-group col-md-2" id="cash" style="display: none;">
+                    <label><b>Cash Back:</b></label>
+                    <input type="number" class="form-control" name="cash" min="1" id="inputCash">
+                </div>
+                <div class="form-group col-md-2" id="other" style="display: none;">
+                    <label><b>Please specify:</b></label>
+                    <input type="text" class="form-control" name="other" id="inputOther">
+                </div>
+
+                <!-- hidden input -->
+
+                <div class="form-group col-md-2">
+                    <label><b>Discount Rate</b></label>
+                    <input class="form-control" id="Drate" name="Drate" readonly>
+                </div>
+
+            </div>
+
+            <div class="form-row">
                 <div class="form-group col-md-4">
-                    <label><b>Attribution</b></label>
+                    <label><b>Upload Image URL</b></label>
+                    <input type="url" class="form-control" name="imgInput" id="imgInput" required>
+                </div>
+
+                <div class="form-group col-md-4">
+                    <label><b>Attribution(s)</b></label>
                     <button id="addInput" class="btn btn-info tooltip-top" data-tooltip="Add additional attribution"
                         type="button" onclick="AddExtraInput()"><i class="fa fa-plus"></i></button>
                     <button id="minusInput" class="btn btn-danger tooltip-top"
-                        data-tooltip="Reduce additional attribution"" type=" button" onclick="MinusExtraInput()"><i
+                        data-tooltip="Reduce additional attribution"" type="button" onclick="MinusExtraInput()"><i
                             class="fa fa-minus"></i></button>
                     <input type="url" class="form-control" name="attribution" required>
 
@@ -84,13 +139,6 @@
                     <input type="url" class="form-control" name="attribution3" id="attribution3" hidden>
                     <input type="url" class="form-control" name="attribution4" id="attribution4" hidden>
                     <input type="url" class="form-control" name="attribution5" id="attribution5" hidden>
-                </div>
-            </div>
-
-            <div class="form-row">
-                <div class="form-group col-md-4">
-                    <label><b>Upload Image URL</b></label>
-                    <input type="url" class="form-control" name="imgInput" id="imgInput" required>
                 </div>
             </div>
             <p><small>don't know how to convert the image to url? refer to this website: <a
@@ -201,4 +249,96 @@
         filenameDisplay.innerHTML = "";
         filenameDisplay.innerHTML += "Selected: " + imgInput.files[0].name;
     }
+
+    function display(x) {
+        if (x == "BuyXgetYfree") {
+            displayBuyXgetYfree();
+
+            // hide other stuff
+            hideCashBack();
+            hidePercentage();
+            hideOther();
+        }
+        if (x == "Percentage") {
+            displayPercentage();
+
+            // hide other stuff
+            hideBuyXgetYfree();
+            hideCashBack();
+            hideOther();
+        }
+        if (x == "CashBack") {
+            displayCashBack();
+
+            // hide other stuff
+            hideBuyXgetYfree();
+            hidePercentage();
+            hideOther();
+        }
+        if (x == "Other") {
+            displayOther();
+
+            // hide other stuff
+            hideBuyXgetYfree();
+            hideCashBack();
+            hidePercentage();
+        }
+        if (x == "PromoCode") {
+            // hide other stuff
+            hideBuyXgetYfree();
+            hideCashBack();
+            hidePercentage();
+            hideOther();
+        }
+    }
+
+    function displayBuyXgetYfree() {
+        document.getElementById('x').style.display = "inline";
+        document.getElementById('y').style.display = "inline";
+
+        document.getElementById('inputX').required = true;
+        document.getElementById('inputY').required = true;
+    }
+    function hideBuyXgetYfree() {
+        document.getElementById('x').style.display = "none";
+        document.getElementById('y').style.display = "none";
+
+        document.getElementById('inputX').required = false;
+        document.getElementById('inputY').required = false;
+    }
+
+    function displayPercentage() {
+        document.getElementById('precentage').style.display = "inline";
+        document.getElementById('inputPrecentage').required = true;
+    }
+    function hidePercentage() {
+        document.getElementById('precentage').style.display = "none";
+        document.getElementById('inputPrecentage').required = false;
+    }
+
+    function displayCashBack() {
+        document.getElementById('spend').style.display = "inline";
+        document.getElementById('cash').style.display = "inline";
+
+        document.getElementById('inputSpend').required = true;
+        document.getElementById('inputCash').required = true;
+    }
+    function hideCashBack() {
+        document.getElementById('spend').style.display = "none";
+        document.getElementById('cash').style.display = "none";
+
+        document.getElementById('inputSpend').required = false;
+        document.getElementById('inputCash').required = false;
+    }
+
+    function displayOther() {
+        document.getElementById('other').style.display = "inline";
+        document.getElementById('inputOther').required = true;
+    }
+    function hideOther() {
+        document.getElementById('other').style.display = "none";
+        document.getElementById('inputOther').required = false;
+    }
+
+
 </script>
