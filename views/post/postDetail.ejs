@@ -544,9 +544,18 @@
                                                                                         <!-- should store url session to nav back later -->
                                                                                         <% } %>
                             </li>
+
+                            <% if(post.post.cat != "any"){ %>
+                            <li class="tag__item">
+                                <b><%= post.post.cat %></b>
+                            </li>
+                            <% } %>
                         </ul>
+
+                        
                     </div>
                 </article>
+                 <!-- Light card -->
 
                 <div>
                     <% var dateStr = post.updateDateString.split("T"); %>
@@ -583,7 +592,8 @@
                                         <% } %>
 
                 </div>
-                <!-- Light card -->
+               
+                <div><small><i class="fa fa-dollar-sign"></i> Preferred payment method(s): <%= post.post.method %></small></div>
 
                 <div><small>Reference link(s):</small></div>
                 <% post.post.attribution.forEach(function(link){ %>
@@ -748,6 +758,7 @@
 
 
                             <% } %>
+                            
 </body>
 
 <script>

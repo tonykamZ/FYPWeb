@@ -467,7 +467,7 @@
                 <div class="col-xs-12 col-md-3">
                     <div class="counter">
                         <i class="fa fa-users fa-2x stats-icon"></i>
-                        <h2 class="timer count-title count-number">12</h2>
+                        <h2 class="timer count-title count-number"><%= user.length %></h2>
                         <div class="stats-line-black"></div>
                         <p class="stats-text">Members</p>
                     </div>
@@ -475,7 +475,7 @@
                 <div class="col-xs-12 col-md-3">
                     <div class="counter">
                         <i class="fa fa-comments fa-2x stats-icon"></i>
-                        <h2 class="timer count-title count-number">9</h2>
+                        <h2 class="timer count-title count-number"><%= post.length %></h2>
                         <div class="stats-line-black"></div>
                         <p class="stats-text">Posts</p>
                     </div>
@@ -535,7 +535,7 @@
 
 
 
-    <section class="packages">
+    <section class="packages greyBG">
         <h3 class="title"><a style="color: rgb(214, 211, 40);">Happy </a><a style="color: rgb(255, 115, 0);">Share
                 :)</a> membership</h3>
         <p>We offer a normal and premium membership packages. It is absolutely free to register
@@ -577,7 +577,7 @@
 
 
 
-    <section class="contact greyBG">
+    <section class="contact">
         <br>
 
         <% if(req.session.memberid){ %>

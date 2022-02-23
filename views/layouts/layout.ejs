@@ -613,11 +613,11 @@
         <!-- li class="nav-item ">
           <a class="nav-link" href="/search">Search</a>
         </li -->
+        <li class="nav-item">
+          <a class="nav-link" href="/explore">Explore</a>
+        </li>
         <% if(req.session.memberid){ %>
           <% if(req.session.memberid=="admin" ){ %>
-            <li class="nav-item">
-              <a class="nav-link" href="/home">Home</a>
-            </li>
 
             <li class="nav-item">
               <a class="nav-link" href="/userlist">Users</a>
@@ -627,10 +627,6 @@
               <a class="nav-link" href="/reporthandle">Reports</a>
             </li>
             <% }else{ %>
-
-              <li class="nav-item">
-                <a class="nav-link" href="/home">Home</a>
-              </li>
 
               <li class="nav-item">
                 <a class="nav-link" href="/post">Post</a>

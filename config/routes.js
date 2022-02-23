@@ -34,8 +34,8 @@ module.exports.routes = {
   ***************************************************************************/
 
 
-  'GET /': { view: 'landingPage' },
-  'GET /home': 'UserController.Home',
+  'GET /': 'UserController.landing',
+  'GET /explore': 'UserController.Home',
   'GET /login': 'UserController.login',
   'POST /login': 'UserController.login',
   'GET /signup': 'UserController.signup',

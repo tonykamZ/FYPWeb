@@ -420,7 +420,7 @@ module.exports = {
         )
 
 
-        return res.redirect('/home');
+        return res.redirect('/explore');
         //return res.json(result);
 
 
@@ -478,16 +478,16 @@ module.exports = {
         var delReason = req.body.delReason;
         var username = req.body.username;
         var csd = req.body.csd;
-        
+
 
         var db = sails.getDatastore().manager;
         var post = await db.collection('post').findOne({ '_id': o_id });
 
-        var user =  await db.collection('user').findOne({'username':username});
-        if(!user){
+        var user = await db.collection('user').findOne({ 'username': username });
+        if (!user) {
             // if user doesn't exist, delete anyway
             await db.collection('post').remove({ '_id': o_id });
-            return res.redirect('/home');
+            return res.redirect('/explore');
         }
         var score = parseInt(user.creditScore) - csd;
 
@@ -519,8 +519,8 @@ module.exports = {
         var dateString = year + "-" + month + "-" + day + "T" + h + ":" + m + ":" + s;
 
         await db.collection('post').remove({ '_id': o_id });
-        delReason = "***[SYSTEM MESSAGE] Your post (title: "+post.post.title+") "+
-        "has been removed. "+csd+" credit score deducted [SYSTEM MESSAGE]*** " + delReason;
+        delReason = "***[SYSTEM MESSAGE] Your post (title: " + post.post.title + ") " +
+            "has been removed. " + csd + " credit score deducted [SYSTEM MESSAGE]*** " + delReason;
         await db.collection('user').updateOne(
             { "username": username },
             {
@@ -535,24 +535,19 @@ module.exports = {
             }
         );
 
-        return res.redirect('/home');
+        return res.redirect('/explore');
 
     },
 
     home: async function (req, res) {
 
         var keywords = req.query.keywords;
-        var range = req.query.range;
-        var date = req.query.date;
+        var cat = req.query.cat;
+        var method = req.query.method;
+        
 
-        if (range) range = parseInt(range) + 1; // convert query string to integer
-        if (date) {
-            date = date + "T23:59:59";
-            date = new Date(date);
-        }
-
-        sails.log(keywords + " " + range + " " + date);
-        var search = keywords || range || date;
+        sails.log(keywords + " " + cat + " " + method);
+        var search = keywords || cat || method;
 
         var db = sails.getDatastore().manager;
         db.collection('post', function (err, collection) {
@@ -566,10 +561,10 @@ module.exports = {
                             ]
                         },
                         {
-                            "post.memberLimit": { $lt: range || 101 }
+                            "post.cat":{ $regex: cat || "", $options: "$i" }
                         },
                         {
-                            "createDate": { $lte: date || new Date() }
+                            "post.method":{ $regex: method || "", $options: "$i" }
                         }
                     ]
                 },
@@ -586,6 +581,16 @@ module.exports = {
         })
 
 
+
+    },
+
+    landing: async function (req, res) {
+
+        var db = sails.getDatastore().manager;
+        var post = await db.collection('post').find().toArray();
+        var user = await db.collection('user').find().toArray();
+
+        return res.view('landingPage', { post: post, user: user });
 
     },
 
@@ -799,7 +804,7 @@ module.exports = {
             if (s < 10) {
                 s = "0" + s;
             }
-            
+
             var dateString = year + "-" + month + "-" + day + "T" + h + ":" + m + ":" + s;
             var timing = dateString + " - " + req.session.memberid + " has joined";
             sails.log("timing = " + timing);
