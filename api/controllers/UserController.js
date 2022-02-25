@@ -365,6 +365,11 @@ module.exports = {
         var img = req.body.imgInput;
         var method = req.body.method;
         var cat = req.body.cat;
+        var dType = req.body.dType;
+
+        if(dType == "Other"){
+            dType = req.body.otherVal;
+        }
 
         var attr = [attribution] // define new array for storing links
         // check if there exist additional attribution links
