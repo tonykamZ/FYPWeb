@@ -611,31 +611,34 @@
       }
     }
 
-    #menuS {
-      display: none;
-    }
+
 
     .menu {
       position: absolute;
       width: 100%;
+      height: 0px;
       display: flex;
       flex-direction: column;
       align-items: center;
       background-color: #dd00d2;
       color: rgb(255, 255, 255);
       z-index: 99;
-      opacity: 0.92;
+      opacity: 0;
+      visibility: hidden;
+      transition: height, .38s linear;
     }
 
     .menu .item {
       display: block;
-      padding: 15px 5px;
+      padding-top: 15px;
+      padding-bottom: 15px;
       border-bottom: 1.2px solid rgb(192, 192, 192);
     }
 
     .item-last {
       display: block;
-      padding: 15px 6px;
+      padding-top: 15px;
+      padding-bottom: 15px;
     }
   </style>
 
@@ -744,9 +747,9 @@
 
 
               <% } %>
-                  <li style="float: right; font-size: 27px; color: #ffffff; padding-left: 10px;"><a
-                      style="cursor: pointer;" onclick="toggleMenu()" id="MenuButton"><i class="fas fa-bars"></i></a>
-                  </li>
+                <li style="float: right; font-size: 27px; color: #ffffff; padding-left: 10px;"><a
+                    style="cursor: pointer;" onclick="toggleMenu()" id="MenuButton"><i class="fas fa-bars"></i></a>
+                </li>
     </div>
 
   </nav>
@@ -767,10 +770,12 @@
             <li class="item"><a href="/post">Post</a></li>
             <li class="item"><a href="/manage">Manage</a></li>
             <% } %>
-              <% } %>
+              <% }else{ %>
+                <li class="item"><a href="/signup">Sign up</a></li>
+                <li class="item"><a href="/login">Log in</a></li>
+                <% } %>
 
-
-              <li class="item-last"><a href="/terms">Terms</a></li>
+                  <li class="item-last"><a href="/terms">Terms</a></li>
     </ul>
   </nav>
 
@@ -846,11 +851,15 @@
     var MenuButton = document.getElementById('MenuButton');
     //alert(htmlContent);
     if (MenuButton.innerHTML == "<i class=\"fas fa-bars\" aria-hidden=\"true\"></i>") {
-      document.getElementById('menuS').style.display = 'inline';
+      document.querySelector('.menu').style.height = '265px';
+      document.querySelector('.menu').style.opacity = 0.89;
+      document.querySelector('.menu').style.visibility = 'visible';
       MenuButton.innerHTML = "";
       MenuButton.innerHTML += "<i class=\"fas fa-times\"></i>";
     } else {
-      document.getElementById('menuS').style.display = 'none';
+      document.querySelector('.menu').style.height = '0px';
+      document.querySelector('.menu').style.opacity = 0;
+      document.querySelector('.menu').style.visibility = 'hidden';
       MenuButton.innerHTML = "";
       MenuButton.innerHTML += "<i class=\"fas fa-bars\" aria-hidden=\"true\"></i>";
     }

@@ -59,7 +59,6 @@ module.exports.routes = {
   'GET /policy': 'UserController.policy',
 
 
-  'GET /member/vip': 'UserController.vip',
 
 
   // *** member ***********************************************

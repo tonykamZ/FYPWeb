@@ -294,12 +294,14 @@
                     </div>
 
                     <div class="form-group col-md-3">
-                        <label style="color: rgb(5, 45, 177); "><b>Payment Method</b></label>
-                           <select class="form-control" name="method" id="method">
+                        <label style="color: rgb(5, 45, 177); "><b>Discount Type</b></label>
+                           <select class="form-control" name="dType" id="dType">
                                <option value="" selected disabled>Please select one</option>
-                               <option value="fps">FPS</option>
-                               <option value="epay">E-payment</option>
-                               <option value="cash">Cash</option>
+                               <option value="Buy X get Y free">Buy X get Y free</option>
+                               <option value="Percentage">Percentage</option>
+                               <option value="Promo Code">Promo Code</option>
+                               <option value="Cash Back">Cash Back</option>
+                               <option value="Other">Other</option>
                            </select>   
                     </div>
 
@@ -321,7 +323,7 @@
                     
                     <div>
                         <button type="button" class="btn btn-outline-primary" style="margin-top: 23px;"
-                            onclick="window.location='?keywords='+document.getElementById('keywords').value+'&method='+document.getElementById('method').value+'&cat='+document.getElementById('cat').value"><i
+                            onclick="window.location='?keywords='+document.getElementById('keywords').value+'&dType='+document.getElementById('dType').value+'&cat='+document.getElementById('cat').value"><i
                                 class="fas fa-search"></i></button>
                     </div>
 
@@ -340,7 +342,7 @@
             <% }else{ %>
                 
                 <div class="intro"><i class="fas fa-megaphone"></i>Here are the latest posts on the platform. You can filter the post by any keywords,
-                  (*) and (*). 
+                  discount type and category.
                 </div>
                 <h6 id="lets">Let's find your favorite discount/offer here!</h6>
 

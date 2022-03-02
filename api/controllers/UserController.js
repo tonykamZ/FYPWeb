@@ -548,11 +548,11 @@ module.exports = {
 
         var keywords = req.query.keywords;
         var cat = req.query.cat;
-        var method = req.query.method;
+        var dType = req.query.dType;
 
 
-        sails.log(keywords + " " + cat + " " + method);
-        var search = keywords || cat || method;
+        sails.log(keywords + " " + cat + " " + dType);
+        var search = keywords || cat || dType;
 
         var db = sails.getDatastore().manager;
         db.collection('post', function (err, collection) {
@@ -569,7 +569,7 @@ module.exports = {
                             "post.cat": { $regex: cat || "", $options: "$i" }
                         },
                         {
-                            "post.method": { $regex: method || "", $options: "$i" }
+                            "post.dType": { $regex: dType || "", $options: "$i" }
                         }
                     ]
                 },
@@ -1211,13 +1211,6 @@ module.exports = {
 
 
         return res.view('test');
-
-    },
-
-    vip: function (req, res) {
-
-
-        return res.view('profile/vipInfo');
 
     },
 
