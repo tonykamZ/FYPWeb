@@ -595,7 +595,20 @@
 
     a:hover {
       opacity: 1;
-      transform: scale(1.07);
+    }
+
+    .toggle {
+      display: none;
+    }
+
+    @media only screen and (max-width: 990px) {
+      .nav-item {
+        display: none;
+      }
+
+      .toggle {
+        display: block;
+      }
     }
   </style>
 
@@ -677,11 +690,19 @@
                           <a class="navbar-brand" id="txt" style="color: rgb(255,255,255);">Today</a>
 
                         </li>
+
         </ul>
       </div>
 
     </div>
+    <div class="toggle">
+      <a class="btn btn-success" href="/signup">Sign up</a>
+      <a class="btn btn-primary" href="/login" style="margin-right: 5px;">Log in</a>
+      <li style="float: right; font-size: x-large; color: #ffffff;" ><a href="#"><i class="fas fa-bars"></i></a></li>
+    </div>
+
   </nav>
+
 
 
   <div class="container">
@@ -707,7 +728,7 @@
 <script>
 
   var currentLocation = window.location;
-  if (currentLocation == "http://localhost:1337/read/profile?username=<%= req.session.memberid %>") {
+  if (currentLocation == "/read/profile?username=<%= req.session.memberid %>") {
     document.getElementById("profile").style.display = "none";
   }
 

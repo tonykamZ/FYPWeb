@@ -57,8 +57,10 @@ module.exports.datastores = {
 
     //url: 'mongodb://admin:12345678@fypdb.5ffhh.mongodb.net/storage?retryWrites=true&w=majority',
 
-    url: 'mongodb://127.0.0.1:27017/test',
-    ssl: false
+    url: 'mongodb://admin:admin@fypdb-shard-00-00.5ffhh.mongodb.net:27017,fypdb-shard-00-01.5ffhh.mongodb.net:27017,fypdb-shard-00-02.5ffhh.mongodb.net:27017/test?ssl=true&replicaSet=atlas-5gm8ln-shard-0&authSource=admin&retryWrites=true&w=majority',
+    
+    //url: 'mongodb://127.0.0.1:27017/test',
+    
   },
 
 
