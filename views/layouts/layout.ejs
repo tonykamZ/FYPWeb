@@ -696,9 +696,32 @@
 
     </div>
     <div class="toggle">
-      <a class="btn btn-success" href="/signup">Sign up</a>
-      <a class="btn btn-primary" href="/login" style="margin-right: 5px;">Log in</a>
-      <li style="float: right; font-size: x-large; color: #ffffff;" ><a href="#"><i class="fas fa-bars"></i></a></li>
+      <% if(req.session.memberid){ %>
+        <% if(req.session.memberid=="admin" ){ %>
+          <a id="profile" class="tooltip-bottom" data-tooltip="view admin profile" href="/read/profile?username=admin">
+            <i id="userA" class="fa fa-user-shield"></i>
+          </a>
+          <% }else{ %>
+
+
+            <a href="/read/profile?username=<%= req.session.memberid %>" id="profile" class="tooltip-bottom"
+              data-tooltip="view personal profile">
+              <% if(req.session.notification> 0){ %>
+                <div class="number"><b class="numberNoti">
+                    <%= req.session.notification %>
+                  </b></div>
+                <% } %>
+                  <i id="userP" class="fas fa-user"></i>
+            </a>
+            <% } %>
+
+
+              <% }else{ %>
+                <a class="btn btn-success" href="/signup">Sign up</a>
+                <a class="btn btn-primary" href="/login" style="margin-right: 5px;">Log in</a>
+                <% } %>
+                  <li style="float: right; font-size: 27px; color: #ffffff; padding-left: 10px;"><a href="#"><i
+                        class="fas fa-bars"></i></a></li>
     </div>
 
   </nav>

@@ -550,6 +550,9 @@
                                 <b><%= post.post.cat %></b>
                             </li>
                             <% } %>
+                            <li class="tag__item">
+                                <b><%= post.post.dType %></b>
+                            </li>
                         </ul>
 
                         
@@ -617,6 +620,7 @@
                         </small>
                         
                         <!-- history -->
+                        <br><br><br>
 
 
                         <!-- input comment -->
@@ -636,10 +640,11 @@
 
                                         <% var perviousCommentDate = ""; %>
                                         <% post.comments.forEach(function(cm){ %>
+                                            <% var arr2 = cm.byDateString.split("T"); %>
                                             <% if(perviousCommentDate){ %>
                                                 <!-- Check DD/MM/YYYY -->
-                                                <% var arr1 = perviousCommentDate.split(" "); %>
-                                                <% var arr2 = cm.byDate.split(" "); %>
+                                                <% var arr1 = perviousCommentDate.split("T"); %>
+                                                
                                                 <!-- Check DD/MM/YYYY -->
                                                 <% if(arr1[0] == arr2[0]){ %>
                                                     <!-- Check time (hour and minutes) -->
@@ -653,20 +658,20 @@
                                                     <!-- not showing datetime if it is within 5 minutes difference -->
                                                     <% if(minutesDiff == 0 || minutesDiff == 1 || minutesDiff == 2 || minutesDiff == 3 || minutesDiff == 4 || minutesDiff == 5 ||minutesDiff == -1 ||minutesDiff == -2 ||minutesDiff == -3 ||minutesDiff == -4 ||minutesDiff == -5 ){ %>
                                                     <% }else { %>
-                                                        <p class="timeId"><%= cm.byDate %></p>
+                                                        <p class="timeId"><%= arr2[0] %> <%= arr2[1] %></p>
                                                         <% } %>
                                                     <% }else{ %>
-                                                        <p class="timeId"><%= cm.byDate %></p>
+                                                        <p class="timeId"><%= arr2[0] %> <%= arr2[1] %></p>
                                                         <% } %>
 
                                                     <% }else{ %>
-                                                        <p class="timeId"><%= cm.byDate %></p>
+                                                        <p class="timeId"><%= arr2[0] %> <%= arr2[1] %></p>
                                                         <% } %>
                                                 
                                                 <% }else{ %>
-                                                    <p class="timeId"><%= cm.byDate %></p>
+                                                    <p class="timeId"><%= arr2[0] %> <%= arr2[1] %></p>
                                                     <% } %>
-                                            <% perviousCommentDate = cm.byDate; %>
+                                            <% perviousCommentDate = cm.byDateString; %>
                                             
                                             <% var displayName="" ; %>
                                             <!-- cut length of username -->

@@ -367,7 +367,7 @@ module.exports = {
         var cat = req.body.cat;
         var dType = req.body.dType;
 
-        if(dType == "Other"){
+        if (dType == "Other") {
             dType = req.body.otherVal;
         }
 
@@ -418,7 +418,7 @@ module.exports = {
         var result = await db.collection('post').insertOne(
             {
                 HostUsername: req.session.memberid, HostNickname: req.session.nickname, creditScore: req.session.creditScore, post: {
-                    title: title, cat: cat, description: description, memberLimit: memberLimit, attribution: attr, imgInput: img, method: method
+                    title: title, cat: cat, description: description, memberLimit: memberLimit, attribution: attr, imgInput: img, method: method, dType: dType
                 }, createDate: new Date(), createDateString: dateString, updateDate: new Date(), updateDateString: '', joinedMembers: [], joinedHistory: [], comments: []
             }
 
@@ -549,7 +549,7 @@ module.exports = {
         var keywords = req.query.keywords;
         var cat = req.query.cat;
         var method = req.query.method;
-        
+
 
         sails.log(keywords + " " + cat + " " + method);
         var search = keywords || cat || method;
@@ -566,10 +566,10 @@ module.exports = {
                             ]
                         },
                         {
-                            "post.cat":{ $regex: cat || "", $options: "$i" }
+                            "post.cat": { $regex: cat || "", $options: "$i" }
                         },
                         {
-                            "post.method":{ $regex: method || "", $options: "$i" }
+                            "post.method": { $regex: method || "", $options: "$i" }
                         }
                     ]
                 },
@@ -934,7 +934,7 @@ module.exports = {
             {
                 $push: {
                     comments: {
-                        content: cm, byUsername: username, byUserNickname: UserNickname, byDate: dateString
+                        content: cm, byUsername: username, byUserNickname: UserNickname, byDateString: dateString, byDate: new Date()
                     }
                 }
             }
