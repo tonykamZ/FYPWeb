@@ -102,7 +102,7 @@ module.exports = {
 
     signup: async function (req, res) {
 
-        if (req.method == "GET") return res.view('signupForm', { status: '', ExisitingUser: '' });
+        if (req.method == "GET") return res.view('SignupForm', { status: '', ExisitingUser: '' });
 
 
         var username = req.body.username;

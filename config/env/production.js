@@ -252,8 +252,8 @@ module.exports = {
     *                                                                          *
     ***************************************************************************/
      onlyAllowOrigins: [
-       'https://polar-island-81363.herokuapp.com',
-       'https://www.polar-island-81363.herokuapp.com',
+       'https://happshare2022.herokuapp.com/',
+       'https://www.happshare2022.herokuapp.com/',
      ],
 
 
