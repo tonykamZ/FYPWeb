@@ -1221,6 +1221,20 @@ module.exports = {
 
     },
 
+    terms: function (req, res) {
+
+
+        return res.view('terms');
+
+    },
+
+    policy: function (req, res) {
+
+
+        return res.view('policy');
+
+    },
+
 
 };
 

@@ -33,67 +33,97 @@ module.exports.routes = {
   *                                                                          *
   ***************************************************************************/
 
-
+  // ********* first landing page *********
   'GET /': 'UserController.landing',
+
+  // home page: show all posts
   'GET /explore': 'UserController.Home',
+
+  // login & signup process
   'GET /login': 'UserController.login',
   'POST /login': 'UserController.login',
   'GET /signup': 'UserController.signup',
   'POST /signup': 'UserController.signup',
 
+  // disconnect gmail 
   'GET /disconnectGmail': 'UserController.disconnectGmail',
+
+  // logout process
   'GET /logout': 'UserController.logout',
 
-  'GET /post': 'UserController.post',
-  'POST /post': 'UserController.post',
+  // read post detail
   'GET /read/post/:id': 'UserController.postDetail',
 
+  // terms & policy
+  'GET /terms': 'UserController.terms',
+  'GET /policy': 'UserController.policy',
+
+
+  'GET /member/vip': 'UserController.vip',
+
+
+  // *** member ***********************************************
+  // create post
+  'GET /post': 'UserController.post',
+  'POST /post': 'UserController.post',
+
+  // join post & leave post
   'GET /join/:id': 'UserController.joinPost',
   'GET /leave/post/:id': 'UserController.leavePost',
 
+  // post comment 
   'POST /comment/:id/:cm': 'UserController.comment',
 
+  // manage own posts
   'GET /manage': 'UserController.manage',
   'GET /manage/post/:id': 'UserController.editPostForm',
   'POST /manage/post/:id': 'UserController.editPostForm',
 
-
+  // manage profile & read other's profile
   'GET /editProfile': 'UserController.editProfile',
   'POST /editProfile': 'UserController.editProfile',
   'GET /read/profile': 'UserController.userDetail',
   'GET /read/profile/notification': 'UserController.notiList',
 
+  // report a user
   'POST /report': 'UserController.report',
 
+  // delete own notification
   'POST /delete/notification': 'UserController.delNoti',
-  
+  // *** member ***********************************************
 
 
-  // admin
-  // report
+
+
+  // *** admin ***********************************************
+  // report handling
   'GET /reporthandle': 'UserController.reportHandle',
   'GET /read/report/:id': 'UserController.viewReport',
   'GET /admin/report/delete/:id': 'UserController.deleteReport',
   'POST /update/report/:id': 'UserController.updateReportStatus',
 
-  // notification
+  //  send notification
   'POST /send/noti': 'UserController.sendNotification',
 
-  // delete post
+  // delete post in DB
   'POST /delete/post/:id': 'UserController.delPost',
 
-  'GET /member/vip': 'UserController.vip',
+  // display all users in DB
+  'GET /userlist': 'UserController.showUsers',
+   // *** admin ***********************************************
 
+
+
+
+  // for testing purpose only
   'GET /test': 'UserController.test',
 
+  // google Oauth api
   'GET /api/v1/auth/google': { controller: 'PassportController', action: 'googleAuth' },
   'GET /api/v1/auth/google/callback': { controller: 'PassportController', action: 'googleCallback' },
 
 
-
-  // admin
-
-  'GET /userlist': 'UserController.showUsers',
+  
 
 
 };

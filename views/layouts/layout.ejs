@@ -610,6 +610,33 @@
         display: block;
       }
     }
+
+    #menuS {
+      display: none;
+    }
+
+    .menu {
+      position: absolute;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background-color: #dd00d2;
+      color: rgb(255, 255, 255);
+      z-index: 99;
+      opacity: 0.92;
+    }
+
+    .menu .item {
+      display: block;
+      padding: 15px 5px;
+      border-bottom: 1.2px solid rgb(192, 192, 192);
+    }
+
+    .item-last {
+      display: block;
+      padding: 15px 6px;
+    }
   </style>
 
 </head>
@@ -720,11 +747,37 @@
                 <a class="btn btn-success" href="/signup">Sign up</a>
                 <a class="btn btn-primary" href="/login" style="margin-right: 5px;">Log in</a>
                 <% } %>
-                  <li style="float: right; font-size: 27px; color: #ffffff; padding-left: 10px;"><a href="#"><i
-                        class="fas fa-bars"></i></a></li>
+                  <li style="float: right; font-size: 27px; color: #ffffff; padding-left: 10px;"><a
+                      style="cursor: pointer;" onclick="toggleMenu()" id="MenuButton"><i class="fas fa-bars"></i></a>
+                  </li>
     </div>
 
   </nav>
+
+  <!-- menu for small screen -->
+  <nav id="menuS">
+    <ul class="menu">
+      <a class="navbar-brand">
+        <span style="color: #effc38">Happy</span>
+        <span style="color: #ffb671">Share:)</span>
+      </a>
+      <li class="item"><a href="/explore">Explore</a></li>
+      <% if(req.session.memberid){ %>
+        <% if(req.session.memberid=="admin" ){ %>
+          <li class="item"><a href="/userlist">User</a></li>
+          <li class="item"><a href="/reporthandle">Report Handle</a></li>
+          <% }else{ %>
+            <li class="item"><a href="/post">Post</a></li>
+            <li class="item"><a href="/manage">Manage</a></li>
+            <% } %>
+              <% } %>
+
+
+              <li class="item-last"><a href="/terms">Terms</a></li>
+    </ul>
+  </nav>
+
+  <!-- menu for small screen -->
 
 
 
@@ -790,6 +843,23 @@
   } else {
     document.getElementById('navBar').className += ' custom-nav';
     document.getElementById('footer').className += ' custom-footer';
+  }
+
+  function toggleMenu() {
+    var MenuButton = document.getElementById('MenuButton');
+    //alert(htmlContent);
+    if (MenuButton.innerHTML == "<i class=\"fas fa-bars\" aria-hidden=\"true\"></i>") {
+      document.getElementById('menuS').style.display = 'inline';
+      MenuButton.innerHTML = "";
+      MenuButton.innerHTML += "<i class=\"fas fa-times\"></i>";
+    } else {
+      document.getElementById('menuS').style.display = 'none';
+      MenuButton.innerHTML = "";
+      MenuButton.innerHTML += "<i class=\"fas fa-bars\" aria-hidden=\"true\"></i>";
+    }
+
+
+
   }
 
 
