@@ -779,9 +779,9 @@ module.exports = {
                 sails.log("Exisiting members count: " + memberCnt);
                 if (memberCnt + 1 >= memberLimit) {
                     // exceed limit
-                    sails.log("join limit is full!");
-                    res.statusMessage = "join limit is full!";
+                    res.statusMessage = "Fail to join! The quota is full!";
                     res.status(400).end();
+                    return;
                 }
 
                 // loop the exisiting members, check if current user is duplicated in DB?
@@ -790,7 +790,9 @@ module.exports = {
                     if (result.joinedMembers[i] == req.session.memberid) {
                         // duplicated
                         sails.log("user duplicated in the DB!");
-                        return res.redirect('/read/post/' + id);
+                        res.statusMessage = "You've joined this post before!";
+                        res.status(400).end();
+                        return;
                     }
                 }
 
