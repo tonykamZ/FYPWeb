@@ -761,80 +761,90 @@ module.exports = {
 
     joinPost: async function (req, res) {
 
-
-        var id = req.params.id;
-        var ObjectId = require('mongodb').ObjectId;
-        var o_id = new ObjectId(id);
-
-        var db = sails.getDatastore().manager;
-        var result = await db.collection('post').findOne({ "_id": o_id });
-
-        if (result) {
-
-            // host user is not included in "joinedMembers"
-            var memberCnt = result.joinedMembers.length;
-            sails.log("Exisiting members count: " + memberCnt);
-
-            // loop the exisiting members, check if current user is duplicated in DB?
-            for (var i = 0; i < memberCnt; i++) {
-                sails.log("[" + i + "] : " + result.joinedMembers[i]);
-                if (result.joinedMembers[i] == req.session.memberid) {
-                    // duplicated
-                    sails.log("user duplicated in the DB!");
-                    return res.redirect('/read/post/' + id);
-                }
-            }
-
-            var date = new Date();
-            var day = date.getDate();
-            var month = date.getMonth();
-            var year = date.getFullYear();
-            var h = date.getHours();
-            var m = date.getMinutes();
-            var s = date.getSeconds();
-            if (day < 10) {
-                day = "0" + day;
-            }
-            // it seems the date.getMonth() is wrong(?) Nov --> get 10 return
-            month = month + 1;
-            if (month < 10) {
-                month = "0" + month;
-            }
-            if (h < 10) {
-                h = "0" + h;
-            }
-            if (m < 10) {
-                m = "0" + m;
-            }
-            if (s < 10) {
-                s = "0" + s;
-            }
-
-            var dateString = year + "-" + month + "-" + day + "T" + h + ":" + m + ":" + s;
-            var timing = dateString + " - " + req.session.memberid + " has joined";
-            sails.log("timing = " + timing);
-            //update user count: push current session user to that post
-            //push the successful joined record to DB
-            await db.collection('post').updateOne(
-                { "_id": o_id },
-                { $push: { joinedMembers: req.session.memberid, joinedHistory: timing } }
-            )
-
-
+        if (req.method == 'GET') {
+            return res.redirect('/read/post/' + id);
         } else {
-            //return null
-            return res.view('post/postDetail', { post: NULL });
+            var id = req.params.id;
+            var ObjectId = require('mongodb').ObjectId;
+            var o_id = new ObjectId(id);
+
+            var db = sails.getDatastore().manager;
+            var result = await db.collection('post').findOne({ "_id": o_id });
+
+            if (result) {
+
+                // host user is not included in "joinedMembers"
+                var memberCnt = result.joinedMembers.length;
+                var memberLimit = result.post.memberLimit;
+                sails.log("Exisiting members count: " + memberCnt);
+                if (memberCnt + 1 >= memberLimit) {
+                    // exceed limit
+                    sails.log("join limit is full!");
+                    res.statusMessage = "join limit is full!";
+                    res.status(400).end();
+                }
+
+                // loop the exisiting members, check if current user is duplicated in DB?
+                for (var i = 0; i < memberCnt; i++) {
+                    sails.log("[" + i + "] : " + result.joinedMembers[i]);
+                    if (result.joinedMembers[i] == req.session.memberid) {
+                        // duplicated
+                        sails.log("user duplicated in the DB!");
+                        return res.redirect('/read/post/' + id);
+                    }
+                }
+
+                var date = new Date();
+                var day = date.getDate();
+                var month = date.getMonth();
+                var year = date.getFullYear();
+                var h = date.getHours();
+                var m = date.getMinutes();
+                var s = date.getSeconds();
+                if (day < 10) {
+                    day = "0" + day;
+                }
+                // it seems the date.getMonth() is wrong(?) Nov --> get 10 return
+                month = month + 1;
+                if (month < 10) {
+                    month = "0" + month;
+                }
+                if (h < 10) {
+                    h = "0" + h;
+                }
+                if (m < 10) {
+                    m = "0" + m;
+                }
+                if (s < 10) {
+                    s = "0" + s;
+                }
+
+                var dateString = year + "-" + month + "-" + day + "T" + h + ":" + m + ":" + s;
+                var timing = dateString + " - " + req.session.memberid + " has joined";
+                sails.log("timing = " + timing);
+                //update user count: push current session user to that post
+                //push the successful joined record to DB
+                await db.collection('post').updateOne(
+                    { "_id": o_id },
+                    { $push: { joinedMembers: req.session.memberid, joinedHistory: timing } }
+                )
+
+
+            } else {
+                //return null
+                return res.view('post/postDetail', { post: NULL });
+            }
+
+            if (req.wantsJSON) {
+                sails.log("returning detail page json data");
+                sails.log("stringgify result: " + JSON.stringify(result));
+                return res.json(result);
+            }
+
+            sails.log(req.session.memberid + " request joining this post (" + id + ") ...")
+            return res.ok();
+
         }
-
-        if (req.wantsJSON) {
-            sails.log("returning detail page json data");
-            sails.log("stringgify result: " + JSON.stringify(result));
-            return res.json(result);
-        }
-
-        sails.log(req.session.memberid + " request joining this post (" + id + ") ...")
-        return res.redirect("/read/post/" + id);
-
     },
 
 

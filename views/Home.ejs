@@ -432,7 +432,7 @@
                                             <a onclick="checkValidJoin('<%= post._id %>','<%= post.joinedMembers.length %>','<%= post.post.memberLimit %>')" style="cursor: pointer;"><i class="fas fa-hand-o-right mr-2"></i>Join</a>
                                             <% } %>
                                             <% }else { %>
-                                                <a href="/manage/post/<%= post._id %>"><i class="fas fa-edit mr-2"></i>Manage</a>
+                                                <a href="/manage/post/<%= post._id %>"><i class="fas fa-edit mr-2"></i>Edit</a>
                                                 <% } %>
                                                
                                         <% }else{ %>
@@ -556,7 +556,7 @@
                                                 <a onclick="checkValidJoin('<%= post._id %>','<%= post.joinedMembers.length %>','<%= post.post.memberLimit %>')" style="cursor: pointer;"><i class="fas fa-hand-o-right mr-2"></i>Join</a>
                                                 <% } %>
                                             <% }else { %>
-                                                <a href="/manage/post/<%= post._id %>"><i class="fas fa-edit mr-2"></i>Manage</a>
+                                                <a href="/manage/post/<%= post._id %>"><i class="fas fa-edit mr-2"></i>Edit</a>
                                                 <% } %>
                                                
                                             <% }else{ %>
@@ -682,7 +682,7 @@
 </script>
 
 <script>
-    function checkValidJoin(id, joinedMembers, maxMembers){
+    async function checkValidJoin(id, joinedMembers, maxMembers){
 
         joinedMembers = parseInt(joinedMembers)+1;
         maxMembers = parseInt(maxMembers);
@@ -690,7 +690,17 @@
         if(joinedMembers >= maxMembers){
             alert("Fail to join the post!\nReason: The quota for joining this post is full! ("+joinedMembers+"/"+maxMembers+")");
         }else{
-            window.location.replace("/join/"+id);
+             
+        var response = await fetch("/join/"+id, { method: "POST" });
+
+
+        if (response.ok) {
+            window.location.reload();
+            alert("Joined the post!");
+        } else {
+            var msg = response.statusText;
+            alert(msg);
+        }
         }
     }
 
