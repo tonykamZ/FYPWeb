@@ -762,7 +762,7 @@ module.exports = {
     joinPost: async function (req, res) {
 
         if (req.method == 'GET') {
-            return res.redirect('/read/post/' + id);
+            return res.redirect('/read/post/' + req.params.id);
         } else {
             var id = req.params.id;
             var ObjectId = require('mongodb').ObjectId;
@@ -800,7 +800,7 @@ module.exports = {
                 var day = date.getDate();
                 var month = date.getMonth();
                 var year = date.getFullYear();
-                var h = date.getHours();
+                var h = date.getUTCHours();
                 var m = date.getMinutes();
                 var s = date.getSeconds();
                 if (day < 10) {
@@ -834,7 +834,10 @@ module.exports = {
 
             } else {
                 //return null
-                return res.view('post/postDetail', { post: NULL });
+                sails.log("null data!");
+                res.statusMessage = "No data found!";
+                res.status(400).end();
+                return;
             }
 
             if (req.wantsJSON) {

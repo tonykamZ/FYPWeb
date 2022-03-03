@@ -612,8 +612,9 @@
                             History:
                             <div>
                             <% post.joinedHistory.forEach(function(h){ %>
+                                 <% var arr =  h.split("T"); %>
                                 <div>
-                                    <%= h %>
+                                   <%= arr[0] %> <%= arr[1] %>
                                 </div>
                                 <% }) %>
                             </div>
@@ -876,7 +877,8 @@
         }
     }
 
-     function checkValidJoin(id, joinedMembers, maxMembers){
+     
+     async function checkValidJoin(id, joinedMembers, maxMembers){
 
         joinedMembers = parseInt(joinedMembers)+1;
         maxMembers = parseInt(maxMembers);
@@ -884,7 +886,18 @@
         if(joinedMembers >= maxMembers){
             alert("Fail to join the post!\nReason: The quota for joining this post is full! ("+joinedMembers+"/"+maxMembers+")");
         }else{
-            window.location.replace("/join/"+id);
+             
+        var response = await fetch("/join/"+id, { method: "POST" });
+
+
+        if (response.ok) {
+            window.location.reload();
+            alert("Joined the post!");
+        } else {
+            var msg = response.statusText;
+            window.location.reload();
+            alert(msg);
+        }
         }
     }
 </script>
