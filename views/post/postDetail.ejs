@@ -587,7 +587,7 @@
                             <% if(req.session.memberid){ %>
                                 <% if(duplicated==true){ %>
                                     <li class="tag__item">
-                                        <a href="/leave/post/<%= post._id %>">
+                                        <a style="cursor: pointer;" onclick="leavePost('<%= post._id %>')">
                                             <i class="fas fa-sign-out-alt mr-2"></i>leave
                                         </a>
                                     </li>
@@ -899,5 +899,21 @@
             alert(msg);
         }
         }
+    }
+
+    async function leavePost(id){
+        
+         var response = await fetch("/leave/post/"+id, { method: "POST" });
+
+
+        if (response.ok) {
+            window.location.reload();
+            alert("left!");
+        } else {
+            var msg = response.statusText;
+            window.location.reload();
+            alert(msg);
+        }
+        
     }
 </script>

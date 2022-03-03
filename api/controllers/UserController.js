@@ -140,7 +140,7 @@ module.exports = {
         var day = date.getDate();
         var month = date.getMonth();
         var year = date.getFullYear();
-        var h = date.getHours();
+        var h = date.getUTCHours() + 8;
         var m = date.getMinutes();
         var s = date.getSeconds();
         if (day < 10) {
@@ -213,7 +213,7 @@ module.exports = {
         var day = date.getDate();
         var month = date.getMonth();
         var year = date.getFullYear();
-        var h = date.getHours();
+        var h = date.getUTCHours() + 8;
         var m = date.getMinutes();
         var s = date.getSeconds();
         if (day < 10) {
@@ -389,7 +389,7 @@ module.exports = {
         var day = date.getDate();
         var month = date.getMonth();
         var year = date.getFullYear();
-        var h = date.getHours();
+        var h = date.getUTCHours() + 8;
         var m = date.getMinutes();
         var s = date.getSeconds();
         if (day < 10) {
@@ -500,7 +500,7 @@ module.exports = {
         var day = date.getDate();
         var month = date.getMonth();
         var year = date.getFullYear();
-        var h = date.getHours();
+        var h = date.getUTCHours() + 8;
         var m = date.getMinutes();
         var s = date.getSeconds();
         if (day < 10) {
@@ -685,7 +685,7 @@ module.exports = {
             var day = date.getDate();
             var month = date.getMonth();
             var year = date.getFullYear();
-            var h = date.getHours();
+            var h = date.getUTCHours() + 8;
             var m = date.getMinutes();
             var s = date.getSeconds();
             if (day < 10) {
@@ -800,7 +800,7 @@ module.exports = {
                 var day = date.getDate();
                 var month = date.getMonth();
                 var year = date.getFullYear();
-                var h = date.getUTCHours();
+                var h = date.getUTCHours() + 8;
                 var m = date.getMinutes();
                 var s = date.getSeconds();
                 if (day < 10) {
@@ -864,7 +864,7 @@ module.exports = {
         var day = date.getDate();
         var month = date.getMonth();
         var year = date.getFullYear();
-        var h = date.getHours();
+        var h = date.getUTCHours() + 8;
         var m = date.getMinutes();
         var s = date.getSeconds();
         if (day < 10) {
@@ -899,12 +899,9 @@ module.exports = {
             { $push: { joinedHistory: timing } }
         )
 
-        if (req.wantsJSON) {
-            sails.log("returning detail page json data");
-            sails.log("stringgify result: " + JSON.stringify(result));
-            return res.json(result);
-        }
-        return res.redirect('/read/post/' + id);
+        // if (req.wantsJSON){}
+
+        return res.ok();
 
     },
 
@@ -921,7 +918,7 @@ module.exports = {
         var day = date.getDate();
         var month = date.getMonth();
         var year = date.getFullYear();
-        var h = date.getHours();
+        var h = date.getUTCHours() + 8;
         var m = date.getMinutes();
         var s = date.getSeconds();
         if (day < 10) {
@@ -1010,7 +1007,7 @@ module.exports = {
         var day = date.getDate();
         var month = date.getMonth();
         var year = date.getFullYear();
-        var h = date.getHours();
+        var h = date.getUTCHours() + 8;
         var m = date.getMinutes();
         var s = date.getSeconds();
         if (day < 10) {
@@ -1161,7 +1158,7 @@ module.exports = {
         var day = date.getDate();
         var month = date.getMonth();
         var year = date.getFullYear();
-        var h = date.getHours();
+        var h = date.getUTCHours() + 8;
         var m = date.getMinutes();
         var s = date.getSeconds();
         if (day < 10) {

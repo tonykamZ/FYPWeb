@@ -67,9 +67,8 @@ module.exports.routes = {
   'POST /post': 'UserController.post',
 
   // join post & leave post
-  'GET /join/:id': 'UserController.joinPost',
   'POST /join/:id': 'UserController.joinPost',
-  'GET /leave/post/:id': 'UserController.leavePost',
+  'POST /leave/post/:id': 'UserController.leavePost',
 
   // post comment 
   'POST /comment/:id/:cm': 'UserController.comment',
