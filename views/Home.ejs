@@ -339,6 +339,9 @@
         <br><br><br>
         <% if(search){ %>
             <h3 class="text-custom">Search results: (<%= postCnt %>)</h3>
+            <% if(postCnt == 0){ %>
+                <h3>No result🤔</h3>
+                <% } %>
             <% }else{ %>
                 
                 <div class="intro"><i class="fas fa-megaphone"></i>Here are the latest posts on the platform. You can filter the post by any keywords,
@@ -349,7 +352,9 @@
                 <h3 class="text-custom">Latest posts (<%= postCnt %>)</h3>
                 <% } %>
                 <% if(postCnt == 0){ %>
-                    <h3>No result🤔</h3>
+                    <br>
+                    <h3>There is no any post yet, let's make a new post! <a class="btn btn-warning" href="/post">New Post</a> </h3>
+                    <br>
                     <% } %>
                     <a id="Top" onclick="window.scrollTo(0, 0);"><i class="fas fa-angle-double-up"></i></a>
 

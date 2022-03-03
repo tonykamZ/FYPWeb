@@ -16,7 +16,9 @@
     <div class="container">
         <% if(req.session.memberid){ %>
             <% if(posts.length==0 ){ %>
+                <br>
                 <h3>Nothing here😐</h3>
+                <h6>Let's make your first post now! <a class="btn btn-warning" href="/post">New Post</a></h6>
                 <% }else { %>
                     <h3 class="text-custom-manage">Manage your posts</h3>
                     <% var cnt=1; %>
