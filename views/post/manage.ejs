@@ -20,6 +20,15 @@
                 <h3>Nothing here😐</h3>
                 <h6>Let's make your first post now! <a class="btn btn-warning" href="/post">New Post</a></h6>
                 <% }else { %>
+                    
+                    <form action="/read/post">
+                        <div class="form-row" style="position: absolute; right: 10%;">
+                            <div class="form-group col-md-4">
+                                <input class="form-control" type="text" name="postID">
+                                <button class="btn btn-info" type="submit" style="float: right;">Go!</button>
+                            </div>
+                        </div>
+                    </form>
                     <h3 class="text-custom-manage">Manage your posts</h3>
                     <% var cnt=1; %>
                         <% var today=new Date(); %>
@@ -141,6 +150,8 @@
                             manage your post </h3>
                                         <!-- visitor layout -->
                                         <% } %>
+
+                                        <br><br>
     </div>
 
 </body>

@@ -497,9 +497,6 @@
                         </div>
 
                         <ul class="postcard__tagbox">
-                            <li class="tag__item"><i class="fas fa-users mr-2"></i>
-                                <%= post.joinedMembers.length + 1 %>/<%= post.post.memberLimit %>
-                            </li>
                             <li class="tag__item"><i class="fas fa-user-secret mr-2"></i>Host:
                                 <% if(post.post.HostNickname){ %>
                                     <a href="/read/profile?username=<%= post.HostUsername %>">
@@ -513,6 +510,20 @@
                             </li>
                             <li class="tag__item" id="creditTag">
                             </li>
+                            <% if(post.post.cat != "any"){ %>
+                                <li class="tag__item">
+                                    <b>#<%= post.post.cat %></b>
+                                </li>
+                                <% } %>
+                                <% if(post.post.dType.substring(0,6)=="Other:" ){ %>
+                                    <li class="tag__item">
+                                        <b>#<%= post.post.dType.substring(6,post.post.dType.length) %></b>
+                                    </li>
+                                    <% }else{ %>
+                                <li class="tag__item">
+                                    <b>#<%= post.post.dType %></b>
+                                </li>
+                                <% } %>
                             <li class="tag__item play red">
                                 <% if(req.session.memberid){ %>
                                     <% if(req.session.memberid == "admin"){ %>
@@ -533,7 +544,7 @@
                                                                                 class="fas fa-hand-o-right mr-2"></i>Join</a>
                                                                         <% } %>
                                                                             <% }else { %>
-                                                                                <a href="/manage/post/<%= post._id %>"><i
+                                                                                <a href="/manage/post/<%= post._id %>" style="color: rgb(163, 1, 1);"><i
                                                                                         class="fas fa-edit mr-2"></i>Edit</a>
                                                                                 <% } %> <% } %>
                                                                                     <% }else{ %>
@@ -545,14 +556,7 @@
                                                                                         <% } %>
                             </li>
 
-                            <% if(post.post.cat != "any"){ %>
-                            <li class="tag__item">
-                                <b><%= post.post.cat %></b>
-                            </li>
-                            <% } %>
-                            <li class="tag__item">
-                                <b><%= post.post.dType %></b>
-                            </li>
+                          
                         </ul>
 
                         
@@ -563,7 +567,9 @@
                 <div>
                     <% var dateStr = post.updateDateString.split("T"); %>
                     <h6 style="float: right;"><small>Last modified: <%= dateStr[0] %> <%= dateStr[1] %></small></h6>
-                    <b>Joined members: </b>
+                    <b>Joined members (
+                        <%= post.joinedMembers.length + 1 %>/<%= post.post.memberLimit %>
+                    ): </b>
                     <a href="/read/profile?username=<%= post.HostUsername %>">
                         <% if(post.post.HostNickname){ %>
                             <a href="/read/profile?username=<%= post.HostUsername %>">
@@ -587,7 +593,7 @@
                             <% if(req.session.memberid){ %>
                                 <% if(duplicated==true){ %>
                                     <li class="tag__item">
-                                        <a style="cursor: pointer;" onclick="leavePost('<%= post._id %>')">
+                                        <a style="cursor: pointer; color: red;" onclick="leavePost('<%= post._id %>')">
                                             <i class="fas fa-sign-out-alt mr-2"></i>leave
                                         </a>
                                     </li>

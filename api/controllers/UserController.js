@@ -368,7 +368,7 @@ module.exports = {
         var dType = req.body.dType;
 
         if (dType == "Other") {
-            dType = req.body.otherVal;
+            dType = "Other:" + req.body.otherVal;
         }
 
         var attr = [attribution] // define new array for storing links
@@ -601,7 +601,7 @@ module.exports = {
 
     postDetail: async function (req, res) {
 
-        var id = req.params.id;
+        var id = req.params.id || req.query.postID;
         var ObjectId = require('mongodb').ObjectId;
         var o_id = new ObjectId(id);
 
@@ -666,6 +666,14 @@ module.exports = {
             var attribution4 = req.body.attribution4;
             var attribution5 = req.body.attribution5;
             var img = req.body.imgInput;
+            var method = req.body.method;
+            var cat = req.body.cat;
+            var dType = req.body.dType;
+
+            sails.log("method = " + method + " cat = " + cat + " dtype = " + dType);
+            if (dType == "Other") {
+                dType = "Other:" + req.body.otherVal;
+            }
 
             var attr = [attribution] // define new array for storing links
             // check if there exist additional attribution links
@@ -716,7 +724,18 @@ module.exports = {
             var result = await db.collection('post').updateOne(
                 { "_id": o_id },
                 {
-                    $set: { 'post.title': title, 'post.description': description, 'post.memberLimit': memberLimit, 'post.attribution': attr, 'post.imgInput': img, updateDate: new Date(), updateDateString: dateString }
+                    $set: {
+                        'post.title': title,
+                        'post.description': description,
+                        'post.memberLimit': memberLimit,
+                        'post.attribution': attr,
+                        'post.imgInput': img,
+                        'post.cat': cat,
+                        'post.method': method,
+                        'post.dType': dType,
+                        updateDate: new Date(),
+                        updateDateString: dateString
+                    }
                 }
             )
 
@@ -830,6 +849,41 @@ module.exports = {
                     { "_id": o_id },
                     { $push: { joinedMembers: req.session.memberid, joinedHistory: timing } }
                 )
+
+                // trigger the deal (member limit is full after joined)
+                // +2 : +1 (Host) +1 (current joined member)
+                if (memberCnt + 2 >= memberLimit) {
+                    var noti = "***[SYSTEM MESSAGE] The post you joined is full now. " +
+                        "Please check out the post! (post title: " + result.post.title + " | Host:" + result.HostUsername + ") [SYSTEM MESSAGE]***";
+
+                    // send message to all joined members
+                    result.joinedMembers.forEach(async function (p) {
+                        await db.collection('user').updateOne(
+                            { "username": p },
+                            {
+                                $push: {
+                                    'notification': {
+                                        message: noti, date: dateString
+                                    }
+                                }
+                            }
+                        );
+                    });
+
+                    var notiTohost = "***[SYSTEM MESSAGE] The post you host is full now. " +
+                        "Please check out the post! (post title: " + result.post.title + " | post id: "+result._id+") [SYSTEM MESSAGE]***";
+                    // send message to the host
+                    await db.collection('user').updateOne(
+                        { "username": result.HostUsername },
+                        {
+                            $push: {
+                                'notification': {
+                                    message: notiTohost, date: dateString
+                                }
+                            }
+                        }
+                    );
+                }
 
 
             } else {
