@@ -190,7 +190,8 @@
                                     <h6>Mesage from the admin:</h6>
                                     <h6 style="color: #7208eb;"><%= report.actionTaken.message %></h6>
                                     <br>
-                                    <h6>Report handled date: <%= report.actionTaken.date %></h6>
+                                    <% var date = report.actionTaken.date.split("T"); %>
+                                    <h6>Report handled date: <%= date[0] %> <%= date[1] %></h6>
 
                         <% } %>
 
@@ -283,12 +284,12 @@
 
                             <% } %>
                 </div>
-
+                <br><br><br><br>
             </div>
 
             <% }else{ %>
                 <!-- normal member layout -->
-
+                <br>
                 <h3>You don't have permission to browse this page😬</h3>
                 <!-- should store url session to nav back later -->
 
@@ -298,7 +299,7 @@
 
                     <% }else{ %>
                         <!-- visitor layout -->
-
+                        <br>
                         <h3><a href="/login">Login <li class="tag__item" style="cursor: pointer;"><i
                                         class="fas fa-sign-in-alt mr-2"></i></li></a> to admin account to browse report
                             list
@@ -307,6 +308,8 @@
 
                         <!-- visitor layout -->
                         <% } %>
+
+                        <br><br>
 
 </body>
 

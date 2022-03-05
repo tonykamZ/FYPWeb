@@ -1,0 +1,236 @@
+<head>
+    <title>View report detail</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <style>
+        .row {
+            display: flex;
+            padding-top: 30px;
+        }
+
+        .column1 {
+            flex: 55%;
+        }
+
+        .column2 {
+            flex: 45%;
+        }
+
+        div {
+            clear: both;
+        }
+
+        label {
+            width: 200px;
+            border-radius: 3px;
+            border: 1px solid #D1D3D4
+        }
+
+        /* hide input */
+        input.radio:empty {
+            margin-left: -999px;
+        }
+
+        /* style label */
+        input.radio:empty~label {
+            position: relative;
+            float: left;
+            line-height: 2.5em;
+            text-indent: 3.25em;
+            margin-top: 2em;
+            cursor: pointer;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        input.radio:empty~label:before {
+            position: absolute;
+            display: block;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            content: '';
+            width: 2.5em;
+            background: #D1D3D4;
+            border-radius: 3px 0 0 3px;
+        }
+
+        /* toggle hover */
+        input.radio:hover:not(:checked)~label:before {
+            content: '\2714';
+            text-indent: .9em;
+            color: #C2C2C2;
+        }
+
+        input.radio:hover:not(:checked)~label {
+            color: rgb(0, 196, 131);
+        }
+
+        /* toggle on */
+        input.radio:checked~label:before {
+            content: '\2714';
+            text-indent: .9em;
+            color: #9CE2AE;
+            background-color: #4DCB6D;
+        }
+
+        input.radio:checked~label {
+            color: rgb(0, 214, 0);
+        }
+
+        /* radio focus */
+        input.radio:focus~label:before {
+            box-shadow: 0 0 0 3px #999;
+        }
+
+        #sub {
+            display: none;
+        }
+
+        #statusBar {
+            background: rgb(255, 255, 255);
+            border-radius: 2px;
+            display: inline-block;
+            margin: 1rem;
+            position: relative;
+            height: 30px;
+            width: 231px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+            transition: all 0.3s cubic-bezier(.25, .8, .25, 1);
+        }
+
+        #statusBar:hover {
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+        }
+
+        #back {
+            float: right;
+            margin-right: 100px;
+        }
+    </style>
+</head>
+
+<body>
+    <% if(req.session.memberid){ %>
+        <% if(req.session.memberid == report.reportedBy ){ %>
+            <div class="row">
+
+                <div class="column1">
+                    <h5>(Report ID#<%= report.reportID %>)</h5>
+                    <button class="btn btn-outline-secondary" type="button" style="float: right; margin-right: 20px;"
+                    onclick="window.history.back()">Back</button>
+                    <div id="statusBar">
+                        Status:
+                        <% if(report.status=="Pending" ){ %>
+                            <b style="color: #707070;">
+                                <%= report.status %>
+                            </b>
+                            <% }else if(report.status=="Approved" ){ %>
+                                <b style="color: #61ff89;">
+                                    <%= report.status %>
+                                </b>
+                                <% }else if(report.status=="Rejected" ){ %>
+                                    <b style="color: rgb(252, 133, 35);">
+                                        <%= report.status %>
+                                    </b>
+                                    <% }else{ %>
+                                        <b style="color: #7208eb;">
+                                            <%= report.status %>
+                                        </b>
+                                        <% } %>
+                    </div>
+
+                    <br>
+                    <ul>
+                        <li><b style="color: red;">Report User</b>: <b>
+                                <a href="/read/profile?username=<%= report.reportUser %>">
+                                    <%= report.reportUser %>
+                                </a>
+                            </b></li>
+                        <li>Content: <b>
+                                <%= report.content %>
+                            </b></li>
+                        <li>Evidence: <b>
+                                <%= report.evidence %>
+                            </b></li>
+                        <li>Report Date: <b>
+                                <% var dateStr=report.createDateString.split("T"); %>
+                                    <%= dateStr[0] %>
+                                        <%= dateStr[1] %>
+                            </b></li>
+                        <li>
+                            Picture provided:
+                        </li>
+                    </ul>
+                    <img src="<%= report.photoLink %>" alt="" class="image" height="180px" />
+
+                </div>
+
+               <div class="column2">
+                <% if(report.actionTaken.date){ %>
+                    <br><br>
+                    <h3>Action Taken:</h3>
+
+                    <% if(report.actionTaken.reportUserCSD){ %>
+                    <h6>@<%= report.reportUser %> - <%= report.actionTaken.reportUserCSD %> credit score</h6>
+                    <% }else{ %>
+                        <h6>@<%= report.reportUser %> : No mark deducted</h6>
+                        <% } %>
+
+                        <% if(report.actionTaken.reportedByCSD){ %>
+                            <h6>@<%= report.reportedBy %> - <%= report.actionTaken.reportedByCSD %></h6>
+                            <% }else{ %>
+                                
+                                <% } %>
+
+                                <h6>Mesage from the admin:</h6>
+                                <h6 style="color: #7208eb;"><%= report.actionTaken.message %></h6>
+                                <br>
+                                <% var date = report.actionTaken.date.split("T"); %>
+                                <h6>Report handled date: <%= date[0] %> <%= date[1] %></h6>
+
+                    <% } %>
+               </div>
+
+            </div>
+
+            <% }else{ %>
+                <!-- normal member layout -->
+
+                <h3>You don't have permission to browse this report detail</h3>
+                <!-- should store url session to nav back later -->
+
+                <!-- normal member layout -->
+
+                <% } %>
+
+                    <% }else{ %>
+                        <!-- visitor layout -->
+
+                        <h3><a href="/login">Login <li class="tag__item" style="cursor: pointer;"><i
+                                        class="fas fa-sign-in-alt mr-2"></i></li></a> to admin account to browse report
+                            list
+                        </h3>
+                        <!-- should store url session to nav back later -->
+
+                        <!-- visitor layout -->
+                        <% } %>
+
+</body>
+
+<script>
+    function showEdit(status) {
+        // enable input fields 
+        document.getElementById("reportUserCSD").readOnly = false;
+        document.getElementById("reportedByCSD").readOnly = false;
+
+        // show confirm button & cancel button
+        document.getElementById("sub").style.display = "inline";
+
+        // update status input
+        document.getElementById("status").value = status;
+    }
+</script>

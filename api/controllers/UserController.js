@@ -299,10 +299,25 @@ module.exports = {
             return res.json(result);
         }
 
-
         return res.view('report/detail', { report: result, reportedBy: reportedBy, reportUser: reportUser });
+    },
 
+    viewReportOnly: async function (req, res) {
 
+        var id = req.params.id;
+        var ObjectId = require('mongodb').ObjectId;
+        var o_id = new ObjectId(id);
+
+        var db = sails.getDatastore().manager;
+        var result = await db.collection('report').findOne({ "_id": o_id });
+
+        if (req.wantsJSON) {
+            sails.log("returning detail page json data");
+            sails.log("stringgify result: " + JSON.stringify(result, reportUser, reportedBy));
+            return res.json(result);
+        }
+
+        return res.view('report/viewOnly', { report: result });
     },
 
     disconnectGmail: function (req, res) {
@@ -871,7 +886,7 @@ module.exports = {
                     });
 
                     var notiTohost = "***[SYSTEM MESSAGE] The post you host is full now. " +
-                        "Please check out the post! (post title: " + result.post.title + " | post id: "+result._id+") [SYSTEM MESSAGE]***";
+                        "Please check out the post! (post title: " + result.post.title + " | post id: " + result._id + ") [SYSTEM MESSAGE]***";
                     // send message to the host
                     await db.collection('user').updateOne(
                         { "username": result.HostUsername },
@@ -1039,6 +1054,15 @@ module.exports = {
         sails.log("deleted report (" + id + ")");
 
         return res.redirect("/reporthandle");
+    },
+
+    reportHistory: async function (req, res) {
+
+        var db = await sails.getDatastore().manager;
+        var reports = await db.collection('report').find({ 'reportedBy': req.session.memberid }).toArray();
+
+
+        return res.view('report/reportHistory', {reports:reports});
     },
 
     updateReportStatus: async function (req, res) {

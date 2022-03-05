@@ -63,8 +63,8 @@ module.exports.routes = {
 
   // *** member ***********************************************
   // create post
-  'GET /post': 'UserController.post',
-  'POST /post': 'UserController.post',
+  'GET /create': 'UserController.post',
+  'POST /create': 'UserController.post',
 
   // join post & leave post
   'POST /join/:id': 'UserController.joinPost',
@@ -86,6 +86,10 @@ module.exports.routes = {
 
   // report a user
   'POST /report': 'UserController.report',
+
+  // report history 
+  'GET /report/history': 'UserController.reportHistory',
+  'GET /view/report/:id': 'UserController.viewReportOnly',
 
   // delete own notification
   'POST /delete/notification': 'UserController.delNoti',

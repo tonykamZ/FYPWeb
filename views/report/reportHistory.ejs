@@ -1,0 +1,108 @@
+<head>
+    <title>Report History</title>
+    <style>
+        .card {
+            background: rgb(250, 250, 250);
+            border-radius: 2px;
+            display: inline-block;
+            margin: 1rem;
+            position: relative;
+            height: 80px;
+            width: 70%;
+            padding: 24px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+            transition: all 0.3s cubic-bezier(.25, .8, .25, 1);
+        }
+
+        .card:hover {
+            box-shadow: 0 2px 2px rgba(0, 0, 0, 0.25), 0 1px 1px rgba(0, 0, 0, 0.22);
+        }
+
+        h1 {
+            font: 67px "Amatic SC", sans-serif;
+            text-shadow: 2px 2px rgba(0, 0, 0, 0.3);
+            margin-bottom: 15px;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css?family=Amatic+SC|Raleway" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+
+<body>
+
+    <% if(req.session.memberid){ %>
+        <div>
+            <br>
+            <h1>Report History <i class="fa fa-exclamation-triangle"></i></h1>
+            <% if(reports.length==0){ %>
+                <h3>The report history is empty~ </h3>
+                <% }else{ %>
+                    <div id="cardContainer">
+                        <% reports.forEach(function(n){ %>
+
+                            <a class="card" href="/view/report/<%= n._id %>">
+                                <h6>
+                                    <b>#<%= n.reportID %></b> | <b>Report User:</b>
+                                    <%= n.reportUser %> <b>Report Content:</b>
+                                        <% if(n.content.length> 20){ %>
+                                            <%= n.content.substring(0,19) %>...
+                                                <% }else{ %>
+                                                    <%= n.content %>
+                                                        <% } %>
+                                                            <% if(n.status=="Pending" ){ %>
+                                                                <b style="color: #707070;float: right;">
+                                                                    <%= n.status %>
+                                                                </b>
+                                                                <% }else if(n.status=="Approved" ){ %>
+                                                                    <b style="color: #61ff89;float: right;">
+                                                                        <%= n.status %>
+                                                                    </b>
+                                                                    <% }else if(n.status=="Rejected" ){ %>
+                                                                        <b
+                                                                            style="color: rgb(252, 133, 35);float: right;">
+                                                                            <%= n.status %>
+                                                                        </b>
+                                                                        <% }else{ %>
+                                                                            <b style="color: #7208eb;float: right;">
+                                                                                <%= n.status %>
+                                                                            </b>
+                                                                            <% } %>
+                                </h6>
+                                <% var arr=n.createDateString.split("T"); %>
+                                    <small>
+                                        <%= arr[0] %>
+                                            <%= arr[1] %>
+                                    </small>
+                            </a>
+
+                            <% }); %>
+
+                    </div>
+
+                    <a class="btn btn-outline-primary" href="/read/profile?username=<%= req.session.memberid %>">Back to
+                        profile</a>
+                    <% } %>
+
+                        <br><br>
+        </div>
+
+        <% }else{ %>
+
+            <!-- visitor layout -->
+            <br>
+            <h3><a href="/login">Login <li class="tag__item" style="cursor: pointer;"><i
+                            class="fas fa-sign-in-alt mr-2"></i></li></a> to browse the report history
+
+            </h3>
+            <!-- should store url session to nav back later -->
+
+            <!-- visitor layout -->
+
+            <% } %>
+
+</body>
+
+<script>
+
+</script>
