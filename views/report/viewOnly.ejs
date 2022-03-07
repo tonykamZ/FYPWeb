@@ -15,6 +15,9 @@
 
         .column2 {
             flex: 45%;
+            border: 2px #333333 solid;
+            padding: 10px;
+            border-radius: 10px;
         }
 
         div {
@@ -171,7 +174,6 @@
 
                <div class="column2">
                 <% if(report.actionTaken.date){ %>
-                    <br><br>
                     <h3>Action Taken:</h3>
 
                     <% if(report.actionTaken.reportUserCSD){ %>

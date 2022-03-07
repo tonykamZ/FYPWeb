@@ -54,6 +54,9 @@ module.exports.routes = {
   // read post detail
   'GET /read/post/:id': 'UserController.postDetail',
 
+  // read post detail BY postID
+  'GET /read/postID': 'UserController.postDetailByID',
+
   // terms & policy
   'GET /terms': 'UserController.terms',
   'GET /policy': 'UserController.policy',
@@ -83,6 +86,9 @@ module.exports.routes = {
   'POST /editProfile': 'UserController.editProfile',
   'GET /read/profile': 'UserController.userDetail',
   'GET /read/profile/notification': 'UserController.notiList',
+
+  // view post history of own/other member
+  'GET /read/postHistory' : 'UserController.viewPostHistory',
 
   // report a user
   'POST /report': 'UserController.report',

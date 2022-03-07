@@ -1,8 +1,31 @@
 <head>
     <title>Log In</title>
     <style>
-        .container {
-            padding-top: 20px;
+        body {
+            background-image: linear-gradient(15deg, #adfff8 0%, #e49fff 100%);
+        }
+
+        .loginContainer {
+            width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 30px;
+            margin-bottom: 320px;
+            background: rgb(250, 250, 250);
+            border-radius: 2px;
+            padding: 30px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25), 0 7px 10px rgba(0, 0, 0, 0.22);
+        }
+
+        .title {
+            font-family: "Amatic SC", sans-serif;
+            font-size: 45px;
+        }
+
+        .small-brand {
+            font-size: 10px;
+            float: right;
+            margin-right: -20px;
         }
     </style>
 
@@ -10,44 +33,59 @@
 
 <body>
 
+    <div class="outCon">
+        <div class="loginContainer">
+            <% if(req.session.memberid){ %>
+                <h3 class="title">You've already logged in</h3> 
+            <b>Want to log out instead?</b> <a href="/logout" class="btn btn-outline-danger">Log out</a>
+            <a class="navbar-brand small-brand" href="/">
+                <span style="color: #effc38">Happy</span>
+                <span style="color: #ffb671">Share:)</span>
+            </a>
+            <% }else{ %>
+            <h3 class="title">Log In to your account</h3>
+            <form method="POST" action="/login">
+                <div class="form-row">
+                    <div class="form-group col-md-12">
+                        <label><b>Username</b></label>
+                        <input type="string" class="form-control" value="<%= username %>" name="username" required>
+                    </div>
 
-    <div class="container">
-        <h3>Log In to your account</h3>
-        <form method="POST" action="/login">
-            <div class="form-row">
-                <div class="form-group col-md-4">
-                    <label><b>Username</b></label>
-                    <input type="string" class="form-control" value="<%= username %>" name="username" required>
                 </div>
 
-            </div>
+                <p id="infoText" style="color: #ff3030;">
 
-            <p id="infoText" style="color: #ff3030;">
+                </p>
+                <div class="form-row">
+                    <div class="form-group col-md-12">
+                        <label><b>Password</b>
+                            <span id="showNhidePW" onclick="showNhidePW()" style="cursor: pointer;"><i
+                                    class="fas fa-eye"></i></span></label>
+                        <input type="password" class="form-control" id="userPW" name="password" required>
 
-            </p>
-            <div class="form-row">
-                <div class="form-group col-md-4">
-                    <label><b>Password</b>
-                    <span id="showNhidePW" onclick="showNhidePW()" style="cursor: pointer;"><i class="fas fa-eye"></i></span></label>
-                    <input type="password" class="form-control" id="userPW" name="password" required>
 
-                    
+                    </div>
+
                 </div>
 
-            </div>
+                <div>
+                    <button class="btn btn-outline-success" type="submit">Login</button>
+                </div>
 
-            <div>
-                <button class="btn btn-outline-success" type="submit">Login</button>
-            </div>
+                <br>
+                <small>
+                    <a href="/signup">Don't have an account yet? create an account here</a>
+                </small>
 
-            <small>
-                <a href="/signup">Don't have an account yet? create an account here</a>
+                <a class="navbar-brand small-brand" href="/">
+                    <span style="color: #effc38">Happy</span>
+                    <span style="color: #ffb671">Share:)</span>
+                </a>
 
-            </small>
-
-        </form>
+            </form>
+            <% } %>
+        </div>
     </div>
-
 </body>
 
 <script>

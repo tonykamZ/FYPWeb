@@ -429,12 +429,23 @@ module.exports = {
 
         memberLimit = parseInt(memberLimit);
 
+        var num = Math.floor(Math.random() * 9000000) + 100000;
         var db = sails.getDatastore().manager;
         var result = await db.collection('post').insertOne(
             {
-                HostUsername: req.session.memberid, HostNickname: req.session.nickname, creditScore: req.session.creditScore, post: {
+                postID: num, HostUsername: req.session.memberid, HostNickname: req.session.nickname, creditScore: req.session.creditScore, post: {
                     title: title, cat: cat, description: description, memberLimit: memberLimit, attribution: attr, imgInput: img, method: method, dType: dType
                 }, createDate: new Date(), createDateString: dateString, updateDate: new Date(), updateDateString: '', joinedMembers: [], joinedHistory: [], comments: []
+            }
+
+        )
+
+        // insert a copy in postHistory (for permanently storage)
+        var historyResult = await db.collection('postHistory').insertOne(
+            {
+                postID: num, HostUsername: req.session.memberid, HostNickname: req.session.nickname, creditScore: req.session.creditScore, post: {
+                    title: title, cat: cat, description: description, memberLimit: memberLimit, attribution: attr, imgInput: img, method: method, dType: dType
+                }, createDate: new Date(), createDateString: dateString, updateDate: new Date(), updateDateString: '', joinedMembers: [], joinedHistory: [], comments: [], status: "Active"
             }
 
         )
@@ -555,6 +566,16 @@ module.exports = {
             }
         );
 
+        // update post history
+        await db.collection('postHistory').updateOne(
+            { "postID": post.postID },
+            {
+                $set: {
+                    'status': "Removed"
+                }
+            }
+        );
+
         return res.redirect('/explore');
 
     },
@@ -616,7 +637,7 @@ module.exports = {
 
     postDetail: async function (req, res) {
 
-        var id = req.params.id || req.query.postID;
+        var id = req.params.id;
         var ObjectId = require('mongodb').ObjectId;
         var o_id = new ObjectId(id);
 
@@ -630,7 +651,22 @@ module.exports = {
         }
         return res.view('post/postDetail', { post: result });
 
+    },
 
+    postDetailByID: async function (req, res) {
+
+        var id = req.query.postID;
+        id = parseInt(id);
+
+        var db = sails.getDatastore().manager;
+        var result = await db.collection('post').findOne({ "postID": id });
+
+        if (req.wantsJSON) {
+            sails.log("returning detail page json data");
+            sails.log("stringgify result: " + JSON.stringify(result));
+            return res.json(result);
+        }
+        return res.view('post/postDetail', { post: result });
 
     },
 
@@ -754,6 +790,15 @@ module.exports = {
                 }
             )
 
+            await db.collection('postHistory').updateOne(
+                { "postID": post.postID },
+                {
+                    $set: {
+                        'status': "Removed"
+                    }
+                }
+            );
+
             res.redirect("/manage");
         }
     },
@@ -785,11 +830,31 @@ module.exports = {
                 });
             }
             return res.view('profile/profile', { user: userDetail[0], joinedPosts: userJoinedPosts });
-
-
         });
 
+    },
 
+    viewPostHistory: async function (req, res) {
+
+        var username = req.query.username;
+
+        if (username.toLowerCase() == "admin") {
+            return res.view('post/postHistory', { user: { username: "admin" }, post: null });
+
+        }
+        var db = sails.getDatastore().manager;
+        // find all post that the user hosted/hosting
+        var userHostPosts = await db.collection('postHistory').find({ "HostUsername": username }).toArray();
+
+
+        if (req.wantsJSON) {
+            sails.log("returning user post history page json data");
+            sails.log("stringgify result: " + JSON.stringify(userHostPosts));
+            return res.json({
+                userHostPosts: userHostPosts
+            });
+        }
+        return res.view('post/postHistory', { user: {username: username}, posts: userHostPosts });
 
     },
 
@@ -1062,7 +1127,7 @@ module.exports = {
         var reports = await db.collection('report').find({ 'reportedBy': req.session.memberid }).toArray();
 
 
-        return res.view('report/reportHistory', {reports:reports});
+        return res.view('report/reportHistory', { reports: reports });
     },
 
     updateReportStatus: async function (req, res) {

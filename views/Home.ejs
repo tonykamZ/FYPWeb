@@ -351,6 +351,18 @@
                 <div class="intro"><i class="fas fa-megaphone"></i>Here are the latest posts on the platform. You can filter the post by any keywords,
                   discount type and category.
                 </div>
+                <div style="float: right; margin-top: 19px;">
+                    <form action="/read/postID">
+                        <div class="form-row">
+                            <div class="form-group col-md-8">
+                                <input class="form-control" type="text" name="postID" placeholder="Enter post id">
+                            </div>
+                            <div class="form-group col-md-2">
+                                <button class="btn btn-info" type="submit" style="float: right;">Go!</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
                 <h6 id="lets">Let's find your favorite discount/offer here!</h6>
 
                 <h3 class="text-custom">Latest posts (<%= postCnt %>)</h3>
@@ -393,8 +405,8 @@
                             <div class="postcard__bar"></div>
                             <div class="postcard__preview-txt">
                                 <% if(post.post.description){ %>
-                                    <% if(post.post.description.length > 40){ %>
-                                        <%= post.post.description.substring(0,39) %>...
+                                    <% if(post.post.description.length > 60){ %>
+                                        <%= post.post.description.substring(0,59) %>...
                                         <% }else{ %>
                                     <%= post.post.description %>
                                     <% } %>
@@ -524,8 +536,8 @@
                                 <div class="postcard__bar"></div>
                                 <div class="postcard__preview-txt">
                                     <% if(post.post.description){ %>
-                                        <% if(post.post.description.length > 40){ %>
-                                            <%= post.post.description.substring(0,39) %>...
+                                        <% if(post.post.description.length > 60){ %>
+                                            <%= post.post.description.substring(0,59) %>...
                                             <% }else{ %>
                                         <%= post.post.description %>
                                         <% } %>

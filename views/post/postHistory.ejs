@@ -1,0 +1,82 @@
+<head>
+    <title>Post History</title>
+</head>
+
+<body>
+    <div class="container">
+        <br>
+        <!-- member layout -->
+        <% if(req.session.memberid){ %>
+            <% if(user.username=="admin" ){ %>
+                <h2>Post History is not applicable for Admin User</h2>
+                <button class="btn btn-outline-secondary" type="button" onclick="window.history.back()">Back</button>
+                <% }else{ %>
+                    <h3>Post History (@<%= user.username %>)</h3>
+                    <small>Total: <%= posts.length %></small>
+                    <button class="btn btn-outline-secondary" type="button" style="position: absolute; right: 10%; top: 12.4%;" onclick="window.history.back()">Back</button>
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Post ID</th>
+                                <th scope="col">Title</th>
+                                <th scope="col">Create Date</th>
+                                <th scope="col">Update Date</th>
+                                <th scope="col">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% posts.forEach(function(post){ %>
+                                <% var offset=1; %>
+                                    <tr>
+                                        <th scope="row">
+                                            <%= offset %>
+                                        </th>
+                                        <td>
+                                            <%= post.postID %>
+                                        </td>
+                                        <td>
+                                            <%= post.post.title %>
+                                        </td>
+                                        <% var createArr=post.createDateString.split("T"); %>
+                                            <td>
+                                                <%= createArr[0] %>
+                                                    <%= createArr[1] %>
+                                            </td>
+                                            <% if(post.updateDateString){ %>
+                                                <% var updateArr=post.updateDateString.split("T"); %>
+                                                    <td>
+                                                        <%= updateArr[0] %>
+                                                            <%= updateArr[1] %>
+                                                    </td>
+                                                    <% }else{ %>
+                                                        <td>N/A</td>
+                                                        <% } %>
+                                                            <td>
+                                                                <b style="color: rgb(90, 20, 255);"><%= post.status %></b>
+                                                            </td>
+
+                                    </tr>
+
+
+                                    <% offset=offset + 1; %>
+                                        <% }); %>
+                        </tbody>
+                    </table>
+                    <% } %>
+                        <% }else{ %>
+                            <!-- visitor layout -->
+                            <h3><a href="/login">Login <li class="tag__item" style="cursor: pointer;"><i
+                                            class="fas fa-sign-in-alt mr-2"></i></li></a> to
+                                browse user' s
+                                post history
+                            </h3>
+                            <!-- should store url session to nav back later -->
+
+                            <!-- visitor layout -->
+                            <% } %>
+
+                                <br><br>
+    </div>
+
+</body>
