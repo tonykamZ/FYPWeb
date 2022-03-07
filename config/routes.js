@@ -99,6 +99,9 @@ module.exports.routes = {
 
   // delete own notification
   'POST /delete/notification': 'UserController.delNoti',
+
+  // delete own post in DB
+  'POST /member/delete/post/:id': 'UserController.memberDelPost',
   // *** member ***********************************************
 
 

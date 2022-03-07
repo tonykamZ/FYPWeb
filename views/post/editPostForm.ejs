@@ -52,7 +52,8 @@
                                 <option value="Electronic">Electronic</option>
                                 <option value="Colthing">Colthing</option>
                                 <option value="Necessity">Necessity</option>
-                                <option value="any">Any</option>
+                                <option value="Course">Course</option>
+                                <option value="Any">Any</option>
                             </select>
                         </div>
 
@@ -75,7 +76,7 @@
                                 value="<%= post.post.memberLimit %>" required>
                         </div>
 
-                       
+
                         <% if(post.post.dType.substring(0,6)=="Other:" ){ %>
                             <!-- other layout -->
                             <div class="form-group col-md-3">
@@ -94,7 +95,8 @@
                             <!-- hidden input -->
                             <div class="form-group col-md-2" id="other">
                                 <label><b>Please specify:</b></label>
-                                <input type="text" class="form-control" name="otherVal" id="inputOther" value="<%= post.post.dType.substring(6,post.post.dType.length) %>">
+                                <input type="text" class="form-control" name="otherVal" id="inputOther"
+                                    value="<%= post.post.dType.substring(6,post.post.dType.length) %>">
                             </div>
                             <!-- hidden input -->
                             <!-- other layout -->
@@ -165,7 +167,7 @@
                                 <option value="FPS">FPS</option>
                                 <option value="E-payment">E-payment</option>
                                 <option value="Cash">Cash</option>
-                                <option value="all">Accept all</option>
+                                <option value="Accept All">Accept all</option>
                             </select>
                         </div>
                     </div>
@@ -174,6 +176,9 @@
                         <% if(req.session.memberid){ %>
                             <% if(post.HostUsername==req.session.memberid){ %>
                                 <button class="btn btn-outline-success" type="submit">Confirm the changes</button>
+                                <button class="btn btn-danger" type="button"
+                                    onclick="confirmDel('<%= post._id %>')">DELETE the
+                                    post</button>
                                 <button class="btn btn-outline-secondary" type="button"
                                     onclick="window.history.back()">Cancel</button>
                                 <% }else{ %>
@@ -290,4 +295,22 @@
         document.getElementById('inputOther').required = false;
     }
 
+    async function confirmDel(id) {
+        var r = confirm('Confirm delete this post? ');
+
+        if (r) {
+            var response = await fetch("/member/delete/post/" + id, { method: "POST" });
+
+
+            if (response.ok) {
+                window.location.replace('/manage');
+                alert("Deleted the post!");
+            } else {
+                var msg = response.statusText;
+                window.location.replace('/manage');
+                alert(msg);
+            }
+        }
+
+    }
 </script>

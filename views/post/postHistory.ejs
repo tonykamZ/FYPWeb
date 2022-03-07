@@ -1,5 +1,10 @@
 <head>
     <title>Post History</title>
+    <style>
+        .empty{
+            font: 47px "Amatic SC", sans-serif;
+        }
+    </style>
 </head>
 
 <body>
@@ -12,8 +17,12 @@
                 <button class="btn btn-outline-secondary" type="button" onclick="window.history.back()">Back</button>
                 <% }else{ %>
                     <h3>Post History (@<%= user.username %>)</h3>
-                    <small>Total: <%= posts.length %></small>
                     <button class="btn btn-outline-secondary" type="button" style="position: absolute; right: 10%; top: 12.4%;" onclick="window.history.back()">Back</button>
+
+                    <% if(posts.length == 0){ %>
+                    <h1 class="empty">The post history is empty.</h1>
+                    <% }else{ %>
+                    <small>Total: <%= posts.length %></small>
                     <table class="table table-sm">
                         <thead>
                             <tr>
@@ -63,6 +72,8 @@
                                         <% }); %>
                         </tbody>
                     </table>
+                    <% } %>
+
                     <% } %>
                         <% }else{ %>
                             <!-- visitor layout -->

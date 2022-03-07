@@ -500,6 +500,29 @@ module.exports = {
 
     },
 
+    memberDelPost: async function (req, res) {
+
+        var id = req.params.id;
+        var ObjectId = require('mongodb').ObjectId;
+        var o_id = new ObjectId(id);
+
+        var db = sails.getDatastore().manager;
+        var post = await db.collection('post').findOne({ '_id': o_id });
+        await db.collection('post').remove({ '_id': o_id });
+
+        // update post history
+        await db.collection('postHistory').updateOne(
+            { "postID": post.postID },
+            {
+                $set: {
+                    'status': "Deleted"
+                }
+            }
+        );
+
+        return res.ok();
+    },
+
     delPost: async function (req, res) {
 
         var id = req.params.id;
@@ -772,6 +795,7 @@ module.exports = {
             sails.log("updated time: " + dateString);
 
             var db = sails.getDatastore().manager;
+            var post = await db.collection('post').findOne({ '_id': o_id });
             var result = await db.collection('post').updateOne(
                 { "_id": o_id },
                 {
@@ -794,7 +818,16 @@ module.exports = {
                 { "postID": post.postID },
                 {
                     $set: {
-                        'status': "Removed"
+                        'post.title': title,
+                        'post.description': description,
+                        'post.memberLimit': memberLimit,
+                        'post.attribution': attr,
+                        'post.imgInput': img,
+                        'post.cat': cat,
+                        'post.method': method,
+                        'post.dType': dType,
+                        updateDate: new Date(),
+                        updateDateString: dateString
                     }
                 }
             );
@@ -854,7 +887,7 @@ module.exports = {
                 userHostPosts: userHostPosts
             });
         }
-        return res.view('post/postHistory', { user: {username: username}, posts: userHostPosts });
+        return res.view('post/postHistory', { user: { username: username }, posts: userHostPosts });
 
     },
 
