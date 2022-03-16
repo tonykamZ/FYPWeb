@@ -7,8 +7,8 @@
             margin: 0 auto;
         }
 
-        .outCon{
-             padding-bottom: 100px;
+        .outCon {
+            padding-bottom: 100px;
         }
 
         .iconify {
@@ -19,9 +19,60 @@
             display: none;
         }
 
-        .step{
+        .step {
             font-family: "Amatic SC", sans-serif;
             font-size: 30px;
+        }
+
+        #usernameInput {
+            display: flex;
+            justify-content: center;
+        }
+
+        #username,
+        #verify {
+            display: inline;
+        }
+
+        #checkStatus {
+            opacity: 0;
+            transition: all .7s ease-in-out;
+
+        }
+
+
+        .lds-hourglass {
+            display: inline-block;
+            position: relative;
+        }
+
+        .lds-hourglass:after {
+            content: " ";
+            display: block;
+            border-radius: 50%;
+            width: 0;
+            height: 0;
+            margin: 8px;
+            box-sizing: border-box;
+            border: 9px solid rgb(167, 167, 167);
+            border-color: rgb(167, 167, 167) transparent rgb(167, 167, 167) transparent;
+            animation: lds-hourglass 1.2s infinite;
+        }
+
+        @keyframes lds-hourglass {
+            0% {
+                transform: rotate(0);
+                animation-timing-function: cubic-bezier(0.55, 0.055, 0.675, 0.19);
+            }
+
+            50% {
+                transform: rotate(900deg);
+                animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+            }
+
+            100% {
+                transform: rotate(1800deg);
+            }
         }
     </style>
 
@@ -43,7 +94,7 @@
                 </p>
                 <% } %>
 
-                <hr>
+                    <hr>
                     <p><b class="step">Step 2:</b> Set up your username & password for new account</p>
                     <% if(ExisitingUser){ %>
                         <p>🤔Already has an account? username: "<%= ExisitingUser.username %>",
@@ -54,21 +105,30 @@
                             <form method="POST" action="/signup">
                                 <div class="form-row">
                                     <div class="form-group col-md-10">
-                                        <label><b>Username</b></label>
-                                        <input type="string" class="form-control" id="username" name="username" required
-                                            disabled>
+                                        <label><b>Username</b> <span id="checkStatus"
+                                                style="padding-left: 10px;"></span></label>
+                                        <div id="usernameInput">
+                                            <input type="string" class="form-control" id="username" name="username"
+                                                required disabled>
+                                            <a class="tooltip-top" data-tooltip="Check availability of the username"
+                                                id="verify" style="margin-left: 20px; cursor: pointer;"
+                                                onclick="checkDul(document.getElementById('username').value)"><i
+                                                    class="fas fa-shield-alt"></i></a>
+                                        </div>
                                     </div>
 
                                 </div>
 
                                 <div class="form-row">
-                                    <div class="form-group col-md-10">
+                                    <div class="form-group col-md-9">
+
                                         <label><b>Password</b>
                                             <span id="showNhidePW" onclick="showNhidePW()"
                                                 style="cursor: pointer; display: none;"><i
                                                     class="fas fa-eye"></i></span></label>
                                         <input type="password" class="form-control" id="password" name="password"
-                                            required disabled>
+                                            minlength=6 required disabled>
+                                        <small><b>**</b>The passwords should have minimum length of 6</small>
                                     </div>
 
                                 </div>
@@ -102,8 +162,7 @@
     if (ExisitingUser) {
         var DBusername = "<%= ExisitingUser.username %>";
         var DBuseremail = "<%= ExisitingUser.connectedGmail %>";
-        alert("Username (" + DBusername + ") already been registered using Gmail: " + DBuseremail + "!" +
-            "Are you " + DBusername + "? login with your password~");
+        alert("Username (" + DBusername + ") already been registered!");
 
     }
 
@@ -129,5 +188,40 @@
             showNhidePW.innerHTML = "";
             showNhidePW.innerHTML += "<i class=\"fas fa-eye\"></i>";
         }
+    }
+
+    async function checkDul(name) {
+        if (!name) {
+            return;
+        }
+
+        var s = document.getElementById('checkStatus');
+        s.style.opacity = 1;
+        s.innerHTML = "";
+        s.innerHTML += "<div class=\"lds-hourglass\"></div>";
+
+        var response = await fetch("/check/username/" + name, { method: "POST" });
+
+        s.style.opacity = 0;
+        if (response.ok) {
+            var msg = response.statusText;
+
+            if (msg == "duplicated") {
+                s.innerHTML = "";
+                s.innerHTML += "<i class=\"fas fa-times\" style=\"color: rgb(221, 50, 50);\"></i><small> Not available</small>";
+                s.style.opacity = 1;
+            } else if (msg == "free") {
+                s.innerHTML = "";
+                s.innerHTML += "<i class=\"fas fa-check\" style=\"color: rgb(3, 231, 3);\"></i><small> Available</small>";
+                s.style.opacity = 1;
+            } else {
+                alert("Unknown status: " + msg);
+            }
+        } else {
+            var msg = response.statusText;
+            alert("Error in sending message:\n\"" + name + "\"\n" + msg);
+            location.reload();
+        }
+
     }
 </script>

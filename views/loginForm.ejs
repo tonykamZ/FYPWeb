@@ -2,7 +2,23 @@
     <title>Log In</title>
     <style>
         body {
-            background-image: linear-gradient(15deg, #adfff8 0%, #e49fff 100%);
+            background: linear-gradient(-45deg, #096620, #a9f187, #23a6d5, #ffe600);
+            background-size: 400% 400%;
+            animation: myGradient 10s ease infinite;
+        }
+
+        @keyframes myGradient {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
         }
 
         .loginContainer {
@@ -36,54 +52,55 @@
     <div class="outCon">
         <div class="loginContainer">
             <% if(req.session.memberid){ %>
-                <h3 class="title">You've already logged in</h3> 
-            <b>Want to log out instead?</b> <a href="/logout" class="btn btn-outline-danger">Log out</a>
-            <a class="navbar-brand small-brand" href="/">
-                <span style="color: #effc38">Happy</span>
-                <span style="color: #ffb671">Share:)</span>
-            </a>
-            <% }else{ %>
-            <h3 class="title">Log In to your account</h3>
-            <form method="POST" action="/login">
-                <div class="form-row">
-                    <div class="form-group col-md-12">
-                        <label><b>Username</b></label>
-                        <input type="string" class="form-control" value="<%= username %>" name="username" required>
-                    </div>
-
-                </div>
-
-                <p id="infoText" style="color: #ff3030;">
-
-                </p>
-                <div class="form-row">
-                    <div class="form-group col-md-12">
-                        <label><b>Password</b>
-                            <span id="showNhidePW" onclick="showNhidePW()" style="cursor: pointer;"><i
-                                    class="fas fa-eye"></i></span></label>
-                        <input type="password" class="form-control" id="userPW" name="password" required>
-
-
-                    </div>
-
-                </div>
-
-                <div>
-                    <button class="btn btn-outline-success" type="submit">Login</button>
-                </div>
-
-                <br>
-                <small>
-                    <a href="/signup">Don't have an account yet? create an account here</a>
-                </small>
-
+                <h3 class="title">You've already logged in</h3>
+                <b>Want to log out instead?</b> <a href="/logout" class="btn btn-outline-danger">Log out</a>
                 <a class="navbar-brand small-brand" href="/">
                     <span style="color: #effc38">Happy</span>
                     <span style="color: #ffb671">Share:)</span>
                 </a>
+                <% }else{ %>
+                    <h3 class="title">Log In to your account</h3>
+                    <form method="POST" action="/login">
+                        <div class="form-row">
+                            <div class="form-group col-md-12">
+                                <label><b>Username</b></label>
+                                <input type="string" class="form-control" value="<%= username %>" name="username"
+                                    required>
+                            </div>
 
-            </form>
-            <% } %>
+                        </div>
+
+                        <p id="infoText" style="color: #ff3030;">
+
+                        </p>
+                        <div class="form-row">
+                            <div class="form-group col-md-12">
+                                <label><b>Password</b>
+                                    <span id="showNhidePW" onclick="showNhidePW()" style="cursor: pointer;"><i
+                                            class="fas fa-eye"></i></span></label>
+                                <input type="password" class="form-control" id="userPW" name="password" required>
+
+
+                            </div>
+
+                        </div>
+
+                        <div>
+                            <button class="btn btn-outline-success" type="submit">Login</button>
+                        </div>
+
+                        <br>
+                        <small>
+                            <a href="/signup">Don't have an account yet? create an account here</a>
+                        </small>
+
+                        <a class="navbar-brand small-brand" href="/">
+                            <span style="color: #effc38">Happy</span>
+                            <span style="color: #ffb671">Share:)</span>
+                        </a>
+
+                    </form>
+                    <% } %>
         </div>
     </div>
 </body>
@@ -96,7 +113,7 @@
             var infoText = document.getElementById("infoText");
             infoText.innerHTML = "";
             infoText.innerHTML += "🧐Incorrect password for user \"" + username + "\", " +
-                "<a href=\"/forgotPassword\">forgot your password?</a>";
+                "<a href=\"/forgotPassword\">forgot the password?</a>";
 
         } else if (status == "UserNotExisit") {
             var username = "<%= username %>";

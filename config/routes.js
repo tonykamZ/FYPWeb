@@ -45,6 +45,8 @@ module.exports.routes = {
   'GET /signup': 'UserController.signup',
   'POST /signup': 'UserController.signup',
 
+  'POST /check/username/:id': 'UserController.checkUsername',
+
   // disconnect gmail 
   'GET /disconnectGmail': 'UserController.disconnectGmail',
 

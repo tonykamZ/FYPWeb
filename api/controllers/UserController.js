@@ -187,6 +187,26 @@ module.exports = {
 
     },
 
+    checkUsername: async function (req, res) {
+
+        // post function
+        var username = req.params.id;
+
+        var db = sails.getDatastore().manager;
+        // check if such username exist in the DB
+        var User = await db.collection('user').findOne({ "username": username });
+
+        sails.log("Input username: " + username);
+        if (User) {
+            // duplicated username
+            res.statusMessage = "duplicated";
+            res.status(200).end();
+        } else {
+            res.statusMessage = "free";
+            res.status(200).end();
+        }
+    },
+
     logout: function (req, res) {
 
         // clear session
@@ -684,6 +704,8 @@ module.exports = {
         var db = sails.getDatastore().manager;
         var result = await db.collection('post').findOne({ "postID": id });
 
+        if (!result) return res.view('post/notFound', { id: id });
+
         if (req.wantsJSON) {
             sails.log("returning detail page json data");
             sails.log("stringgify result: " + JSON.stringify(result));
@@ -984,7 +1006,7 @@ module.exports = {
                     });
 
                     var notiTohost = "***[SYSTEM MESSAGE] The post you host is full now. " +
-                        "Please check out the post! (post title: " + result.post.title + " | post id: " + result._id + ") [SYSTEM MESSAGE]***";
+                        "Please check out the post! (post title: " + result.post.title + " | post id: " + result.postID + ") [SYSTEM MESSAGE]***";
                     // send message to the host
                     await db.collection('user').updateOne(
                         { "username": result.HostUsername },

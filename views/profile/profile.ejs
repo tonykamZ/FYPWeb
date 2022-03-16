@@ -218,7 +218,7 @@
                                                             <option value="misinformation">Misinformation</option>
                                                             <option value="hate">Hate speech, violence, or threats
                                                             </option>
-                                                            <option value="other">others</option>
+                                                            <option value="other">Others</option>
                                                         </select>
                                                     </div>
                                                     <div class="form-group col-md-12">
@@ -328,6 +328,9 @@
                                                                     <button class="btn btn-outline-secondary"
                                                                         type="button"
                                                                         onclick="window.history.back()">Back</button>
+                                                                        <hr>
+                                                                        <% var createArr = user.createDateString.split("T"); %>
+                                                                        <small>Account create date: <%= createArr[0] %> <%= createArr[1] %></small>
                                                                         <hr>
                                                                         <a href="/read/postHistory?username=<%= user.username %>">Post History</a>
                                                                     <% } %>
