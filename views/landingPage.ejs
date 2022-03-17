@@ -66,6 +66,24 @@
             opacity: 0;
         }
 
+        .adminHeader{
+            animation: 2s fadein 1.5s forwards;
+        }
+
+        .adminL{
+            font-family: "Amatic SC", sans-serif;
+            position: absolute;
+            left: 36%;
+            animation: 3s fadein 2.1s forwards;
+        }
+
+        .adminR{
+            font-family: "Amatic SC", sans-serif;
+            position: absolute;
+            left: 57%;
+            animation: 4s fadein 2.9s forwards;
+        }
+
         @keyframes fadein {
             100% {
                 opacity: 1;
@@ -408,7 +426,30 @@
 
 
 <body>
-    <!-- Forked from a template on Tutorialzine: https://tutorialzine.com/2016/06/freebie-landing-page-template-with-flexbox -->
+    
+    
+        <% if(req.session.memberid == "admin"){ %>
+            <!-- admin layout -->
+
+            <header>
+                <h2><a href="/" style="color: rgb(214, 211, 40);">Happy </a><a href="/" style="color: rgb(255, 115, 0);">Share
+                        :)</a></h2>
+            </header>
+
+            <header class="adminHeader">
+                <h2>Admin Mode</h2>
+            </header>
+
+            <header class="adminL">
+                <a href="/userlist"><h3>&#187;Manage Users</h3></a>
+            </header>
+
+            <header class="adminR">
+                <a href="/reporthandle"><h3>&#187;Handle Reports</h3></a>
+            </header>
+
+            <!-- admin layout -->
+        <% }else{ %>
     <header>
         <h2><a href="/" style="color: rgb(214, 211, 40);">Happy </a><a href="/" style="color: rgb(255, 115, 0);">Share
                 :)</a></h2>
@@ -617,6 +658,7 @@
 
     </footer>
 
+    <% } %>
     <br><br><br>
 
 </body>
@@ -634,11 +676,12 @@
     $(function () {
         //list of skills
         var skills = {
-            'Food & Drink': '77',
-            Electronic: '56',
+            'Food & Drink': '68',
+            Electronic: '46',
             Clothing: '31',
-            Necessity: '62',
-            Any: '88'
+            Necessity: '50',
+            Course: '66',
+            Any: '78'
 
         };
 

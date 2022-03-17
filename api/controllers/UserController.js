@@ -47,6 +47,7 @@ module.exports = {
                     DBnickname = results[0].profile.nickname;
                     DBconnectedGmail = results[0].connectedGmail;
                     DBnotification = results[0].notification;
+                    DBUserStatus = results[0].status;
 
 
                     sails.log("user: " + DBusername);
@@ -69,6 +70,7 @@ module.exports = {
                         req.session.nickname = DBnickname;
                         req.session.description = DBdesc;
                         req.session.notification = DBnotification.length;
+                        req.session.userStatus = DBUserStatus;
                         req.session.report = [];
 
 
@@ -167,7 +169,7 @@ module.exports = {
         var db = sails.getDatastore().manager;
         db.collection('user').insertOne(
             {
-                username: username, password: password, connectedGmail: req.session.useremail, connectedGmailID: req.session.userid, creditScore: 100, notification: [], profile: {
+                username: username, password: password, status: 'active', connectedGmail: req.session.useremail, connectedGmailID: req.session.userid, creditScore: 100, notification: [], profile: {
                     description: '',
                     nickname: '',
                 }, createDate: new Date(), createDateString: dateString
@@ -185,6 +187,121 @@ module.exports = {
         sails.log("created a new account!");
         return res.view('loginForm', { status: 'CreatedNewAC', username: username });
 
+    },
+
+    delUser: async function (req, res) {
+
+        var username = req.params.id;
+
+        var db = sails.getDatastore().manager;
+        await db.collection('user').updateOne(
+            { "username": username },
+            {
+                $set: {
+                    status: 'banned'
+                }
+            }
+        );
+
+        var date = new Date();
+        var day = date.getDate();
+        var month = date.getMonth();
+        var year = date.getFullYear();
+        var h = date.getUTCHours() + 8;
+        var m = date.getMinutes();
+        var s = date.getSeconds();
+        if (day < 10) {
+            day = "0" + day;
+        }
+        // it seems the date.getMonth() is wrong(?) Nov --> get 10 return
+        month = month + 1;
+        if (month < 10) {
+            month = "0" + month;
+        }
+        if (h < 10) {
+            h = "0" + h;
+        }
+        if (m < 10) {
+            m = "0" + m;
+        }
+        if (s < 10) {
+            s = "0" + s;
+        }
+        // YYYY-MM-DDTHH:MM:SS
+        var dateString = year + "-" + month + "-" + day + "T" + h + ":" + m + ":" + s;
+
+        var str = '***[SYSTEM MESSAGE] Your account has been banned at' + dateString +
+            ' [SYSTEM MESSAGE]***';
+        //send notification to user
+        await db.collection('user').updateOne(
+            { "username": username },
+            {
+                $push: {
+                    'notification': {
+                        message: str, date: dateString
+                    }
+                }
+            }
+        );
+
+        return res.ok();
+    },
+
+    actiUser: async function (req, res) {
+
+        var username = req.params.id;
+
+        var db = sails.getDatastore().manager;
+        await db.collection('user').updateOne(
+            { "username": username },
+            {
+                $set: {
+                    status: 'active'
+                }
+            }
+        );
+
+        var date = new Date();
+        var day = date.getDate();
+        var month = date.getMonth();
+        var year = date.getFullYear();
+        var h = date.getUTCHours() + 8;
+        var m = date.getMinutes();
+        var s = date.getSeconds();
+        if (day < 10) {
+            day = "0" + day;
+        }
+        // it seems the date.getMonth() is wrong(?) Nov --> get 10 return
+        month = month + 1;
+        if (month < 10) {
+            month = "0" + month;
+        }
+        if (h < 10) {
+            h = "0" + h;
+        }
+        if (m < 10) {
+            m = "0" + m;
+        }
+        if (s < 10) {
+            s = "0" + s;
+        }
+        // YYYY-MM-DDTHH:MM:SS
+        var dateString = year + "-" + month + "-" + day + "T" + h + ":" + m + ":" + s;
+
+        var str = '***[SYSTEM MESSAGE] Your account has been activated again at' + dateString +
+            ' [SYSTEM MESSAGE]***';
+        //send notification to user
+        await db.collection('user').updateOne(
+            { "username": username },
+            {
+                $push: {
+                    'notification': {
+                        message: str, date: dateString
+                    }
+                }
+            }
+        );
+        return res.ok();
     },
 
     checkUsername: async function (req, res) {
