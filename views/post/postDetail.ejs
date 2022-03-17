@@ -476,7 +476,7 @@
             <div class="container">
                 <button class="btn btn-outline-secondary" type="button" style="float: right;"
                     onclick="window.history.back()">Back</button>
-                <h3>Post (#<%= post.postID %>) Detail:</h3>
+                <h3>Post <b class="tooltip-top" data-tooltip="Post id">(#<%= post.postID %>)</b> Detail:</h3>
 
                 <!-- Light card -->
                 <article class="postcard light red">
@@ -545,14 +545,14 @@
                                                         <% } %>
                                                             <% }) %>
                                                                 <% if(duplicated){ %>
-                                                                    <a onclick="window.scrollTo(0, document.body.scrollHeight);" style="cursor: pointer;"><i
+                                                                    <a onclick="window.scrollTo(0, document.body.scrollHeight);" style="cursor: pointer;" class="tooltip-top" data-tooltip="Go to Chatroom"><i
                                                                             class="fas fa-comments mr-2"></i>Chat</a>
                                                                     <% }else{ %>
-                                                                        <a onclick="checkValidJoin('<%= post._id %>','<%= post.joinedMembers.length %>','<%= post.post.memberLimit %>')" style="cursor: pointer;"><i
+                                                                        <a onclick="checkValidJoin('<%= post._id %>','<%= post.joinedMembers.length %>','<%= post.post.memberLimit %>')" style="cursor: pointer;" class="tooltip-top" data-tooltip="Join this post!"><i
                                                                                 class="fas fa-hand-o-right mr-2"></i>Join</a>
                                                                         <% } %>
                                                                             <% }else { %>
-                                                                                <a href="/manage/post/<%= post._id %>" style="color: rgb(163, 1, 1);"><i
+                                                                                <a href="/manage/post/<%= post._id %>" style="color: rgb(163, 1, 1);" class="tooltip-top" data-tooltip="Make some changes of the post"><i
                                                                                         class="fas fa-edit mr-2"></i>Edit</a>
                                                                                 <% } %> <% } %>
                                                                                     <% }else{ %>
@@ -601,7 +601,7 @@
                             <% if(req.session.memberid){ %>
                                 <% if(duplicated==true){ %>
                                     <li class="tag__item">
-                                        <a style="cursor: pointer; color: red;" onclick="leavePost('<%= post._id %>')">
+                                        <a style="cursor: pointer; color: red;" onclick="leavePost('<%= post._id %>')" class="tooltip-top" data-tooltip="Leave this post">
                                             <i class="fas fa-sign-out-alt mr-2"></i>leave
                                         </a>
                                     </li>

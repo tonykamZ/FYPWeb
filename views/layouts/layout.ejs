@@ -656,27 +656,27 @@
         <!-- li class="nav-item ">
           <a class="nav-link" href="/search">Search</a>
         </li -->
-        <li class="nav-item">
+        <li class="nav-item tooltip-bottom" data-tooltip="Explore latest posts">
           <a class="nav-link" href="/explore">Explore</a>
         </li>
         <% if(req.session.memberid){ %>
           <% if(req.session.memberid=="admin" ){ %>
 
-            <li class="nav-item">
+            <li class="nav-item tooltip-bottom" data-tooltip="View users list">
               <a class="nav-link" href="/userlist">Users</a>
             </li>
 
-            <li class="nav-item">
+            <li class="nav-item tooltip-bottom" data-tooltip="Handle report">
               <a class="nav-link" href="/reporthandle">Reports</a>
             </li>
             <% }else{ %>
 
-              <li class="nav-item">
+              <li class="nav-item tooltip-bottom" data-tooltip="Create new post">
                 <a class="nav-link" href="/create">Create</a>
               </li>
 
 
-              <li class="nav-item">
+              <li class="nav-item tooltip-bottom" data-tooltip="Manage your own posts">
                 <a class="nav-link" href="/manage">Manage</a>
               </li>
               <% } %>

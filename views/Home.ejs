@@ -354,9 +354,11 @@
                                 <button class="btn btn-outline-primary" type="submit" style="margin-top: 20%;"><i class="fas fa-search"></i></button>
                     </div>
 
-                    <a onclick="window.scrollTo(0, 0);"><i class="far fa-arrow-alt-circle-up"
-                            style="font-size: 40px; position: absolute; right: 2%; cursor: pointer;"></i>
-                    </a>
+                    <div class="tooltip-bottom" data-tooltip="go to top">
+                    <span onclick="window.scrollTo(0, 0);"><i class="far fa-arrow-alt-circle-up"
+                            style="font-size: 40px; cursor: pointer;"></i>
+                    </span>
+                    </div>
                 </div>
                 </form>
             </div>
@@ -378,8 +380,8 @@
                 <div style="float: right; margin-top: 19px;">
                     <form action="/read/postID">
                         <div class="form-row">
-                            <div class="form-group col-md-8">
-                                <input class="form-control" type="text" name="postID" placeholder="Find by post id">
+                            <div class="form-group col-md-8 tooltip-left" data-tooltip="Search a post directly by post id">
+                                <input class="form-control" type="text" name="postID" placeholder="Enter the post id">
                             </div>
                             <div class="form-group col-md-2">
                                 <button class="btn btn-info" type="submit" style="float: right;">Go!</button>
@@ -448,7 +450,7 @@
                                 <li class="tag__item"><i class="fas fa-users mr-2"></i>
                                     <%= post.joinedMembers.length + 1 %>/<%= post.post.memberLimit %>
                                 </li>
-                                <li class="tag__item"><i class="fas fa-user-secret mr-2"></i>Host:
+                                <li class="tag__item tooltip-top" data-tooltip="Host User"><i class="fas fa-user-secret mr-2"></i>Host:
                                     <b>
                                     <% if(post.post.HostNickname){ %>
                                         <a href="/read/profile?username=<%= post.HostUsername %>">
@@ -477,12 +479,12 @@
                                                     <% } %>
                                                 <% }) %>
                                                 <% if(duplicated){ %>
-                                                    <a href="/read/post/<%= post._id %>#chat"><i class="fas fa-comments mr-2"></i>Chat</a>
+                                                    <a href="/read/post/<%= post._id %>#chat" class="tooltip-top" data-tooltip="Go to Chatroom"><i class="fas fa-comments mr-2"></i>Chat</a>
                                                     <% }else{ %>
-                                            <a onclick="checkValidJoin('<%= post._id %>','<%= post.joinedMembers.length %>','<%= post.post.memberLimit %>')" style="cursor: pointer;"><i class="fas fa-hand-o-right mr-2"></i>Join</a>
+                                            <a onclick="checkValidJoin('<%= post._id %>','<%= post.joinedMembers.length %>','<%= post.post.memberLimit %>')" style="cursor: pointer;" class="tooltip-top" data-tooltip="Join this post!"><i class="fas fa-hand-o-right mr-2"></i>Join</a>
                                             <% } %>
                                             <% }else { %>
-                                                <a href="/manage/post/<%= post._id %>"><i class="fas fa-edit mr-2"></i>Edit</a>
+                                                <a href="/manage/post/<%= post._id %>" class="tooltip-top" data-tooltip="Make some changes of the post"><i class="fas fa-edit mr-2"></i>Edit</a>
                                                 <% } %>
                                                
                                         <% }else{ %>
@@ -577,7 +579,7 @@
                                     <li class="tag__item"><i class="fas fa-users mr-2"></i>
                                         <%= post.joinedMembers.length + 1 %>/<%= post.post.memberLimit %>
                                     </li>
-                                    <li class="tag__item"><i class="fas fa-user-secret mr-2"></i>Host:
+                                    <li class="tag__item tooltip-top" data-tooltip="Host User"><i class="fas fa-user-secret mr-2"></i>Host:
                                         <b>
                                         <% if(post.post.HostNickname){ %>
                                             <a href="/read/profile?username=<%= post.HostUsername %>">
@@ -606,12 +608,12 @@
                                                         <% } %>
                                                     <% }) %>
                                                     <% if(duplicated){ %>
-                                                        <a href="/read/post/<%= post._id %>#chat"><i class="fas fa-comments mr-2"></i>Chat</a>
+                                                        <a href="/read/post/<%= post._id %>#chat" class="tooltip-top" data-tooltip="Go to Chatroom"><i class="fas fa-comments mr-2"></i>Chat</a>
                                                         <% }else{ %>
-                                                <a onclick="checkValidJoin('<%= post._id %>','<%= post.joinedMembers.length %>','<%= post.post.memberLimit %>')" style="cursor: pointer;"><i class="fas fa-hand-o-right mr-2"></i>Join</a>
+                                                <a onclick="checkValidJoin('<%= post._id %>','<%= post.joinedMembers.length %>','<%= post.post.memberLimit %>')" style="cursor: pointer;" class="tooltip-top" data-tooltip="Join this post!"><i class="fas fa-hand-o-right mr-2"></i>Join</a>
                                                 <% } %>
                                             <% }else { %>
-                                                <a href="/manage/post/<%= post._id %>"><i class="fas fa-edit mr-2"></i>Edit</a>
+                                                <a href="/manage/post/<%= post._id %>" class="tooltip-top" data-tooltip="Make some changes of the post"><i class="fas fa-edit mr-2"></i>Edit</a>
                                                 <% } %>
                                                
                                             <% }else{ %>

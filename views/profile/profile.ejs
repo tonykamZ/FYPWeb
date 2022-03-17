@@ -144,11 +144,8 @@
                                                 <label><b>User name:</b> <a href="/member/vip"><i
                                                             class="fas fa-user-check"></i></a></label>
                                                 <input class="form-control" value="<%= user.username %>" readonly>
-                                                <p><small>Connected to Gmail: <span class="iconify"
-                                                            data-icon="logos:google-gmail"></span>
-                                                        <b style="color: blue;">
-                                                            <%= user.connectedGmail %>
-                                                        </b></small></p>
+                                                <% var createArr = user.createDateString.split("T"); %>
+                                                <small>Account create date: <%= createArr[0] %></small>
                                             </div>
 
                                             <div class="form-group col-md-10">
@@ -328,9 +325,7 @@
                                                                     <button class="btn btn-outline-secondary"
                                                                         type="button"
                                                                         onclick="window.history.back()">Back</button>
-                                                                        <hr>
-                                                                        <% var createArr = user.createDateString.split("T"); %>
-                                                                        <small>Account create date: <%= createArr[0] %> <%= createArr[1] %></small>
+                                                                        
                                                                         <hr>
                                                                         <a href="/read/postHistory?username=<%= user.username %>">Post History</a>
                                                                     <% } %>

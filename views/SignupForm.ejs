@@ -97,10 +97,9 @@
                     <hr>
                     <p><b class="step">Step 2:</b> Set up your username & password for new account</p>
                     <% if(ExisitingUser){ %>
-                        <p>🤔Already has an account? username: "<%= ExisitingUser.username %>",
-
-                                <a href="/login">Login with "<%= ExisitingUser.username %>"</a>
+                        <p style="color: red;">username "<%= ExisitingUser.username %>" is already been in use!
                         </p>
+                        <small>**Please change the username and check its availability.</small>
                         <% }%>
                             <form method="POST" action="/signup">
                                 <div class="form-row">
@@ -162,7 +161,6 @@
     if (ExisitingUser) {
         var DBusername = "<%= ExisitingUser.username %>";
         var DBuseremail = "<%= ExisitingUser.connectedGmail %>";
-        alert("Username (" + DBusername + ") already been registered!");
 
     }
 
