@@ -473,13 +473,13 @@
 
                     <div class="form-group col-md-1">
                         <div class="toggle-switch">
-                            <input type="checkbox" id="chkFull" name="chkFull" onchange="changeFull()">
-                            <label for="chkFull" id="chkFullLabel">
+                            <input type="checkbox" id="chkFullp" name="chkFull" onchange="changeFull();">
+                             <label for="chkFullp" id="chkFullLabel">
                                 <h6 id="fulfill" style="float: left; margin-left: 14%;">Including posts which fulfil the quota</h6>
                                 <span class="toggle-track"></span>
-                                
-                            </label>
+                                 </label>
                         </div>
+                        
                     </div>
                
                     
@@ -947,7 +947,7 @@
     }
 
     function changeFull(){
-        var chkFull = document.getElementById('chkFull');
+        var chkFull = document.getElementById('chkFullp');
         var fulfill = document.getElementById('fulfill');
 
         if (chkFull.checked == true){
