@@ -572,7 +572,7 @@ module.exports = {
             {
                 postID: num, HostUsername: req.session.memberid, HostNickname: req.session.nickname, creditScore: req.session.creditScore, post: {
                     title: title, cat: cat, description: description, memberLimit: memberLimit, attribution: attr, imgInput: img, method: method, dType: dType
-                }, createDate: new Date(), createDateString: dateString, updateDate: new Date(), updateDateString: '', joinedMembers: [], joinedHistory: [], comments: []
+                }, createDate: new Date(), createDateString: dateString, updateDate: new Date(), updateDateString: '', joinedMembers: [], joinedHistory: [], comments: [], status: 'available'
             }
 
         )
@@ -745,11 +745,15 @@ module.exports = {
         var keywords = req.query.keywords;
         var cat = req.query.cat;
         var dType = req.query.dType;
+        var chkFull = req.query.chkFull;
 
 
-        sails.log(keywords + " " + cat + " " + dType);
-        var search = keywords || cat || dType;
+        sails.log(keywords + " " + cat + " " + dType + " " + chkFull);
+        var search = keywords || cat || dType || chkFull;
 
+        if(chkFull){
+            chkFull = "available";
+        }
         var db = sails.getDatastore().manager;
         db.collection('post', function (err, collection) {
             collection.find(
@@ -766,6 +770,9 @@ module.exports = {
                         },
                         {
                             "post.dType": { $regex: dType || "", $options: "$i" }
+                        },
+                        {
+                            "status": { $regex: chkFull || "", $options: "$i" }
                         }
                     ]
                 },
@@ -1105,6 +1112,12 @@ module.exports = {
                 // trigger the deal (member limit is full after joined)
                 // +2 : +1 (Host) +1 (current joined member)
                 if (memberCnt + 2 >= memberLimit) {
+                    // update post status to "FULL"
+                    await db.collection('post').updateOne(
+                        { "_id": o_id },
+                        { $set: { status: 'full' } }
+                    )
+
                     var noti = "***[SYSTEM MESSAGE] The post you joined is full now. " +
                         "Please check out the post! (post title: " + result.post.title + " | Host:" + result.HostUsername + ") [SYSTEM MESSAGE]***";
 

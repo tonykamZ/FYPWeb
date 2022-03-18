@@ -33,9 +33,7 @@
         .page-header .trigger-menu {
             display: flex;
             align-items: center;
-            font-size: 1.3rem;
             color: #fcfcfc;
-            letter-spacing: 0.2em;
         }
 
         .page-header .trigger-menu svg {
@@ -301,6 +299,76 @@
             background-color: transparent !important;
             pointer-events: none;
         }
+
+        .phone-header {
+          display: none;
+        }
+
+        .goToTop{
+            position: fixed;
+            cursor: pointer;
+            left: 3%;
+            bottom: 11%;
+            font-size: 32px;
+            opacity: 0;
+            transition: all 1s ease-in-out;
+            display: none;
+            z-index: 99;
+        }
+
+        @media only screen and (max-width: 990px) {
+           .page-header {
+             display: none;
+           }
+
+           .phone-header {
+             display: block;
+           }
+
+           .goToTop{
+             display: block;
+           }
+        }
+
+        .toggle-switch input[type=checkbox] {
+            display: none;
+        }
+
+        #chkFullLabel{
+            width: 100%;
+        }
+
+        .toggle-switch label {
+            cursor: pointer;
+        }
+
+        .toggle-switch label .toggle-track {
+            display: block;
+            height: 20px;
+            width: 40px;
+            background: #eee;
+            border-radius: 20px;
+            position: relative;
+            border: 1px solid #ccc;
+        }
+
+        .toggle-switch .toggle-track:before {
+            content: '';
+            display: inline-block;
+            height: 20px;
+            width: 20px;
+            background: red;
+            border-radius: 20px;
+            position: absolute;
+            top: 0;
+            right: 0;
+            transition: right .2s ease-in;
+        }
+
+        .toggle-switch input[type="checkbox"]:checked+label .toggle-track:before {
+            background: green;
+            right: 20px;
+        }
     </style>
 
 </head>
@@ -343,13 +411,17 @@
                             <option value="Necessity">Necessity</option>
                             <option value="Course">Course</option>
                         </select>   
-                 </div>
+                   </div>
 
-                    <!-- div class="form-group col-md-2">
-                        <label style="color: rgb(4, 160, 139);"><b>Date before</b></label>
-                        <input type="date" class="form-control" name="date" id="date">
-                    </div !-->
-                    
+                   <div class="form-group col-md-1" style="margin-top: 40px;">
+                    <div class="toggle-switch tooltip-bottom" id="toggleTooltip" data-tooltip="Including posts which fulfil the quota">
+                        <input type="checkbox" id="chkFull" name="chkFull" onchange="changeFullTooltip()">
+                        <label for="chkFull" id="chkFullLabel">
+                            <span class="toggle-track"></span>
+                        </label>
+                    </div>
+                   </div>
+                 
                     <div class="form-group col-md-2">
                                 <button class="btn btn-outline-primary" type="submit" style="margin-top: 20%;"><i class="fas fa-search"></i></button>
                     </div>
@@ -363,12 +435,65 @@
                 </form>
             </div>
         </nav>
-    </header>
-    <div class="container">
-
         <br><br><br>
-                
-                <div class="intro"><i class="fas fa-megaphone"></i>Here are the latest posts on the platform. You can filter the post by any keywords,
+    </header>
+
+     <!-- phone header version -->
+    <div class="phone-header">
+            <form action="/explore" method="get">
+                <div class="form-row">
+                    <div class="form-group col-md-3">
+                        <label style="color: rgb(5, 45, 177); "><b>Filter by</b></label>
+                        <input type="string" class="form-control" name="keywords" id="keywords" placeholder="Keywords">
+                    </div>
+
+                    <div class="form-group col-md-3">
+                        <label style="color: rgb(5, 45, 177); "><b>Discount Type</b></label>
+                           <select class="form-control" name="dType" id="dType">
+                               <option value="" selected disabled>Please select one</option>
+                               <option value="Buy X get Y free">Buy X get Y free</option>
+                               <option value="Percentage">Percentage</option>
+                               <option value="Promo Code">Promo Code</option>
+                               <option value="Cash Back">Cash Back</option>
+                               <option value="Other">Other</option>
+                           </select>   
+                    </div>
+
+                    <div class="form-group col-md-2">
+                        <label style="color: rgb(5, 45, 177); "><b>Category</b></label>
+                        <select class="form-control" name="cat" id="cat">
+                            <option value="" selected disabled>Please select one</option>
+                            <option value="Food&Drink">Food&Drink</option>
+                            <option value="Electronic">Electronic</option>
+                            <option value="Colthing">Colthing</option>
+                            <option value="Necessity">Necessity</option>
+                            <option value="Course">Course</option>
+                        </select>   
+                    </div>
+
+                    <div class="form-group col-md-1">
+                        <div class="toggle-switch">
+                            <input type="checkbox" id="chkFull" name="chkFull" onchange="changeFull()">
+                            <label for="chkFull" id="chkFullLabel">
+                                <h6 id="fulfill" style="float: left; margin-left: 10%;">Including posts which fulfil the quota</h6>
+                                <span class="toggle-track"></span>
+                                
+                            </label>
+                        </div>
+                    </div>
+               
+                    
+                    <div class="form-group col-md-2">
+                                <button class="btn btn-outline-primary" type="submit"><i class="fas fa-search"></i></button>
+                    </div>
+                 </div>    
+         </form>
+    </div>
+    <!-- phone header version -->
+
+    <div class="container">
+            
+                <div class="intro"><i class="fas fa-bullhorn"></i> Here are the latest posts on the platform. You can filter the post by any keywords,
                   discount type and category.
                 </div>
               
@@ -392,6 +517,7 @@
                 <% }else{ %>
                     <h3 class="text-custom">Search results (<%= postCnt %>)</h3>
                     <% } %>
+                  
           
                 
                 
@@ -413,7 +539,7 @@
                     <!-- Dark card -->
                     <% if(post.joinedMembers.length + 1 == post.post.memberLimit){ %>
                         <article class="postcard dark red full">
-                        <div style="position: absolute; margin-left: 44%; font-size: 50px; margin-top: 5.5%; font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;">FULL <i class="fa fa-user-slash"></i></div>
+                        <div style="position: absolute;z-index: 98; left: 40%; font-size: 62px; top: 30%; font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;">FULL <i class="fa fa-user-slash"></i></div>
                     <% }else{ %>
                     <article class="postcard dark red">
                     <% } %>
@@ -542,7 +668,7 @@
                         <!-- Light card -->
                         <% if(post.joinedMembers.length + 1 == post.post.memberLimit){ %>
                             <article class="postcard light red full">
-                            <div style="position: absolute; margin-left: 44%; font-size: 50px; margin-top: 5.5%; font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;">FULL <i class="fa fa-user-slash"></i></div>
+                            <div style="position: absolute;z-index: 98; color: #000; left: 40%; font-size: 62px; top: 30%; font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;">FULL <i class="fa fa-user-slash"></i></div>
                         <% }else{ %>
                         <article class="postcard light red">
                         <% } %>
@@ -675,6 +801,7 @@
 
     </div>
 
+    <div class="goToTop" id="goToTop" onclick="window.scrollTo(0, 0);"><i class="fas fa-arrow-circle-up"></i></div>
     <br>
     <% if(postCnt > 5){ %>
     <a href="#" id="loadMore"> Load More </a>
@@ -712,7 +839,7 @@
 </script>
 
 <script>
-    const body = document.body;
+    var body = document.body;
     const scrollUp = "scroll-up";
     const scrollDown = "scroll-down";
     let lastScroll = 0;
@@ -738,6 +865,26 @@
         }
         lastScroll = currentScroll;
     });
+
+    var myID = document.getElementById("goToTop");
+    var html = document.documentElement;
+    var height = Math.max(body.scrollHeight, body.offsetHeight,
+        html.clientHeight, html.scrollHeight, html.offsetHeight);
+
+    var myScrollFunc = function () {
+        var y = window.scrollY;
+        height = height * 0.87; // actual height is less that 100% height
+        var percentage = y / height * 100;
+        if (percentage > 80) {
+            myID.style.opacity = 1;
+            sendButton.disabled = false;
+        } else {
+            myID.style.opacity = 0;
+            sendButton.disabled = true;
+        }
+    };
+
+    window.addEventListener("scroll", myScrollFunc);
 
 </script>
 
@@ -798,5 +945,28 @@
     function hide(form) {
         document.getElementById("popup-"+form['popupIndex'].value).style.display = "none";
     }
-</script>
 
+    function changeFull(){
+        var chkFull = document.getElementById('chkFull');
+        var fulfill = document.getElementById('fulfill');
+
+        if (chkFull.checked == true){
+            fulfill.innerHTML = "";
+            fulfill.innerHTML += "Only include available posts";
+        } else {
+            fulfill.innerHTML = "";
+            fulfill.innerHTML += "Including posts which fulfil the quota";
+        }
+    }
+
+    function changeFullTooltip(){
+        var toggleTooltip = document.getElementById('toggleTooltip');
+        var chkFull = document.getElementById('chkFull');
+
+        if (chkFull.checked == true){
+            toggleTooltip.setAttribute('data-tooltip', 'Only include available posts');
+        } else {
+            toggleTooltip.setAttribute('data-tooltip', 'Including posts which fulfil the quota');
+        }
+    }
+</script>

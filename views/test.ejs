@@ -2,152 +2,55 @@
     <title>
         Load more bootstrap Example
     </title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
     <style>
-        
 
-        .flex {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            align-items: center;
+        .toggle-switch input[type=checkbox] {
+            display: none
         }
 
-        h2 {
-            font-weight: bold;
-            margin-bottom: 2.5rem;
-            color: #aaa;
-            text-align: center;
-            font-size: 30px;
-            margin-top: 1.5rem;
-            font-weight: 1000;
+        .toggle-switch label {
+            cursor: pointer;
         }
 
-        p {
-            font-weight: bold;
-            margin-bottom: 2.5rem;
-            color: #aaa;
-            text-align: center;
-            font-size: 20px;
-            margin-top: 1.5rem;
-            font-weight: 1000;
-        }
-
-        h3 {
-            font-weight: bold;
-            margin-bottom: 2.5rem;
-            color: #aaa;
-            text-align: center;
-            font-size: 30px;
-            margin-top: 1.5rem;
-            font-weight: 1000;
-        }
-
-        .content {
-            height: 100px;
-            width: 45%;
-            color: #fff;
-            font-size: 24px;
-            line-height: 100px;
-            /* centering text just for view */
-            text-align: center;
-            background-color: grey;
-            margin: 5px;
-            border: 1px solid lightgrey;
-            display: none;
-        }
-
-        #loadMore {
-            width: 200px;
-            color: #fff;
+        .toggle-switch label .toggle-track {
             display: block;
-            text-align: center;
-            margin: 20px auto;
-            padding: 10px;
-            border-radius: 10px;
-            border: 1px solid transparent;
-            background-color: blue;
-            transition: .3s;
+            height: 40px;
+            width: 80px;
+            background: #eee;
+            border-radius: 20px;
+            position: relative;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
         }
 
-        .noContent {
-            color: #000 !important;
-            background-color: transparent !important;
-            pointer-events: none;
+        .toggle-switch .toggle-track:before {
+            content: '';
+            display: inline-block;
+            height: 40px;
+            width: 40px;
+            background: red;
+            border-radius: 20px;
+            position: absolute;
+            top: 0;
+            right: 0;
+            transition: right .2s ease-in;
         }
 
-        #loadMore {
-            text-align: center;
-            font-size: 1.5em;
-            color: #fff;
-            letter-spacing: -5px;
-            font-weight: 700;
-            text-transform: uppercase;
-            animation: blur .25s ease-out;
-            text-shadow: 0px 0px 5px #fff, 0px 0px 7px #fff;
-        }
-
-        @keyframes blur {
-            from {
-                text-shadow: 0px 0px 10px #fff,
-                    0px 0px 10px #fff,
-                    0px 0px 25px #fff,
-                    0px 0px 25px #fff,
-                    0px 0px 25px #fff,
-                    0px 0px 25px #fff,
-                    0px 0px 25px #fff,
-                    0px 0px 25px #fff,
-                    0px 0px 50px #fff,
-                    0px 0px 50px #fff,
-                    0px 0px 50px #7B96B8,
-                    0px 0px 150px #7B96B8,
-                    0px 10px 100px #7B96B8,
-                    0px 10px 100px #7B96B8,
-                    0px 10px 100px #7B96B8,
-                    0px 10px 100px #7B96B8,
-                    0px -10px 100px #7B96B8,
-                    0px -10px 100px #7B96B8;
-            }
+        .toggle-switch input[type="checkbox"]:checked+label .toggle-track:before {
+            background: green;
+            right: 40px;
         }
     </style>
 </head>
 
-<body>
-    
-    <div class="container">
-        <div class="flex">
-            <div class="content"> <a href="#"> Content 1 </a> </div>
-            <div class="content"> <a href="#"> Content 2 </a> </div>
-            <div class="content"> <a href="#"> Content 3 </a> </div>
-            <div class="content"> <a href="#"> Content 4 </a> </div>
-            <div class="content"> <a href="#"> Content 5 </a> </div>
-            <div class="content"> <a href="#"> Content 6 </a> </div>
-            <div class="content"> <a href="#"> Content 7 </a> </div>
-            <div class="content"> <a href="#"> Content 8 </a> </div>
-            <div class="content"> <a href="#"> Content 9 </a> </div>
-            <div class="content"> <a href="#"> Content 10 </a> </div>
-            <div class="content"> <a href="#"> Content 11 </a> </div>
-            <div class="content"> <a href="#"> Content 12 </a> </div>
-            <div class="content"> <a href="#"> Content 13 </a> </div>
-            <div class="content"> <a href="#"> Content 14 </a> </div>
-            <div class="content"> <a href="#"> Content 15 </a> </div>
-            <div class="content"> <a href="#"> Content 16 </a> </div>
-        </div>
-        <a href="#" id="loadMore"> Load More </a>
-    </div>
 
+<body>
+    <div class="toggle-switch">
+        <input type="checkbox" id="chkTest" name="chkTest">
+        <label for="chkTest">
+            <span class="toggle-track"></span>
+        </label>
+    </div>
 </body>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"> </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"> </script>
-<script>
-    $(document).ready(function () {
-        $(".content").slice(0, 4).show();
-        $("#loadMore").on("click", function (e) {
-            e.preventDefault();
-            $(".content:hidden").slice(0, 4).slideDown();
-            if ($(".content:hidden").length == 0) {
-                $("#loadMore").text("No Content").addClass("noContent");
-            }
-        });
-    })  
-</script>
