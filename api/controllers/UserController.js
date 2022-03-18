@@ -1216,7 +1216,7 @@ module.exports = {
         var id = req.params.id; // post id
         var ObjectId = require('mongodb').ObjectId;
         var o_id = new ObjectId(id);
-        var cm = req.params.cm.trim(); // comment content
+        var cm = req.query.cm.trim(); // comment content
         var username = req.session.memberid;
         var UserNickname = req.session.nickname;
 

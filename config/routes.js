@@ -76,7 +76,7 @@ module.exports.routes = {
   'POST /leave/post/:id': 'UserController.leavePost',
 
   // post comment 
-  'POST /comment/:id/:cm': 'UserController.comment',
+  'POST /comment/:id': 'UserController.comment',
 
   // manage own posts
   'GET /manage': 'UserController.manage',
