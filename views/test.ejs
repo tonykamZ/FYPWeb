@@ -1,56 +1,32 @@
 <head>
-    <title>
-        Load more bootstrap Example
-    </title>
 
-
-    <style>
-
-        .toggle-switch input[type=checkbox] {
-            display: none
-        }
-
-        .toggle-switch label {
-            cursor: pointer;
-        }
-
-        .toggle-switch label .toggle-track {
-            display: block;
-            height: 40px;
-            width: 80px;
-            background: #eee;
-            border-radius: 20px;
-            position: relative;
-            margin-bottom: 15px;
-            border: 1px solid #ccc;
-        }
-
-        .toggle-switch .toggle-track:before {
-            content: '';
-            display: inline-block;
-            height: 40px;
-            width: 40px;
-            background: red;
-            border-radius: 20px;
-            position: absolute;
-            top: 0;
-            right: 0;
-            transition: right .2s ease-in;
-        }
-
-        .toggle-switch input[type="checkbox"]:checked+label .toggle-track:before {
-            background: green;
-            right: 40px;
-        }
-    </style>
 </head>
 
-
 <body>
-    <div class="toggle-switch">
-        <input type="checkbox" id="chkTest" name="chkTest">
-        <label for="chkTest">
-            <span class="toggle-track"></span>
-        </label>
-    </div>
+    <canvas id="myChart" style="width:100%;max-width:700px"></canvas>
 </body>
+
+<script>
+    const ctx = document.getElementById('myChart').getContext('2d');
+    const data = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: [
+                'Red',
+                'Blue',
+                'Yellow'
+            ],
+            datasets: [{
+                label: 'My First Dataset',
+                data: [300, 50, 100],
+                backgroundColor: [
+                    'rgb(255, 99, 132)',
+                    'rgb(54, 162, 235)',
+                    'rgb(255, 205, 86)'
+                ],
+                hoverOffset: 4
+            }]
+        }
+
+    });
+</script>

@@ -307,120 +307,6 @@
 
         }
 
-        .chart .skills {
-            position: absolute;
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-            padding: 0;
-            margin: 0;
-        }
-
-        .chart .skills li {
-            text-align: right;
-            font-size: 18px;
-            margin: 5px 0px;
-            color: #333;
-        }
-
-        .chart li {
-            list-style: none;
-            flex: 1;
-            position: relative;
-            margin: 1% 0px;
-        }
-
-        .chart .bars {
-            display: flex;
-            flex-direction: column;
-            position: absolute;
-            height: 100%;
-            padding: 0;
-            margin: 0;
-        }
-
-        .chart .bars .bar {
-            position: absolute;
-            height: 100%;
-            width: 0px;
-            background: #0fe2d4;
-            display: block;
-            overflow: hidden;
-        }
-
-        .chart .bars .bar:hover {
-            background: #09887f;
-        }
-
-
-        .chart .bars .perc {
-            color: #f1f1f1;
-            position: absolute;
-            right: 10px;
-            top: 25%;
-        }
-
-        @media only screen and (max-width: 800px) {
-            .chart {
-                width: 100%;
-            }
-
-            .skills {
-                width: 20%;
-            }
-
-            .bars {
-                width: 75%;
-                left: 25%;
-            }
-
-        }
-
-        @media only screen and (min-width: 800px) {
-            .chart {
-                width: 90%;
-            }
-
-            .skills {
-                width: 13%;
-            }
-
-            .bars {
-                width: 85%;
-                left: 15%;
-            }
-        }
-
-        @media only screen and (min-width: 1300px) {
-            .chart {
-                width: 70%;
-                max-width: 1000px;
-            }
-
-            .skills {
-                width: 13%;
-            }
-
-            .bars {
-                width: 85%;
-                left: 15%;
-            }
-        }
-
-        @media only screen and (max-width: 500px) {
-            .chart {
-                width: 100%;
-            }
-
-            .skills {
-                width: 30%;
-            }
-
-            .bars {
-                width: 65%;
-                left: 35%;
-            }
-        }
     </style>
 </head>
 
@@ -540,13 +426,9 @@
                 :)</a> ?</h3>
         <a style="cursor: pointer; position:relative; bottom: 10px; right: 10px; color: #000280;" onclick="window.location.reload();">Refresh</a>
        
-        <div class="chart">
-            <div class="skills"></div>
-            <div class="bars"></div>
-            
-        </div>
-        <b>(percentage)</b>
-        <br>
+      
+        
+        <canvas id="myChart" style="width:100%;max-width:700px"></canvas>
         <hr>
     </section>
 
@@ -671,45 +553,46 @@
             time: 3990
         });
     });
+</script>
 
-
-    $(function () {
-        //list of skills
-        var skills = {
-            'Food & Drink': '68',
-            Electronic: '46',
-            Clothing: '31',
-            Necessity: '50',
-            Course: '66',
-            Any: '78'
-
-        };
-
-        displayData(skills);
-        animate();
+<script>
+    const ctx = document.getElementById('myChart').getContext('2d');
+    const myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Food&Drink', 'Electronic', 'Colthing', 'Necessity', 'Course', 'Service','Any'],
+            datasets: [{
+                label: '# of Posts',
+                data: [6, 2, 1, 3, 5, 4, 8],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)',
+                    'rgba(155, 59, 64, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)',
+                    'rgba(155, 59, 64, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
     });
-
-
-    //Functions
-    //display data
-    function displayData(skills) {
-        $('.bars').html('');
-        $('.skills').html('');
-        for (var key in skills) {
-            $('.skills').append("<li><span>" + key + "</span></li>");
-            $('.bars').append("<li><div data-percentage='" + skills[key] + "' class='bar'></div></li>");
-        };
-    }
-
-
-    //animate the data
-    function animate() {
-        $('.bar').css('width', '0px');
-        $(".bars .bar").each(function (i) {
-            var percentage = $(this).data('percentage');
-
-            $(this).delay(i + "00").animate({ 'width': percentage + '%' }, 700);
-            $(this).html($(this).html() + "<div class='perc'>" + percentage + "</div>");
-        });
-    }
 </script>

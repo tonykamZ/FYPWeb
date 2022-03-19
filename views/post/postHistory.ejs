@@ -35,8 +35,8 @@
                             </tr>
                         </thead>
                         <tbody>
+                            <% var offset=1; %>
                             <% posts.forEach(function(post){ %>
-                                <% var offset=1; %>
                                     <tr>
                                         <th scope="row">
                                             <%= offset %>
@@ -62,7 +62,13 @@
                                                         <td>N/A</td>
                                                         <% } %>
                                                             <td>
+                                                                <% if(post.status == "Active"){ %>
                                                                 <b style="color: rgb(90, 20, 255);"><%= post.status %></b>
+                                                                <% }else if(post.status == "Deleted"){ %>
+                                                                    <b style="color: rgb(83, 84, 102);"><%= post.status %></b>
+                                                                <% }else{ %>
+                                                                    <b style="color: rgb(248, 20, 20);"><%= post.status %></b>
+                                                                <% } %>
                                                             </td>
 
                                     </tr>

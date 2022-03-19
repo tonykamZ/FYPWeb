@@ -105,7 +105,7 @@
             padding: 16px;
         }
 
-        #notiNum{
+        #notiNum {
             margin-left: 45px;
         }
     </style>
@@ -141,11 +141,16 @@
                                             <br>
 
                                             <div class="form-group col-md-10">
-                                                <label><b>User name:</b> <a href="/member/vip"><i
-                                                            class="fas fa-user-check"></i></a></label>
+                                                <label><b>User name:</b> 
+                                                    <% if(user.status == "active"){ %>
+                                                    <i class="fas fa-user-check"></i>
+                                                    <% }else{ %>
+                                                        <b style="color: red;"><i class="fas fa-user-slash"></i>Banned user</b>
+                                                    <% } %>
+                                                </label>
                                                 <input class="form-control" value="<%= user.username %>" readonly>
-                                                <% var createArr = user.createDateString.split("T"); %>
-                                                <small>Account create date: <%= createArr[0] %></small>
+                                                <% var createArr=user.createDateString.split("T"); %>
+                                                    <small>Account create date: <%= createArr[0] %></small>
                                             </div>
 
                                             <div class="form-group col-md-10">
@@ -188,14 +193,16 @@
 
                                                 <% }else{ %>
                                                     <!-- read others layout -->
-                                                    <% if(req.session.report.indexOf(user.username) != -1){ %>
-                                                        <a class="btn btn-outline-danger" href="#">You've reported this user</a>
-                                                    <% }else{ %>    
-                                                    <a class="btn btn-outline-danger" onclick="show()">Report</a>
-                                                    <% } %>
-                                                    <!-- read others layout -->
+                                                    <% if(req.session.report.indexOf(user.username) !=-1){ %>
+                                                        <a class="btn btn-outline-danger" href="#">You've reported this
+                                                            user</a>
+                                                        <% }else{ %>
+                                                            <a class="btn btn-outline-danger"
+                                                                onclick="show()">Report</a>
+                                                            <% } %>
+                                                                <!-- read others layout -->
 
-                                                    <% } %>
+                                                                <% } %>
                                     </form>
                                     <% } %>
                                         <!-- member layout -->
@@ -325,9 +332,11 @@
                                                                     <button class="btn btn-outline-secondary"
                                                                         type="button"
                                                                         onclick="window.history.back()">Back</button>
-                                                                        
-                                                                        <hr>
-                                                                        <a href="/read/postHistory?username=<%= user.username %>">Post History</a>
+
+                                                                    <hr>
+                                                                    <a
+                                                                        href="/read/postHistory?username=<%= user.username %>">Post
+                                                                        History</a>
                                                                     <% } %>
                                                                         <% } %>
 
@@ -347,12 +356,12 @@
                                         <div id="notiNum">
                                             <% if(user.notification.length> 0){ %>
                                                 <% if(user.notification.length> 1){ %>
-                                                <b>(<%= user.notification.length %> messages)</b>
-                                                <% }else{ %>
-                                                    <b>(<%= user.notification.length %> message)</b>
-                                                    <% } %>
-                                                
-                                                <% } %>
+                                                    <b>(<%= user.notification.length %> messages)</b>
+                                                    <% }else{ %>
+                                                        <b>(<%= user.notification.length %> message)</b>
+                                                        <% } %>
+
+                                                            <% } %>
                                         </div>
                                         <div class="icons">
                                             <a href="/report/history"><i class="fas fa-exclamation-circle"
@@ -360,8 +369,8 @@
                                             </a>Report History
                                         </div>
                                         <div class="icons">
-                                            <a href="/read/postHistory?username=<%= req.session.memberid %>"><i class="fas fa-history"
-                                                    style="font-size: xx-large;"></i>
+                                            <a href="/read/postHistory?username=<%= req.session.memberid %>"><i
+                                                    class="fas fa-history" style="font-size: xx-large;"></i>
                                             </a>My Post History
                                         </div>
                                         <!-- div class="icons">
@@ -373,7 +382,7 @@
                                     </div>
                 </div>
                 <% }else{ %>
-                   
+
                     <% } %>
                         <% } %>
 

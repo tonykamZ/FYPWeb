@@ -751,7 +751,7 @@ module.exports = {
         sails.log(keywords + " " + cat + " " + dType + " " + chkFull);
         var search = keywords || cat || dType || chkFull;
 
-        if(chkFull){
+        if (chkFull) {
             chkFull = "available";
         }
         var db = sails.getDatastore().manager;
@@ -1018,13 +1018,16 @@ module.exports = {
         var username = req.query.username;
 
         if (username.toLowerCase() == "admin") {
-            return res.view('post/postHistory', { user: { username: "admin" }, post: null });
-
+            return res.view('post/postHistory', { user: { username: username }, posts: null});
         }
         var db = sails.getDatastore().manager;
         // find all post that the user hosted/hosting
         var userHostPosts = await db.collection('postHistory').find({ "HostUsername": username }).toArray();
 
+        var user = await db.collection('user').findOne({"username":username});
+        if (!user) {
+            return res.view('404');
+        }
 
         if (req.wantsJSON) {
             sails.log("returning user post history page json data");
@@ -1033,7 +1036,8 @@ module.exports = {
                 userHostPosts: userHostPosts
             });
         }
-        return res.view('post/postHistory', { user: { username: username }, posts: userHostPosts });
+
+        return res.view('post/postHistory', { user: { username: username }, posts: userHostPosts});
 
     },
 
