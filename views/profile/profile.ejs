@@ -108,6 +108,10 @@
         #notiNum {
             margin-left: 45px;
         }
+
+        #notiForm{
+            display: none;
+        }
     </style>
 
 </head>
@@ -190,7 +194,7 @@
                                             </div>
                                             <!-- personal layout -->
                                             <% }else if(req.session.memberid=="admin" ){ %>
-
+                                               
                                                 <% }else{ %>
                                                     <!-- read others layout -->
                                                     <% if(req.session.report.indexOf(user.username) !=-1){ %>
@@ -337,6 +341,23 @@
                                                                     <a
                                                                         href="/read/postHistory?username=<%= user.username %>">Post
                                                                         History</a>
+
+                                                                        <!-- Admin send noti -->
+                                                                        <% if(req.session.memberid == "admin"){ %>
+                                                                            <hr>
+                                                                            <a onclick="showForm()" style="cursor: pointer;"><i class="fas fa-bullhorn"></i> Send Message to <%= user.username %></a>
+                                                                            <br>
+                                                                            <div class="form-row" id="notiForm">
+                                                                                <div class="form-group col-md-7">
+                                                                                    <textarea class="form-control" name="message" id="message" rows="4"
+                                                                                        placeholder="message here..."></textarea>
+                                                                                </div>
+                                                                                <input id="GETusername" value="<%= user.username %>" hidden>
+                                                                                <button class="btn btn-outline-warning" onclick="fetchMessage()">Send</button>
+                                                                            </div>
+                                                                            
+                                                                            <% } %>                        
+
                                                                     <% } %>
                                                                         <% } %>
 
@@ -462,6 +483,27 @@
         } else {
             element.style.display = 'none';
             otherContent.required = false;
+        }
+    }
+
+    function showForm(){
+        var notiForm = document.getElementById('notiForm');
+        notiForm.style.display = 'inline';
+    }
+
+    async function fetchMessage(){
+        var message = document.getElementById('message');
+        var GETusername = document.getElementById('GETusername');
+        
+        var response = await fetch('/send/directly/noti?message='+message.value+"&username="+GETusername.value, {method: 'POST'});
+
+        if (response.ok) {
+            alert("Message sent!");
+            message.value = "";
+        } else {
+            var msg = response.statusText;
+            alert("Error in sending message:\n\"" + message.value + "\"\n" + msg);
+            location.reload();
         }
     }
 </script>

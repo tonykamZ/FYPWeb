@@ -18,7 +18,7 @@
             box-shadow: 0 5px 22px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
         }
 
-        .cardToday{
+        .cardToday {
             background: rgb(255, 254, 170);
             border-radius: 2px;
             display: inline-block;
@@ -28,7 +28,7 @@
             width: 70%;
             padding: 30px;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
-            transition: all 0.3s cubic-bezier(.25, .8, .25, 1); 
+            transition: all 0.3s cubic-bezier(.25, .8, .25, 1);
         }
 
         .cardToday:hover {
@@ -58,16 +58,16 @@
     <% if(req.session.memberid){ %>
         <div>
             <br>
-            <h1>Notification  <i class="fas fa-envelope-open"></i></h1>
+            <h1>Notification <i class="fas fa-envelope-open"></i></h1>
             <% if(notiList.length==0){ %>
                 <h3>There is no message here <i class="fas fa-child stick"></i></h3>
                 <% }else{ %>
                     <div id="cardContainer">
-                    <% notiList.forEach(function(n){ %>
-                        <% var today=new Date(); %>
-                        <% var year=today.getFullYear(); %>
-                            <% var month=today.getMonth()+1; %>
-                                <% var day=today.toString().split(' ')[2]; %>
+                        <% notiList.forEach(function(n){ %>
+                            <% var today=new Date(); %>
+                                <% var year=today.getFullYear(); %>
+                                    <% var month=today.getMonth()+1; %>
+                                        <% var day=today.toString().split(' ')[2]; %>
 
                         <% var dateStr = n.date.split("T"); %>
                         <% var ymd = dateStr[0].split("-"); %>
@@ -128,7 +128,7 @@
                     <a class="btn btn-outline-primary" href="/read/profile?username=<%= req.session.memberid %>">Back to profile</a>
                             <% } %>
 
-                            <br><br>
+                            <br><br><br><br>
         </div>
 
         <% }else{ %>
@@ -148,18 +148,20 @@
 </body>
 
 <script>
+    
     async function del(form) {
-        //alert(form['index'].value);
-        document.getElementById(form['index'].value).style.display = 'none';
-
-        var response = await fetch("/delete/notification?id=" + form['index'].value, { method: "POST" });
-
-
-        if (response.ok) {
-        } else {
-            var msg = response.statusText;
-            alert(msg);
+        
+        var id = form['index'].value;
+        var response = await fetch("/delete/notification?id=" + id, {method: "POST"}); 
+        
+        if (response.ok){ 
+            location.reload();
+        }else{
+             var msg = response.statusText; 
+             alert(msg); 
         }
-    }
+    } 
+    
+    
     
 </script>

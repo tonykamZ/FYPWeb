@@ -116,8 +116,10 @@ module.exports.routes = {
   'GET /admin/report/delete/:id': 'UserController.deleteReport',
   'POST /update/report/:id': 'UserController.updateReportStatus',
 
-  //  send notification
+  //  send notification (when handling report)
   'POST /send/noti': 'UserController.sendNotification',
+  // send notification only
+  'POST /send/directly/noti': 'UserController.sendNotificationOnly',
 
   // delete post in DB
   'POST /delete/post/:id': 'UserController.delPost',
