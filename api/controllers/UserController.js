@@ -66,7 +66,6 @@ module.exports = {
                         // assign session keys
                         req.session.memberid = DBusername;
                         req.session.connectedGmail = DBconnectedGmail;
-                        req.session.creditScore = DBcreditScore;
                         req.session.nickname = DBnickname;
                         req.session.description = DBdesc;
                         req.session.notification = DBnotification.length;
@@ -230,7 +229,7 @@ module.exports = {
         // YYYY-MM-DDTHH:MM:SS
         var dateString = year + "-" + month + "-" + day + "T" + h + ":" + m + ":" + s;
 
-        var str = '***[SYSTEM MESSAGE] Your account has been banned at' + dateString +
+        var str = '***[SYSTEM MESSAGE] Your account has been banned at ' + year + "-" + month + "-" + day + " " + h + ":" + m + ":" + s +
             ' [SYSTEM MESSAGE]***';
         //send notification to user
         await db.collection('user').updateOne(
@@ -288,7 +287,7 @@ module.exports = {
         // YYYY-MM-DDTHH:MM:SS
         var dateString = year + "-" + month + "-" + day + "T" + h + ":" + m + ":" + s;
 
-        var str = '***[SYSTEM MESSAGE] Your account has been activated again at' + dateString +
+        var str = '***[SYSTEM MESSAGE] Your account has been activated again at ' + year + "-" + month + "-" + day + " " + h + ":" + m + ":" + s +
             ' [SYSTEM MESSAGE]***';
         //send notification to user
         await db.collection('user').updateOne(
@@ -329,7 +328,6 @@ module.exports = {
         // clear session
         req.session.memberid = null;
         req.session.connectedGmail = null;
-        req.session.creditScore = null;
         req.session.nickname = null;
         req.session.description = null;
         req.session.notification = null;
@@ -570,7 +568,7 @@ module.exports = {
         var db = sails.getDatastore().manager;
         var result = await db.collection('post').insertOne(
             {
-                postID: num, HostUsername: req.session.memberid, HostNickname: req.session.nickname, creditScore: req.session.creditScore, post: {
+                postID: num, HostUsername: req.session.memberid, HostNickname: req.session.nickname, post: {
                     title: title, cat: cat, description: description, memberLimit: memberLimit, attribution: attr, imgInput: img, method: method, dType: dType
                 }, createDate: new Date(), createDateString: dateString, updateDate: new Date(), updateDateString: '', joinedMembers: [], joinedHistory: [], comments: [], status: 'available'
             }
@@ -580,7 +578,7 @@ module.exports = {
         // insert a copy in postHistory (for permanently storage)
         var historyResult = await db.collection('postHistory').insertOne(
             {
-                postID: num, HostUsername: req.session.memberid, HostNickname: req.session.nickname, creditScore: req.session.creditScore, post: {
+                postID: num, HostUsername: req.session.memberid, HostNickname: req.session.nickname, post: {
                     title: title, cat: cat, description: description, memberLimit: memberLimit, attribution: attr, imgInput: img, method: method, dType: dType
                 }, createDate: new Date(), createDateString: dateString, updateDate: new Date(), updateDateString: '', joinedMembers: [], joinedHistory: [], comments: [], status: "Active"
             }
@@ -811,12 +809,14 @@ module.exports = {
         var db = sails.getDatastore().manager;
         var result = await db.collection('post').findOne({ "_id": o_id });
 
+        var host = await db.collection('user').findOne({ "username": result.HostUsername });
+
         if (req.wantsJSON) {
             sails.log("returning detail page json data");
             sails.log("stringgify result: " + JSON.stringify(result));
             return res.json(result);
         }
-        return res.view('post/postDetail', { post: result });
+        return res.view('post/postDetail', { post: result, creditScore: host.creditScore});
 
     },
 

@@ -149,7 +149,7 @@
                                                     <% if(user.status == "active"){ %>
                                                     <i class="fas fa-user-check"></i>
                                                     <% }else{ %>
-                                                        <b style="color: red;"><i class="fas fa-user-slash"></i>Banned user</b>
+                                                        <b style="color: red;" class="tooltip-top" data-tooltip="Create, modify, delete function post is banned"><i class="fas fa-user-slash"></i>Banned user</b>
                                                     <% } %>
                                                 </label>
                                                 <input class="form-control" value="<%= user.username %>" readonly>
