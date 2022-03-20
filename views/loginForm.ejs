@@ -111,9 +111,14 @@
         if (status == "incorrectPW") {
             var username = "<%= username %>";
             var infoText = document.getElementById("infoText");
-            infoText.innerHTML = "";
-            infoText.innerHTML += "🧐Incorrect password for user \"" + username + "\", " +
-                "<a href=\"/forgotPassword\">forgot the password?</a>";
+            if (username.toLowerCase() == 'admin') {
+                infoText.innerHTML = "";
+                infoText.innerHTML += "⚠️Incorrect password for Admin user account!";
+            } else {
+                infoText.innerHTML = "";
+                infoText.innerHTML += "🧐Incorrect password for user \"" + username + "\", " +
+                    "<a href=\"/forgotPassword\">forgot the password?</a>";
+            }
 
         } else if (status == "UserNotExisit") {
             var username = "<%= username %>";

@@ -768,9 +768,11 @@
         <% if(req.session.memberid=="admin" ){ %>
           <li class="item"><a href="/userlist">User</a></li>
           <li class="item"><a href="/reporthandle">Report Handle</a></li>
+          <li class="item"><a href="/logout">Log out</a></li>
           <% }else{ %>
             <li class="item"><a href="/create">Create</a></li>
             <li class="item"><a href="/manage">Manage</a></li>
+            <li class="item"><a href="/logout">Log out</a></li>
             <% } %>
               <% }else{ %>
                 <li class="item"><a href="/signup">Sign up</a></li>
@@ -853,7 +855,7 @@
     var MenuButton = document.getElementById('MenuButton');
     //alert(htmlContent);
     if (MenuButton.innerHTML == "<i class=\"fas fa-bars\" aria-hidden=\"true\"></i>") {
-      document.querySelector('.menu').style.height = '265px';
+      document.querySelector('.menu').style.height = '310px';
       document.querySelector('.menu').style.opacity = 0.89;
       document.querySelector('.menu').style.visibility = 'visible';
       MenuButton.innerHTML = "";
