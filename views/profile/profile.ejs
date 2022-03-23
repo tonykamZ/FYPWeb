@@ -493,6 +493,11 @@
 
     async function fetchMessage(){
         var message = document.getElementById('message');
+        if(message.value.trim() == ""){
+            alert("Please input the message!");
+            message.value = "";
+            return;
+        }
         var GETusername = document.getElementById('GETusername');
         
         var response = await fetch('/send/directly/noti?message='+message.value+"&username="+GETusername.value, {method: 'POST'});
