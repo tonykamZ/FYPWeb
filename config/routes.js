@@ -144,6 +144,6 @@ module.exports.routes = {
 
 
   
-
+  'GET /loaderio-2feda3059cf8e1e5f77aaec7b7133a00' : 'UserController.loader'
 
 };

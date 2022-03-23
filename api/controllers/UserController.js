@@ -1618,6 +1618,11 @@ module.exports = {
 
     },
 
+    loader: function (req, res) {
+
+        return res.sendfile('loaderio-2feda3059cf8e1e5f77aaec7b7133a00.txt');
+    }
+
 
 };
 
