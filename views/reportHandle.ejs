@@ -67,9 +67,23 @@
                             </a>
                         </td>
                         <td>
-                            <b style="color: grey;">
-                                <%= report.status %>
-                            </b>
+                            <% if(report.status=="Pending" ){ %>
+                                <b style="color: gray;">
+                                    <%= report.status %>
+                                </b>
+                                <% }else if(report.status=="Approved" ){ %>
+                                    <b style="color: #61ff89;">
+                                        <%= report.status %>
+                                    </b>
+                                    <% }else if(report.status=="Rejected" ){ %>
+                                        <b style="color: rgb(252, 133, 35);">
+                                            <%= report.status %>
+                                        </b>
+                                        <% }else{ %>
+                                            <b style="color: #7208eb;">
+                                                <%= report.status %>
+                                            </b>
+                                            <% } %>
 
                         </td>
                         <td>

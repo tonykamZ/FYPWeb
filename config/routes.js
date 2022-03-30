@@ -104,6 +104,8 @@ module.exports.routes = {
 
   // delete own post in DB
   'POST /member/delete/post/:id': 'UserController.memberDelPost',
+
+  
   // *** member ***********************************************
 
 
@@ -117,7 +119,7 @@ module.exports.routes = {
   'POST /update/report/:id': 'UserController.updateReportStatus',
 
   //  send notification (when handling report)
-  'POST /send/noti': 'UserController.sendNotification',
+  // 'POST /send/noti': 'UserController.sendNotification',
   // send notification only
   'POST /send/directly/noti': 'UserController.sendNotificationOnly',
 
@@ -144,6 +146,6 @@ module.exports.routes = {
 
 
   
-  'GET /loaderio-2feda3059cf8e1e5f77aaec7b7133a00' : 'UserController.loader'
+  'GET /loaderio-2feda3059cf8e1e5f77aaec7b7133a00' : 'UserController.loader',
 
 };

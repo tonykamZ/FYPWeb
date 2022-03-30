@@ -613,8 +613,26 @@ module.exports = {
 
         var id = req.query.id;
 
+        
         sails.log("ready to delete notification (" + id + ")");
         var db = await sails.getDatastore().manager;
+
+        // delete all notification option
+        if(id == "ALL"){
+            await db.collection('user').updateOne(
+                { "username": req.session.memberid },
+                {
+                    $set: {
+                        notification: []
+                    }
+                }
+            )
+            req.session.notification = 0;
+            sails.log("deleted ALL notification");
+            return res.ok();
+        }
+
+
         await db.collection('user').updateOne(
             { "username": req.session.memberid },
             {
@@ -627,7 +645,6 @@ module.exports = {
         )
 
         req.session.notification = req.session.notification - 1;
-        sails.log("sessopn.noti = " + req.session.notification);
 
         sails.log("deleted notification (" + id + ")");
 
@@ -1478,74 +1495,7 @@ module.exports = {
         return res.redirect("/read/report/" + id);
     },
 
-    sendNotification: async function (req, res) {
-
-        var reportUser = req.body.reportUser;
-        var reportedBy = req.body.reportedBy;
-
-        // MS = message
-        var reportUserMS = req.body.reportUserMS;
-        var reportedByMS = req.body.reportedByMS;
-
-        var date = new Date();
-        var day = date.getDate();
-        var month = date.getMonth();
-        var year = date.getFullYear();
-        var h = date.getUTCHours() + 8;
-        var m = date.getMinutes();
-        var s = date.getSeconds();
-        if (day < 10) {
-            day = "0" + day;
-        }
-        // it seems the date.getMonth() is wrong(?) Nov --> get 10 return
-        month = month + 1;
-        if (month < 10) {
-            month = "0" + month;
-        }
-        if (h < 10) {
-            h = "0" + h;
-        }
-        if (m < 10) {
-            m = "0" + m;
-        }
-        if (s < 10) {
-            s = "0" + s;
-        }
-        var dateString = year + "-" + month + "-" + day + "T" + h + ":" + m + ":" + s;
-
-
-        var db = await sails.getDatastore().manager;
-
-        if (reportUserMS) {
-            var str = "*** ***" + reportUserMS;
-            await db.collection('user').updateOne(
-                { "username": reportUser },
-                {
-                    $push: {
-                        'notification': {
-                            message: str, date: dateString
-                        }
-                    }
-                }
-            );
-        }
-
-        if (reportedByMS) {
-            var str = "*** ***" + reportedByMS;
-            await db.collection('user').updateOne(
-                { "username": reportedBy },
-                {
-                    $push: {
-                        'notification': {
-                            message: str, date: dateString
-                        }
-                    }
-                }
-            );
-        }
-
-        return res.redirect("/reporthandle");
-    },
+    
 
     // directly send notification to user
     sendNotificationOnly: async function (req, res) {
@@ -1596,13 +1546,15 @@ module.exports = {
         return res.ok();
     },
 
+    
 
-    test: function (req, res) {
 
+    test: async function (req, res) {
 
         return res.view('test');
 
     },
+
 
     terms: function (req, res) {
 

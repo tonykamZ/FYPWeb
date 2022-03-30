@@ -176,24 +176,30 @@
                         <h3>Action Taken:</h3>
 
                         <% if(report.actionTaken.reportUserCSD){ %>
-                        <h6>@<%= report.reportUser %> - <%= report.actionTaken.reportUserCSD %></h6>
-                        <% }else{ %>
-                            <h6>@<%= report.reportUser %> : No mark deducted</h6>
-                            <% } %>
+                            <h6>@<%= report.reportUser %> - <%= report.actionTaken.reportUserCSD %>
+                            </h6>
+                            <% }else{ %>
+                                <h6>@<%= report.reportUser %> : No mark deducted</h6>
+                                <% } %>
 
-                            <% if(report.actionTaken.reportedByCSD){ %>
-                                <h6>@<%= report.reportedBy %> - <%= report.actionTaken.reportedByCSD %></h6>
-                                <% }else{ %>
-                                    <h6>@<%= report.reportedBy %> : No mark deducted</h6>
-                                    <% } %>
+                                    <% if(report.actionTaken.reportedByCSD){ %>
+                                        <h6>@<%= report.reportedBy %> - <%= report.actionTaken.reportedByCSD %>
+                                        </h6>
+                                        <% }else{ %>
+                                            <h6>@<%= report.reportedBy %> : No mark deducted</h6>
+                                            <% } %>
 
-                                    <h6>Mesage from the admin:</h6>
-                                    <h6 style="color: #7208eb;"><%= report.actionTaken.message %></h6>
-                                    <br>
-                                    <% var date = report.actionTaken.date.split("T"); %>
-                                    <h6>Report handled date: <%= date[0] %> <%= date[1] %></h6>
+                                                <h6>Mesage from the admin:</h6>
+                                                <h6 style="color: #7208eb;">
+                                                    <%= report.actionTaken.message %>
+                                                </h6>
+                                                <br>
+                                                <% var date=report.actionTaken.date.split("T"); %>
+                                                    <h6>Report handled date: <%= date[0] %>
+                                                            <%= date[1] %>
+                                                    </h6>
 
-                        <% } %>
+                                                    <% } %>
 
                 </div>
 
@@ -258,29 +264,28 @@
                         </form>
                         <% }else{ %>
                             <!-- approved/rejected layout -->
-                            <form action="/send/noti" method="post">
-                                <h3>Additional Action (optional):</h3>
-                                <h6>Send message to user:</h6>
+                            <h3>Additional Information (optional):</h3>
+                            <h6>Send message to user:</h6>
 
-                                <div class="form-row">
-                                    <div class="form-group col-md-7">
-                                        <b>Send to @ <%= report.reportUser %> (<%= reportUser.creditScore %>)</b>
-                                        <textarea class="form-control" name="reportUserMS" rows="4"
-                                            placeholder="message here..."></textarea>
-                                    </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-7">
+                                    <b>Send to @ <%= report.reportUser %> (<%= reportUser.creditScore %>)</b>
+                                    <textarea class="form-control" name="reportUserMS" rows="4" id="reportUserMS"
+                                        placeholder="message here..."></textarea>
                                 </div>
-                                <div class="form-row">
-                                    <div class="form-group col-md-7">
-                                        <b>Send to @ <%= report.reportedBy %> (<%= reportedBy.creditScore %>)</b>
-                                        <textarea class="form-control" name="reportedByMS" rows="4"
-                                            placeholder="message here..."></textarea>
-                                    </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-7">
+                                    <b>Send to @ <%= report.reportedBy %> (<%= reportedBy.creditScore %>)</b>
+                                    <textarea class="form-control" name="reportedByMS" rows="4" id="reportedByMS"
+                                        placeholder="message here..."></textarea>
                                 </div>
+                            </div>
 
-                                <input name="reportUser" value="<%= report.reportUser %>" readonly hidden>
-                                <input name="reportedBy" value="<%= report.reportedBy %>" readonly hidden>
-                                <button class="btn btn-outline-warning" type="submit">Send</button>
-                            </form>
+                            <input name="reportUser" id="reportUser" value="<%= report.reportUser %>" readonly hidden>
+                            <input name="reportedBy" id="reportedBy" value="<%= report.reportedBy %>" readonly hidden>
+                            <button class="btn btn-outline-warning" onclick="fetchNoti()">Send</button>
+
 
                             <% } %>
                 </div>
@@ -309,7 +314,7 @@
                         <!-- visitor layout -->
                         <% } %>
 
-                        <br><br>
+                            <br><br>
 
 </body>
 
@@ -324,5 +329,50 @@
 
         // update status input
         document.getElementById("status").value = status;
+    }
+
+    async function fetchNoti() {
+
+        var rMessage = document.getElementById('reportUserMS').value;
+        var rbMessage = document.getElementById('reportedByMS').value;
+
+        rMessage = rMessage.trim();
+        rbMessage = rbMessage.trim();
+
+        messageCnt = 0;
+        if (rMessage != "") {
+            var username = document.getElementById('reportUser').value;
+            var response = await fetch('/send/directly/noti?username='+username+"&message="+rMessage, { method: 'POST' });
+
+            if (response.ok) {
+                messageCnt += 1;
+            } else {
+                var msg = response.statusText;
+                alert("Error in sending message:\n\"" + y + "\"\n" + msg);
+            }
+        }
+        if (rbMessage != "") {
+            var username = document.getElementById('reportedBy').value;
+            var response = await fetch('/send/directly/noti?username='+username+"&message="+rbMessage, { method: 'POST' });
+
+            if (response.ok) {
+                messageCnt += 1;
+            } else {
+                var msg = response.statusText;
+                alert("Error in sending message:\n\"" + y + "\"\n" + msg);
+            }
+        }
+
+        if(messageCnt == 0){
+            alert("The message is empty!");
+        }else if(messageCnt == 1){
+            alert("Message sent!");
+            location.reload();
+        }else{
+            alert("Messages sent!");
+            location.reload();
+        }
+
+
     }
 </script>

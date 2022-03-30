@@ -7,9 +7,9 @@
             display: inline-block;
             margin: 1rem;
             position: relative;
-            height: 150px;
+            height: 100%;
             width: 70%;
-            padding: 30px;
+            padding: 35px;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
             transition: all 0.3s cubic-bezier(.25, .8, .25, 1);
         }
@@ -19,20 +19,34 @@
         }
 
         .cardToday {
-            background: rgb(255, 254, 170);
             border-radius: 2px;
             display: inline-block;
             margin: 1rem;
             position: relative;
-            height: 150px;
+            height: 100%;
             width: 70%;
-            padding: 30px;
+            padding: 35px;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
             transition: all 0.3s cubic-bezier(.25, .8, .25, 1);
+            animation: blinkingBackground 2s infinite;
         }
 
         .cardToday:hover {
             box-shadow: 0 5px 22px rgba(246, 250, 11, 0.39), 0 10px 10px rgba(0, 0, 0, 0.22);
+        }
+
+        @keyframes blinkingBackground {
+            0% {
+                background: rgb(255, 254, 213);
+            }
+
+            50%{
+                 background: rgb(245, 252, 149);
+            }
+
+            100% {
+                background: rgb(255, 254, 213);
+            }
         }
 
         h1 {
@@ -41,11 +55,20 @@
             margin-bottom: 15px;
         }
 
-        #trash {
+        .card:hover .trash {
+            opacity: 1;
+        }
+
+        .cardToday:hover .trash {
+            opacity: 1;
+        }
+
+        .trash {
             position: absolute;
             cursor: pointer;
-            top: 2%;
-            left: 94%;
+            top: 3%;
+            left: 96%;
+            opacity: 0;
         }
     </style>
     <link href="https://fonts.googleapis.com/css?family=Amatic+SC|Raleway" rel="stylesheet">
@@ -62,14 +85,21 @@
             <% if(notiList.length==0){ %>
                 <h3>There is no message here <i class="fas fa-child stick"></i></h3>
                 <% }else{ %>
-                    <div id="cardContainer">
-                        <% notiList.forEach(function(n){ %>
-                            <% var today=new Date(); %>
-                                <% var year=today.getFullYear(); %>
-                                    <% var month=today.getMonth()+1; %>
-                                        <% var day=today.toString().split(' ')[2]; %>
+                    <% if(notiList.length> 1){ %>
+                        <button class="btn btn-outline-danger" style="float: right; margin-right: 30%;" onclick="deleteAllNoti()">Delete All notification</button>
+                        <small>
+                            <%= notiList.length %> messages
+                        </small>
+                      
+                        <% } %>
+                            <div id="cardContainer">
+                                <% for (var i=notiList.length-1; i>= 0; i--) { %>
+                                    <% var today=new Date(); %>
+                                        <% var year=today.getFullYear(); %>
+                                            <% var month=today.getMonth()+1; %>
+                                                <% var day=today.toString().split(' ')[2]; %>
 
-                        <% var dateStr = n.date.split("T"); %>
+                        <% var dateStr = notiList[i].date.split("T"); %>
                         <% var ymd = dateStr[0].split("-"); %>
                         <% var notiY = parseInt(ymd[0]); var notiM = parseInt(ymd[1]); var notiD =  parseInt(ymd[2]); %>
                         <% var tdyY = parseInt(year); var tdyM = parseInt(month); var tdyD = parseInt(day); %>
@@ -82,8 +112,8 @@
                         <% }}} %>
 
                         <% if(isToday){ %>
-                            <div class="cardToday" id="<%= n.date %>">
-                                <% var str=n.message.split("***") %>
+                            <div class="cardToday" id="<%= notiList[i].date %>">
+                                <% var str=notiList[i].message.split("***") %>
                                     <h6>
                                         <%= str[1] %>
                                     </h6>
@@ -94,34 +124,30 @@
                                         <%= dateStr[0] %> <%= dateStr[1] %>
                                     </small>
     
-                                    <form>
-                                        <input value="<%= n.date %>" name="index" readonly hidden>
-                                        <button id="trash" class="btn btn-outline-danger" type="button"
-                                            onclick="del(this.form)"> <i class="fa fa-trash"></i></button>
-                                    </form>
+                                    <a class="tooltip-top trash" data-tooltip="Delete Notification"
+                                    onclick="del('<%= notiList[i].date %>')"> <i class="fa fa-trash"></i></a>
                             </div>
                             <% }else{ %>
-                        <div class="card" id="<%= n.date %>">
-                            <% var str=n.message.split("***") %>
+                        <div class="card" id="<%= notiList[i].date %>">
+                            <% var str=notiList[i].message.split("***") %>
                                 <h6>
                                     <%= str[1] %>
                                 </h6>
-                                <h6 style="color: rgb(204, 0, 255); font-weight: bold;">
+                                <h6 style="color: rgb(0, 4, 255); font-weight: bold;">
                                     <%= str[2] %>
                                 </h6>
                                 <small>
                                     <%= dateStr[0] %> <%= dateStr[1] %>
                                 </small>
 
-                                <form>
-                                    <input value="<%= n.date %>" name="index" readonly hidden>
-                                    <button id="trash" class="btn btn-outline-danger" type="button"
-                                        onclick="del(this.form)"> <i class="fa fa-trash"></i></button>
-                                </form>
+                                
+                                    <a class="tooltip-top trash" data-tooltip="Delete Notification"
+                                    onclick="del('<%= notiList[i].date %>')"> <i class="fa fa-trash"></i></a>
+                               
                         </div>
                         <% } %>
 
-                        <% }); %>
+                        <% }; %>
 
                     </div>
 
@@ -148,20 +174,35 @@
 </body>
 
 <script>
-    
-    async function del(form) {
+
+    async function del(id) {
         
-        var id = form['index'].value;
-        var response = await fetch("/delete/notification?id=" + id, {method: "POST"}); 
+        var response = await fetch("/delete/notification?id=" + id, { method: "POST" }); 
         
-        if (response.ok){ 
+        if (response.ok) { 
             location.reload();
-        }else{
-             var msg = response.statusText; 
-             alert(msg); 
+        } else {
+          var msg = response.statusText; 
+          alert(msg);
         }
-    } 
-    
-    
+    }
+
+    async function deleteAllNoti(){
+
+        var r = confirm('Are you sure you want to delete all of the notification?');
+
+        if(r){
+            var response = await fetch("/delete/notification?id=ALL", { method: "POST" }); 
+        
+        if (response.ok) { 
+            alert("Deleted all the messages.");
+            location.reload();
+        } else {
+          var msg = response.statusText; 
+          alert(msg);
+        }
+        }
+
+    }
     
 </script>
