@@ -613,12 +613,12 @@ module.exports = {
 
         var id = req.query.id;
 
-        
+
         sails.log("ready to delete notification (" + id + ")");
         var db = await sails.getDatastore().manager;
 
         // delete all notification option
-        if(id == "ALL"){
+        if (id == "ALL") {
             await db.collection('user').updateOne(
                 { "username": req.session.memberid },
                 {
@@ -813,7 +813,47 @@ module.exports = {
         var post = await db.collection('post').find().toArray();
         var user = await db.collection('user').find().toArray();
 
-        return res.view('landingPage', { post: post, user: user });
+        // count category
+        var fnd = elect = colth = ness = course = service = any = 0;
+        post.forEach(function (p) {
+            if (p.post.cat == "Food&Drink") {
+                fnd += 1
+            } else if (p.post.cat == "Electronic") {
+                elect += 1;
+            } else if (p.post.cat == "Colthing") {
+                colth += 1;
+            } else if (p.post.cat == "Necessity") {
+                ness += 1;
+            } else if (p.post.cat == "Course") {
+                course += 1;
+            } else if (p.post.cat == "Service") {
+                service += 1;
+            } else {
+                any += 1;
+            }
+            sails.log("CAT = " + p.post.cat);
+        });
+        sails.log(fnd + " " + elect + " " + colth + " " + ness + " " + course + " " + service + " " + any);
+        return res.view('landingPage', { post: post, user: user.length, fnd: fnd, elect: elect, colth: colth, ness: ness, course: course, service: service, any: any });
+
+    },
+
+    postHistoryDetail: async function (req, res) {
+
+        var postID = req.params.id;
+
+        postID = parseInt(postID);
+        sails.log('finding post history with id: '+postID);
+        var db = sails.getDatastore().manager;
+        var post = await db.collection('postHistory').findOne({ "postID": { $eq: postID}});
+
+        var access = 'forbidden';
+        if (req.session.memberid == "admin") {
+            access = 'accessible';
+        }
+
+        return res.view('post/history/detail', { post: post, access: access });
+
 
     },
 
@@ -833,7 +873,7 @@ module.exports = {
             sails.log("stringgify result: " + JSON.stringify(result));
             return res.json(result);
         }
-        return res.view('post/postDetail', { post: result, creditScore: host.creditScore});
+        return res.view('post/postDetail', { post: result, creditScore: host.creditScore });
 
     },
 
@@ -1130,6 +1170,14 @@ module.exports = {
                     { $push: { joinedMembers: req.session.memberid, joinedHistory: timing } }
                 )
 
+                // update post history
+                await db.collection('postHistory').updateOne(
+                    { "postID": result.postID },
+                    {
+                        $push: { joinedMembers: req.session.memberid, joinedHistory: timing }
+                    }
+                );
+
                 // trigger the deal (member limit is full after joined)
                 // +2 : +1 (Host) +1 (current joined member)
                 if (memberCnt + 2 >= memberLimit) {
@@ -1239,6 +1287,19 @@ module.exports = {
             { $push: { joinedHistory: timing } }
         )
 
+        var result = await db.collection('post').findOne({ "_id": o_id });
+
+        // update post history
+        await db.collection('postHistory').updateOne(
+            { "postID": result.postID },
+            { $pull: { joinedMembers: req.session.memberid } }
+        );
+        // update post history
+        await db.collection('postHistory').updateOne(
+            { "postID": result.postID },
+            { $push: { joinedHistory: timing } }
+        );
+
         // if (req.wantsJSON){}
 
         return res.ok();
@@ -1281,7 +1342,7 @@ module.exports = {
         var dateString = year + "-" + month + "-" + day + "T" + h + ":" + m + ":" + s;
 
         var db = sails.getDatastore().manager;
-        var result = await db.collection('post').updateOne(
+        await db.collection('post').updateOne(
             { "_id": o_id },
             {
                 $push: {
@@ -1292,7 +1353,20 @@ module.exports = {
             }
         )
 
-        sails.log("result = " + result);
+        var post = await db.collection('post').findOne({ "_id": o_id });
+        // update post history
+        await db.collection('postHistory').updateOne(
+            { "postID": post.postID },
+            {
+                $push: {
+                    comments: {
+                        content: cm, byUsername: username, byUserNickname: UserNickname, byDateString: dateString, byDate: new Date()
+                    }
+                }
+            }
+        );
+
+
         return res.ok();
 
     },
@@ -1495,7 +1569,7 @@ module.exports = {
         return res.redirect("/read/report/" + id);
     },
 
-    
+
 
     // directly send notification to user
     sendNotificationOnly: async function (req, res) {
@@ -1546,7 +1620,7 @@ module.exports = {
         return res.ok();
     },
 
-    
+
 
 
     test: async function (req, res) {

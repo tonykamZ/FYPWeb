@@ -132,6 +132,9 @@ module.exports.routes = {
    // bacn user in DB
    'POST /ban/user/:id': 'UserController.delUser',
    'POST /activate/user/:id': 'UserController.actiUser',
+
+   // view post history
+   'GET /view/history/post/:id' : 'UserController.postHistoryDetail',
    // *** admin ***********************************************
 
 

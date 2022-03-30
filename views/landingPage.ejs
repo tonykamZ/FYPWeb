@@ -250,6 +250,10 @@
             background: linear-gradient(to right, #b2c8e6, #00c6ff);
         }
 
+        .statistic-section:hover {
+            box-shadow: 0 5px 22px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+        }
+
         .count-title {
             font-size: 50px;
             font-weight: normal;
@@ -308,6 +312,24 @@
 
         }
 
+        .destination:hover .leftStar{
+            opacity: 1;
+        }
+        .destination:hover .rightStar{
+            opacity: 1;
+        }
+
+        .leftStar {
+            position: absolute;
+            left: 9%;
+            opacity: 0;
+        }
+        .rightStar {
+            position: absolute;
+            right: 9%;
+            opacity: 0;
+        }
+
     </style>
 </head>
 
@@ -348,13 +370,15 @@
         </div>
     </section>
 
-    <section class="destinations greyBG">
+    <section class="destinations greyBG destination">
+        <b class="leftStar">&#10025;</b>
+        <b class="rightStar">&#10025;</b>
         <h3 class="title">Some of our destinations:</h3>
-        <p>Tired of missing the shop discount? Are the discount requirement too demanding? Come along with us on one
+        <p>&#10077; Tired of missing the shop discount? Are the discount requirement too demanding? Come along with us on one
             of our discount sharing platform
             with your friends. The biggest goal is to ultimately help you save more by enjoying the discount with anyone
             in this
-            platform.</p>
+            platform.&#10078;</p>
     </section>
 
     <section>
@@ -371,7 +395,7 @@
                 <div class="col-xs-12 col-md-3">
                     <div class="counter">
                         <i class="fa fa-users fa-2x stats-icon"></i>
-                        <h2 class="timer count-title count-number"><%= user.length %></h2>
+                        <h2 class="timer count-title count-number"><%= user %></h2>
                         <div class="stats-line-black"></div>
                         <p class="stats-text">Members</p>
                     </div>
@@ -564,7 +588,7 @@
             labels: ['Food&Drink', 'Electronic', 'Colthing', 'Necessity', 'Course', 'Service','Any'],
             datasets: [{
                 label: '# of Posts',
-                data: [6, 2, 1, 3, 5, 4, 8],
+                data: [],
                 backgroundColor: [
                     'rgba(255, 99, 132, 0.2)',
                     'rgba(54, 162, 235, 0.2)',
@@ -590,10 +614,29 @@
             scales: {
                 yAxes: [{
                     ticks: {
-                        beginAtZero: true
+                        beginAtZero: true,
+                        stepSize: 1
                     }
                 }]
             }
         }
     });
+
+
+    
+    var cnt1 = "<%= fnd %>";
+    var cnt2 = "<%= elect %>";
+    var cnt3 = "<%= ness %>";
+    var cnt4 = "<%= colth %>";
+    var cnt5 = "<%= course %>";
+    var cnt6 = "<%= service %>";
+    var cnt7 = "<%= any %>";
+    myChart.data.datasets[0].data[0] = cnt1;
+    myChart.data.datasets[0].data[1] = cnt2;
+    myChart.data.datasets[0].data[2] = cnt3;
+    myChart.data.datasets[0].data[3] = cnt4;
+    myChart.data.datasets[0].data[4] = cnt5;
+    myChart.data.datasets[0].data[5] = cnt6;
+    myChart.data.datasets[0].data[6] = cnt7;
+    myChart.update();
 </script>
