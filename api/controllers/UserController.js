@@ -843,9 +843,9 @@ module.exports = {
         var postID = req.params.id;
 
         postID = parseInt(postID);
-        sails.log('finding post history with id: '+postID);
+        sails.log('finding post history with id: ' + postID);
         var db = sails.getDatastore().manager;
-        var post = await db.collection('postHistory').findOne({ "postID": { $eq: postID}});
+        var post = await db.collection('postHistory').findOne({ "postID": { $eq: postID } });
 
         var access = 'forbidden';
         if (req.session.memberid == "admin") {
@@ -1192,6 +1192,17 @@ module.exports = {
 
                     // send message to all joined members
                     result.joinedMembers.forEach(async function (p) {
+                        // send email to all joined member
+                        var member = await db.collection('user').findOne({ 'username': p });
+                        var user = {
+                            name: member.username,
+                            email: member.connectedGmail,
+                            title: result.post.title,
+                            host: result.HostUsername,
+                            date: dateString,
+                        }
+                        Mailer.sendDealMailtoMember(user);
+
                         await db.collection('user').updateOne(
                             { "username": p },
                             {
@@ -1207,6 +1218,17 @@ module.exports = {
                     var notiTohost = "***[SYSTEM MESSAGE] The post you host is full now. " +
                         "Please check out the post! (post title: " + result.post.title + " | post id: " + result.postID + ") [SYSTEM MESSAGE]***";
                     // send message to the host
+                    // send email to all joined member
+                    var hostUser = await db.collection('user').findOne({ 'username': result.HostUsername });
+                    var ho = {
+                        name: hostUser.username,
+                        email: hostUser.connectedGmail,
+                        title: result.post.title,
+                        id: result.postID,
+                        date: dateString,
+                    }
+                    Mailer.sendDealMailtoHost(ho);
+
                     await db.collection('user').updateOne(
                         { "username": result.HostUsername },
                         {
@@ -1228,11 +1250,11 @@ module.exports = {
                 return;
             }
 
-            if (req.wantsJSON) {
-                sails.log("returning detail page json data");
-                sails.log("stringgify result: " + JSON.stringify(result));
-                return res.json(result);
-            }
+            //if (req.wantsJSON) {
+            //    sails.log("returning detail page json data");
+            //    sails.log("stringgify result: " + JSON.stringify(result));
+            //    return res.json(result);
+            //}
 
             sails.log(req.session.memberid + " request joining this post (" + id + ") ...")
             return res.ok();
@@ -1618,6 +1640,16 @@ module.exports = {
         );
 
         return res.ok();
+    },
+
+    emailWelcome: function (req, res) {
+
+        var user = { name: 'tony', email: '18226485@life.hkbu.edu.hk' }
+        Mailer.sendDealMailtoMember(user);
+
+        return res.ok();
+
+
     },
 
 

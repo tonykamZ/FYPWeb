@@ -129,12 +129,15 @@ module.exports.routes = {
   // display all users in DB
   'GET /userlist': 'UserController.showUsers',
 
-   // bacn user in DB
-   'POST /ban/user/:id': 'UserController.delUser',
-   'POST /activate/user/:id': 'UserController.actiUser',
+  // bacn user in DB
+  'POST /ban/user/:id': 'UserController.delUser',
+  'POST /activate/user/:id': 'UserController.actiUser',
 
-   // view post history
-   'GET /view/history/post/:id' : 'UserController.postHistoryDetail',
+  // view post history
+  'GET /view/history/post/:id' : 'UserController.postHistoryDetail',
+
+  // send email
+  'POST /send/email/welcome' : 'UserController.emailWelcome',
    // *** admin ***********************************************
 
 
