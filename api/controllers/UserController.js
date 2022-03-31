@@ -232,6 +232,15 @@ module.exports = {
         var str = '***[SYSTEM MESSAGE] Your account has been banned at ' + year + "-" + month + "-" + day + " " + h + ":" + m + ":" + s +
             ' [SYSTEM MESSAGE]***';
         //send notification to user
+
+        var r = await sd.collection('user').findOne({'username':username});
+        var user = { 
+            name : username,
+            date : dateString,
+            email: r.connectedGmail
+        }
+        Mailer.sendBanMail(user);
+
         await db.collection('user').updateOne(
             { "username": username },
             {

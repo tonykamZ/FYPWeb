@@ -45,3 +45,18 @@ module.exports.sendDealMailtoHost = function (obj) {
         function (err) { console.log(err || "Mail Sent!"); }
     )
 }
+
+module.exports.sendBanMail = function (obj) {
+    sails.hooks.email.send(
+        "ban",
+        {
+            name: obj.name,
+            date : obj.date,
+        },
+        {
+            to: obj.email,
+            subject: "Your account has been banned!"
+        },
+        function (err) { console.log(err || "Mail Sent!"); }
+    )
+}

@@ -167,9 +167,12 @@
                             </b></li>
                         <li>
                             Picture provided:
+                             <img src="<%= report.photoLink %>" alt="" class="image" height="180px" />
                         </li>
+                        <li><small>link: <a href="<%= report.photoLink %>" target="_blank"><%= report.photoLink %></a></small></li>
                     </ul>
-                    <img src="<%= report.photoLink %>" alt="" class="image" height="180px" />
+                   
+                    
 
                     <% if(report.actionTaken.date){ %>
                         <br><br>
@@ -245,10 +248,10 @@
                                     </div>
                                 </div>
 
-                                <h5>Message: </h5>
+                                <h5>*Message: </h5>
                                 <div class="form-row">
                                     <textarea class="form-control" rows="4" name="message"
-                                        placeholder="Reasons for taking this action"></textarea>
+                                        placeholder="Reasons for taking this action" required></textarea>
                                 </div>
 
                                 <br>
