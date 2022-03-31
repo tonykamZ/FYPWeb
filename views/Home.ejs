@@ -917,6 +917,14 @@
 <script>
     async function checkValidJoin(id, joinedMembers, maxMembers){
 
+        var cs = "<%= req.session.creditScore %>";
+        
+        cs = parseInt(cs);
+        if(cs < 70){
+            alert("Your credit score is lower than 70. Join post function is not allowed!");
+            return;
+        }
+        
         joinedMembers = parseInt(joinedMembers)+1;
         maxMembers = parseInt(maxMembers);
 

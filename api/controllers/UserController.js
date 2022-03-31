@@ -70,6 +70,7 @@ module.exports = {
                         req.session.description = DBdesc;
                         req.session.notification = DBnotification.length;
                         req.session.userStatus = DBUserStatus;
+                        req.session.creditScore = DBcreditScore;
                         req.session.report = [];
 
 
@@ -233,7 +234,7 @@ module.exports = {
             ' [SYSTEM MESSAGE]***';
         //send notification to user
 
-        var r = await sd.collection('user').findOne({'username':username});
+        var r = await db.collection('user').findOne({'username':username});
         var user = { 
             name : username,
             date : dateString,
@@ -299,6 +300,14 @@ module.exports = {
         var str = '***[SYSTEM MESSAGE] Your account has been activated again at ' + year + "-" + month + "-" + day + " " + h + ":" + m + ":" + s +
             ' [SYSTEM MESSAGE]***';
         //send notification to user
+        var r = await db.collection('user').findOne({'username':username});
+        var user = { 
+            name : username,
+            date : dateString,
+            email: r.connectedGmail
+        }
+        Mailer.sendActiMail(user);
+
         await db.collection('user').updateOne(
             { "username": username },
             {

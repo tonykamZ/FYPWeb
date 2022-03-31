@@ -60,3 +60,19 @@ module.exports.sendBanMail = function (obj) {
         function (err) { console.log(err || "Mail Sent!"); }
     )
 }
+
+
+module.exports.sendActiMail= function (obj) {
+    sails.hooks.email.send(
+        "activate",
+        {
+            name: obj.name,
+            date : obj.date,
+        },
+        {
+            to: obj.email,
+            subject: "Your account has been activated!"
+        },
+        function (err) { console.log(err || "Mail Sent!"); }
+    )
+}
