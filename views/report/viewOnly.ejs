@@ -194,7 +194,9 @@
                                 <% var date = report.actionTaken.date.split("T"); %>
                                 <h6>Report handled date: <%= date[0] %> <%= date[1] %></h6>
 
-                    <% } %>
+                    <% }else{ %>
+                        <h3>Waiting for admin approval...</h3>
+                        <% } %>
                </div>
 
             </div>

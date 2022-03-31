@@ -39,44 +39,44 @@
                 <h3>The report history is empty~ </h3>
                 <% }else{ %>
                     <div id="cardContainer">
-                        <% reports.forEach(function(n){ %>
+                        <% for (var i=reports.length-1; i>= 0; i--) { %>
 
-                            <a class="card" href="/view/report/<%= n._id %>">
+                            <a class="card" href="/view/report/<%= reports[i]._id %>">
                                 <h6>
-                                    <b>#<%= n.reportID %></b> | <b>Report User:</b>
-                                    <%= n.reportUser %> <b>Report Content:</b>
-                                        <% if(n.content.length> 20){ %>
-                                            <%= n.content.substring(0,19) %>...
+                                    <b>#<%= reports[i].reportID %></b> | <b>Report User:</b>
+                                    <%= reports[i].reportUser %> <b>Report Content:</b>
+                                        <% if(reports[i].content.length> 20){ %>
+                                            <%= reports[i].content.substring(0,19) %>...
                                                 <% }else{ %>
-                                                    <%= n.content %>
+                                                    <%= reports[i].content %>
                                                         <% } %>
-                                                            <% if(n.status=="Pending" ){ %>
+                                                            <% if(reports[i].status=="Pending" ){ %>
                                                                 <b style="color: #707070;float: right;">
-                                                                    <%= n.status %>
+                                                                    <%= reports[i].status %>
                                                                 </b>
-                                                                <% }else if(n.status=="Approved" ){ %>
+                                                                <% }else if(reports[i].status=="Approved" ){ %>
                                                                     <b style="color: #61ff89;float: right;">
-                                                                        <%= n.status %>
+                                                                        <%= reports[i].status %>
                                                                     </b>
-                                                                    <% }else if(n.status=="Rejected" ){ %>
+                                                                    <% }else if(reports[i].status=="Rejected" ){ %>
                                                                         <b
                                                                             style="color: rgb(252, 133, 35);float: right;">
-                                                                            <%= n.status %>
+                                                                            <%= reports[i].status %>
                                                                         </b>
                                                                         <% }else{ %>
                                                                             <b style="color: #7208eb;float: right;">
-                                                                                <%= n.status %>
+                                                                                <%= reports[i].status %>
                                                                             </b>
                                                                             <% } %>
                                 </h6>
-                                <% var arr=n.createDateString.split("T"); %>
+                                <% var arr=reports[i].createDateString.split("T"); %>
                                     <small>
                                         <%= arr[0] %>
                                             <%= arr[1] %>
                                     </small>
                             </a>
 
-                            <% }); %>
+                            <% }; %>
 
                     </div>
 
@@ -84,8 +84,9 @@
                         profile</a>
                     <% } %>
 
-                        <br><br>
+                      
         </div>
+         <br><br><br>
 
         <% }else{ %>
 

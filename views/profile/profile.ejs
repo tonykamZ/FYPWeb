@@ -16,45 +16,42 @@
         }
 
         .column1 {
-            flex: 35%;
+            flex: 65%;
         }
 
         .column2 {
-            flex: 45%;
-        }
+            flex: 35%;
 
-        .column3 {
-            flex: 20;
-            border-style: outset;
         }
 
         .card-container {
             align-items: start;
-            display: grid;
-            grid-gap: 16px;
-            grid-template-columns: repeat(auto-fit, 300px);
-            justify-content: left;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
         }
 
         .card-dark {
-            background-color: rgb(46, 44, 43);
+            background-image: linear-gradient(15deg, #453a3a 0%, #888888 100%);
             border-radius: 5px;
             color: white;
             text-shadow: 1px 1px 0 #555;
+            flex: 0 0 33.333333%;
         }
 
         .card-light {
-            background-color: rgb(223, 198, 189);
+            background-image: linear-gradient(15deg, #cfcfcf 0%, #ffffdd 100%);
             border-radius: 5px;
             color: white;
             text-shadow: 1px 1px 0 #555;
+            flex: 0 0 33.333333%;
         }
 
         /* Resize images */
         img {
-            width: 140px;
-            height: auto;
-            float: left;
+            width: 100px;
+            height: 160px;
+            object-fit: scale-down;
         }
 
         #popup {
@@ -68,7 +65,8 @@
             z-index: 99;
         }
 
-        #form {
+        #form,
+        #form2 {
             position: absolute;
             background-color: #f5f5f5;
             border: 1px solid #212121;
@@ -87,6 +85,16 @@
             color: rgb(231, 4, 4);
             margin-left: 260px;
             margin-top: -19px;
+        }
+
+        #close2 {
+            position: absolute;
+            font-weight: bold;
+            cursor: pointer;
+            color: rgb(231, 4, 4);
+            margin-left: 750px;
+            margin-top: 64px;
+            z-index: 99;
         }
 
         #submit {
@@ -109,8 +117,19 @@
             margin-left: 45px;
         }
 
-        #notiForm{
+        #notiForm {
             display: none;
+        }
+
+        #creditTagExplain {
+            display: none;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            position: fixed;
+            background-color: rgba(112, 112, 112, 0.616);
+            z-index: 999;
         }
     </style>
 
@@ -144,30 +163,38 @@
 
                                             <br>
 
-                                            <div class="form-group col-md-10">
-                                                <label><b>User name:</b> 
-                                                    <% if(user.status == "active"){ %>
-                                                    <i class="fas fa-user-check"></i>
-                                                    <% }else{ %>
-                                                        <b style="color: red;" class="tooltip-top" data-tooltip="Create, modify, delete function post is banned"><i class="fas fa-user-slash"></i>Banned user</b>
-                                                    <% } %>
-                                                </label>
-                                                <input class="form-control" value="<%= user.username %>" readonly>
-                                                <% var createArr=user.createDateString.split("T"); %>
-                                                    <small>Account create date: <%= createArr[0] %></small>
-                                            </div>
+                                            <div class="form-row">
+                                                <div class="form-group col-md-4">
+                                                    <label><b>User name:</b>
+                                                        <% if(user.status=="active" ){ %>
+                                                            <i class="fas fa-user-check"></i>
+                                                            <% }else{ %>
+                                                                <b style="color: red;" class="tooltip-top"
+                                                                    data-tooltip="Create, modify, delete function post is banned"><i
+                                                                        class="fas fa-user-slash"></i>Banned user</b>
+                                                                <% } %>
+                                                    </label>
+                                                    <input class="form-control" value="<%= user.username %>" readonly>
+                                                    <% var createArr=user.createDateString.split("T"); %>
+                                                        <small>Account create date: <%= createArr[0] %></small>
+                                                </div>
 
-                                            <div class="form-group col-md-10">
-                                                <label><b>Credit Score</b></label>
-                                                <input class="form-control"
-                                                    value="<%= user.creditScore %>/100" readonly>
-                                            </div>
+                                                <div class="form-group col-md-2">
+                                                    <label class="tooltip-top"
+                                                        data-tooltip="Credibility, click to see the explain"
+                                                        id="creditTag" style="cursor: pointer;"
+                                                        onclick="showCredit()"><b>Credit Score</b></label>
+
+                                                    <input class="form-control" value="<%= user.creditScore %>/100"
+                                                        readonly>
+                                                </div>
 
 
-                                            <div class="form-group col-md-10">
-                                                <label><b>Nick Name</b></label>
-                                                <input class="form-control" type="text" id="nickname" name="nickname"
-                                                    value="<%= user.profile.nickname %>" readonly>
+                                                <div class="form-group col-md-4">
+                                                    <label><b>Nick Name</b></label>
+                                                    <input class="form-control" type="text" id="nickname"
+                                                        name="nickname" value="<%= user.profile.nickname %>" readonly>
+                                                </div>
                                             </div>
 
                                             <div class="form-group col-md-10">
@@ -189,12 +216,10 @@
                                                     type="submit">Confirm</button>
                                                 <button id="cancelButton" class="btn btn-outline-secondary"
                                                     type="button" onclick="cancelEdit()">Cancel</button>
-
-                                                <a class="btn btn-outline-danger" href="/logout">Log out</a>
                                             </div>
                                             <!-- personal layout -->
                                             <% }else if(req.session.memberid=="admin" ){ %>
-                                               
+
                                                 <% }else{ %>
                                                     <!-- read others layout -->
                                                     <% if(req.session.report.indexOf(user.username) !=-1){ %>
@@ -256,122 +281,42 @@
                                                     type="submit">Submit</button>
                                             </form>
                                         </div>
-                        </div>
 
-                        <div class="column2">
-                            <% if(user.username=="admin" ){ %>
-                                <a class="btn btn-outline-danger" href="/logout">Log out</a>
-                                <% }else{ %>
-                                    <% if(user.username==req.session.memberid){ %>
-                                        <% var cnt=0; %>
-                                            <% var today=new Date(); %>
-                                                <% var year=today.getFullYear(); %>
-                                                    <% var month=today.getMonth()+1; %>
-                                                        <% var day=today.toString().split(' ')[2]; %>
-                                <h2 style="color: brown;"><b>Joined Posts</b></h2>
-                                <section class="card-container">
-                    <% joinedPosts.forEach(function(post){ %>
-                        <% if(cnt%2==1){ %>
-                                <div class="card-dark">
-                                    <a href="/read/post/<%= post._id %>">
-                                        <img src="<%= post.post.imgInput %>" alt="Image Title" />
-                                    </a>
-                                    <a href="/read/post/<%= post._id %>">
-                                        <%= post.post.title %>
-                                    </a>
-                                    <li class="tag__item"><i class="fas fa-users mr-2"></i>
-                                        <%= post.joinedMembers.length + 1 %>/<%= post.post.memberLimit %>
-                                    </li>
-                                    <li class="tag__item"><i class="fas fa-user-secret mr-2"></i>Host:
-                                        <% if(post.post.HostNickname){ %>
-                                            <a href="/read/profile?username=<%= post.HostUsername %>">
-                                                <%= post.post.HostNickname %>
-                                            </a>
-                                            <% }else{ %>
-                                                <a href="/read/profile?username=<%= post.HostUsername %>">
-                                                    <%= post.HostUsername %>
-                                                </a>
-                                                <% } %>
-                                    </li>
-                                    <li class="tag__item">
-                                    <a href="/read/post/<%= post._id %>#chat"><i class="fas fa-comments mr-2"></i>Chat</a>
-                                    </li>
-                                </div>
-                                
-                            <% }else{ %>
-                                <div class="card-light">
-                                    <a href="/read/post/<%= post._id %>">
-                                        <img src="<%= post.post.imgInput %>" alt="Image Title" />
-                                    </a>
-                                    <a href="/read/post/<%= post._id %>">
-                                        <%= post.post.title %>
-                                    </a>
-                                    <li class="tag__item"><i class="fas fa-users mr-2"></i>
-                                        <%= post.joinedMembers.length + 1 %>/<%= post.post.memberLimit %>
-                                    </li>
-                                    <li class="tag__item"><i class="fas fa-user-secret mr-2"></i>Host:
-                                        <% if(post.post.HostNickname){ %>
-                                            <a href="/read/profile?username=<%= post.HostUsername %>">
-                                                <%= post.post.HostNickname %>
-                                            </a>
-                                            <% }else{ %>
-                                                <a href="/read/profile?username=<%= post.HostUsername %>">
-                                                    <%= post.HostUsername %>
-                                                </a>
-                                                <% } %>
-                                    </li>
-                                    <li class="tag__item">
-                                    <a href="/read/post/<%= post._id %>#chat"><i class="fas fa-comments mr-2"></i>Chat</a>
-                                    </li>
-                                </div>
-                                <% } %>
-                                    <% cnt=cnt + 1; %>
-                                        <% }); %>
-                                        </section>
+                                        <div id="creditTagExplain">
+                                            <form>
+                                                <button id="close2" type="button" onclick="hideCredit()"
+                                                    style="cursor: pointer;">
+                                                    <i class="fa fa-times"></i></button>
+                                            </form>
 
-                                        <% if(cnt == 0){ %>
-                                            <b>you haven' t joined any post yet😐</b>
-                                                            <% } %>
-                                                                <% }else{ %>
-                                                                    <button class="btn btn-outline-secondary"
-                                                                        type="button"
-                                                                        onclick="window.history.back()">Back</button>
+                                            <div id="form2">
+                                                <h6>Credibility Explain:</h6>
+                                                <b>Credit Score between:</b>
+                                                <h6>100-91: <i class="fas fa-smile-wink mr-2"></i>creditable</h6>
+                                                <h6>90-71: <i class="fas fa-thumbs-up mr-2"></i>trustworthy</h6>
+                                                <h6>70-51: <i class="fas fa-thumbs-down mr-2"></i>deceptive</h6>
+                                                <h6>50-0: <i class="fas fa-frown-open mr-2"></i>misleading</h6>
 
-                                                                    <hr>
-                                                                    <a
-                                                                        href="/read/postHistory?username=<%= user.username %>">Post
-                                                                        History</a>
+                                                <small>**Suspicious and
+                                                    malicious activity may cause
+                                                    credit score deduction of the user's account.</small>
+                                            </div>
 
-                                                                        <!-- Admin send noti -->
-                                                                        <% if(req.session.memberid == "admin"){ %>
-                                                                            <hr>
-                                                                            <a onclick="showForm()" style="cursor: pointer;"><i class="fas fa-bullhorn"></i> Send Message to <%= user.username %></a>
-                                                                            <br>
-                                                                            <div class="form-row" id="notiForm">
-                                                                                <div class="form-group col-md-7">
-                                                                                    <textarea class="form-control" name="message" id="message" rows="4"
-                                                                                        placeholder="message here..."></textarea>
-                                                                                </div>
-                                                                                <input id="GETusername" value="<%= user.username %>" hidden>
-                                                                                <button class="btn btn-outline-warning" onclick="fetchMessage()">Send</button>
-                                                                            </div>
-                                                                            
-                                                                            <% } %>                        
-
-                                                                    <% } %>
-                                                                        <% } %>
-
+                                        </div>
                         </div>
 
 
                         <% if(user.username=="admin" ){ %>
+                            <!-- Logout button -->
+                            <a class="btn btn-outline-danger" href="/logout">Log out</a>
+                            <!-- Logout button -->
                             <% }else{ %>
                                 <% if(user.username==req.session.memberid){ %>
-                                    <div class="column3">
+                                    <div class="column2">
                                         <div class="icons">
                                             <a href="/read/profile/notification"><i class="fas fa-envelope"
-                                                    style="font-size: xx-large;"></i></a>
-                                            Notification
+                                                    style="font-size: xx-large;"></i> Notification</a>
+
 
                                         </div>
                                         <div id="notiNum">
@@ -386,23 +331,158 @@
                                         </div>
                                         <div class="icons">
                                             <a href="/report/history"><i class="fas fa-exclamation-circle"
-                                                    style="font-size: xx-large;"></i>
-                                            </a>Report History
+                                                    style="font-size: xx-large;"></i> Report History
+                                            </a>
                                         </div>
                                         <div class="icons">
                                             <a href="/read/postHistory?username=<%= req.session.memberid %>"><i
-                                                    class="fas fa-history" style="font-size: xx-large;"></i>
-                                            </a>My Post History
+                                                    class="fas fa-history" style="font-size: xx-large;"></i> My Post
+                                                History
+                                            </a>
                                         </div>
                                         <!-- div class="icons">
                                             <a href="#"><i class="fas fa-magic" style="font-size: xx-large;"></i></a>
                                             Premium
                                         </div -->
 
+                                        <br><br><br>
+                                        <!-- Logout button -->
+                                        <a class="btn btn-outline-danger" href="/logout">Log out <i
+                                                class="fa fa-power-off"></i></a>
+                                        <!-- Logout button -->
+                                    </div>
+
+
+
+
+                                    <div>
+                                        <% if(user.username!="admin" ){ %>
+                                            <!-- Joined post section only available for session user -->
+                                            <% if(user.username==req.session.memberid){ %>
+                                                <% var cnt=0; %>
+                                                    <h2 style="color: brown;"><b>Joined Posts (<%= joinedPosts.length %>
+                                                                )</b></h2>
+
+                                                    <section class="card-container">
+                                                        <% joinedPosts.forEach(function(post){ %>
+                                                            <% if(cnt%2==1){ %>
+                                                                <div class="card-dark">
+                                                                    <a href="/read/post/<%= post._id %>">
+                                                                        <img src="<%= post.post.imgInput %>"
+                                                                            alt="Image Title" />
+                                                                    </a>
+                                                                    <a href="/read/post/<%= post._id %>">
+                                                                        <%= post.post.title %>
+                                                                    </a>
+                                                                    <div>
+                                                                        <li class="tag__item"><i
+                                                                                class="fas fa-users mr-2"></i>
+                                                                            <%= post.joinedMembers.length + 1 %>/<%=
+                                                                                    post.post.memberLimit %>
+                                                                        </li>
+                                                                        <li class="tag__item"><i
+                                                                                class="fas fa-user-secret mr-2"></i>Host:
+                                                                            <% if(post.post.HostNickname){ %>
+                                                                                <a
+                                                                                    href="/read/profile?username=<%= post.HostUsername %>">
+                                                                                    <%= post.post.HostNickname %>
+                                                                                </a>
+                                                                                <% }else{ %>
+                                                                                    <a
+                                                                                        href="/read/profile?username=<%= post.HostUsername %>">
+                                                                                        <%= post.HostUsername %>
+                                                                                    </a>
+                                                                                    <% } %>
+                                                                        </li>
+                                                                        <li class="tag__item">
+                                                                            <a href="/read/post/<%= post._id %>#chat"><i
+                                                                                    class="fas fa-comments mr-2"></i>Chat</a>
+                                                                        </li>
+                                                                    </div>
+                                                                </div>
+
+                                                                <% }else{ %>
+                                                                    <div class="card-light">
+                                                                        <a href="/read/post/<%= post._id %>">
+                                                                            <img src="<%= post.post.imgInput %>"
+                                                                                alt="Image Title" />
+                                                                        </a>
+                                                                        <a href="/read/post/<%= post._id %>">
+                                                                            <%= post.post.title %>
+                                                                        </a>
+                                                                        <div>
+                                                                            <li class="tag__item"><i
+                                                                                    class="fas fa-users mr-2"></i>
+                                                                                <%= post.joinedMembers.length + 1 %>/<%=
+                                                                                        post.post.memberLimit %>
+                                                                            </li>
+                                                                            <li class="tag__item"><i
+                                                                                    class="fas fa-user-secret mr-2"></i>Host:
+                                                                                <% if(post.post.HostNickname){ %>
+                                                                                    <a
+                                                                                        href="/read/profile?username=<%= post.HostUsername %>">
+                                                                                        <%= post.post.HostNickname %>
+                                                                                    </a>
+                                                                                    <% }else{ %>
+                                                                                        <a
+                                                                                            href="/read/profile?username=<%= post.HostUsername %>">
+                                                                                            <%= post.HostUsername %>
+                                                                                        </a>
+                                                                                        <% } %>
+                                                                            </li>
+                                                                            <li class="tag__item">
+                                                                                <a
+                                                                                    href="/read/post/<%= post._id %>#chat"><i
+                                                                                        class="fas fa-comments mr-2"></i>Chat</a>
+                                                                            </li>
+                                                                        </div>
+                                                                    </div>
+                                                                    <% } %>
+                                                                        <% cnt=cnt + 1; %>
+                                                                            <% }); %>
+                                                    </section>
+
+
+                                                    <% if(cnt==0){ %>
+                                                        <b>you haven' t joined any post yet😐</b>
+                                                        <% } %>
+                                                                <% } %>
+                                                                    <% } %>
 
                                     </div>
                 </div>
                 <% }else{ %>
+                    <!-- View other member's layout -->
+                    <div class="column2">
+                        <button class="btn btn-outline-secondary" type="button"
+                            onclick="window.history.back()">Back</button>
+
+                        <hr>
+                        <a href="/read/postHistory?username=<%= user.username %>">Post
+                            History</a>
+
+                        <!-- Admin send noti -->
+                        <% if(req.session.memberid=="admin" ){ %>
+                            <hr>
+                            <a onclick="showForm()" style="cursor: pointer;"><i class="fas fa-bullhorn"></i> Send
+                                Message to
+                                <%= user.username %>
+                            </a>
+                            <br>
+                            <div class="form-row" id="notiForm">
+                                <div class="form-group col-md-7">
+                                    <textarea class="form-control" name="message" id="message" rows="4"
+                                        placeholder="message here..."></textarea>
+                                </div>
+                                <input id="GETusername" value="<%= user.username %>" hidden>
+                                <button class="btn btn-outline-warning" onclick="fetchMessage()">Send</button>
+                            </div>
+
+                            <% } %>
+
+                    </div>
+
+
 
                     <% } %>
                         <% } %>
@@ -486,21 +566,21 @@
         }
     }
 
-    function showForm(){
+    function showForm() {
         var notiForm = document.getElementById('notiForm');
         notiForm.style.display = 'inline';
     }
 
-    async function fetchMessage(){
+    async function fetchMessage() {
         var message = document.getElementById('message');
-        if(message.value.trim() == ""){
+        if (message.value.trim() == "") {
             alert("Please input the message!");
             message.value = "";
             return;
         }
         var GETusername = document.getElementById('GETusername');
-        
-        var response = await fetch('/send/directly/noti?message='+message.value+"&username="+GETusername.value, {method: 'POST'});
+
+        var response = await fetch('/send/directly/noti?message=' + message.value + "&username=" + GETusername.value, { method: 'POST' });
 
         if (response.ok) {
             alert("Message sent!");
@@ -510,5 +590,12 @@
             alert("Error in sending message:\n\"" + message.value + "\"\n" + msg);
             location.reload();
         }
+    }
+
+    function showCredit() {
+        document.getElementById('creditTagExplain').style.display = "block";
+    }
+    function hideCredit() {
+        document.getElementById('creditTagExplain').style.display = "none";
     }
 </script>

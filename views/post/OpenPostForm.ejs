@@ -36,10 +36,13 @@
 
     <div class="container">
         <h3 class="text-custom-create"><b>Create new post</b></h3>
+
+        <p>Fill in the form below to make a new post!</p>
         <form method="POST" action="/create">
             <div class="form-row">
                 <div class="form-group col-md-4">
-                    <label class="tooltip-top" data-tooltip="Come up with a eye-catching title!"><b>Post Title</b></label>
+                    <label class="tooltip-top" data-tooltip="Come up with a eye-catching title!"><b>Post
+                            Title</b></label>
                     <input type="text" class="form-control" name="title" maxlength="30" required>
                 </div>
 
@@ -61,7 +64,8 @@
 
             <div class="form-row">
                 <div class="form-group col-md-6">
-                    <label class="tooltip-top" data-tooltip="Describe more about the discount! The more detailed the better~"><b>Description</b></label>
+                    <label class="tooltip-top"
+                        data-tooltip="Describe more about the discount! The more detailed the better~"><b>Description</b></label>
                     <textarea rows="5" id="description" name="description" class="form-control" maxlength="300"
                         required></textarea>
                 </div>
@@ -71,7 +75,8 @@
 
             <div class="form-row">
                 <div class="form-group col-md-2">
-                    <label class="tooltip-top" data-tooltip="How many people you want to share with? (Maximum)"><b>Member limit</b></label>
+                    <label class="tooltip-top"
+                        data-tooltip="How many people you want to share with? (Maximum)"><b>Member limit</b></label>
                     <input type="number" class="form-control" name="memberLimit" min=2 max=100 required>
                 </div>
 
@@ -99,23 +104,31 @@
 
             <div class="form-row">
                 <div class="form-group col-md-4">
-                    <label class="tooltip-top" data-tooltip="Make it more interesting! Convert your image to url and input in here."><b>Upload Image URL</b></label>
-                    <input type="url" class="form-control" name="imgInput" id="imgInput" placeholder="e.g: https://www.linkpicture.com/sample.jpg" required>
+                    <label class="tooltip-top"
+                        data-tooltip="Make it more interesting! Convert your image to url and input in here."><b>Upload
+                            Image URL</b></label>
+                    <input type="url" class="form-control" name="imgInput" id="imgInput"
+                        placeholder="e.g: https://www.linkpicture.com/sample.jpg" required>
                 </div>
 
                 <div class="form-group col-md-4">
-                    <label class="tooltip-top" data-tooltip="Also enter the official website of the discount"><b>Attribution(s)</b></label>
+                    <label class="tooltip-top"
+                        data-tooltip="Also enter the official website of the discount"><b>Attribution(s)</b></label>
                     <button id="addInput" class="btn btn-info tooltip-top" data-tooltip="Add additional attribution"
                         type="button" onclick="AddExtraInput()"><i class="fa fa-plus"></i></button>
                     <button id="minusInput" class="btn btn-danger tooltip-top"
-                        data-tooltip="Reduce additional attribution"" type="button" onclick="MinusExtraInput()"><i
+                        data-tooltip="Reduce additional attribution"" type=" button" onclick="MinusExtraInput()"><i
                             class="fa fa-minus"></i></button>
                     <input type="url" class="form-control" name="attribution" placeholder="Reference link/url" required>
 
-                    <input type="url" class="form-control" name="attribution2" id="attribution2" placeholder="Reference link/url" hidden>
-                    <input type="url" class="form-control" name="attribution3" id="attribution3" placeholder="Reference link/url" hidden>
-                    <input type="url" class="form-control" name="attribution4" id="attribution4" placeholder="Reference link/url" hidden>
-                    <input type="url" class="form-control" name="attribution5" id="attribution5" placeholder="Reference link/url" hidden>
+                    <input type="url" class="form-control" name="attribution2" id="attribution2"
+                        placeholder="Reference link/url" hidden>
+                    <input type="url" class="form-control" name="attribution3" id="attribution3"
+                        placeholder="Reference link/url" hidden>
+                    <input type="url" class="form-control" name="attribution4" id="attribution4"
+                        placeholder="Reference link/url" hidden>
+                    <input type="url" class="form-control" name="attribution5" id="attribution5"
+                        placeholder="Reference link/url" hidden>
                 </div>
             </div>
             <p><small>don't know how to convert the image to url? refer to this website: <a
@@ -126,7 +139,8 @@
 
             <div class="form-row">
                 <div class="form-group col-md-3">
-                    <label class="tooltip-top" data-tooltip="What kind of payment type you preferred?"><b>Preferred Payment Method</b></label>
+                    <label class="tooltip-top" data-tooltip="What kind of payment type you preferred?"><b>Preferred
+                            Payment Method</b></label>
                     <select class="form-control" name="method" id="method" required>
                         <option value="" selected disabled>Please select one</option>
                         <option value="FPS">FPS</option>
@@ -141,20 +155,23 @@
             <br>
             <div>
                 <% if(req.session.memberid){ %>
-                    <% if(req.session.userStatus == "active"){ %>
-                    <button class="btn btn-outline-success" type="submit">Create post</button>
-                    <% }else{ %>
-                        <button class="btn btn-outline-success tooltip-top" data-tooltip="Create feature is banned" disabled>Create post</button>
-                        <% } %>
-                    <% }else{ %>
-                        <a class="btn btn-primary" href="/login">Login</a> or <a href="/signup">signup a new account</a>
-                        to create a post.
-                        <% } %>
+                    <% if(req.session.userStatus=="active" ){ %>
+                        <button class="btn btn-outline-success" type="submit">Create post</button>
+                        <% }else{ %>
+                            <button class="btn btn-outline-success tooltip-top" data-tooltip="Create feature is banned"
+                                disabled>Create post</button>
+                            <% } %>
+                                <% }else{ %>
+                                    <a class="btn btn-primary" href="/login">Login</a> or <a href="/signup">signup a new
+                                        account</a>
+                                    to create a post.
+                                    <% } %>
             </div>
 
+            <hr>
             <small>
-                <b>**IMPORTANT**</b> Please make sure the information that you provided is correct. Suspicious malicious
-                behavior may cause
+                <b>**IMPORTANT**</b> Please make sure the information that you provided is correct. Suspicious and
+                malicious activity may cause
                 credit score deduction of your account. Low credit score may lead to account restriction. For details,
                 please check out our <a href="/terms" style="color: blue;">policies and terms.</a>
             </small>
@@ -234,7 +251,7 @@
     function display(x) {
         if (x == "Other") {
             displayOther();
-        }else{
+        } else {
             hideOther();
         }
     }
