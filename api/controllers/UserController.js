@@ -901,7 +901,11 @@ module.exports = {
         id = parseInt(id);
 
         var db = sails.getDatastore().manager;
-        var post = await db.collection('post').findOne({ "postID": { $eq: postID } });
+        var post = await db.collection('post').findOne({ "postID": { $eq: id } });
+
+        var user = await db.collection('user').findOne({'username':post.HostUsername});
+
+        var creditScore = user.creditScore;
 
         if (!post) return res.view('post/notFound', { id: id });
 
@@ -910,7 +914,7 @@ module.exports = {
             sails.log("stringgify result: " + JSON.stringify(post));
             return res.json(post);
         }
-        return res.view('post/postDetail', { post: post });
+        return res.view('post/postDetail', { post: post, creditScore:creditScore });
 
     },
 
