@@ -901,16 +901,16 @@ module.exports = {
         id = parseInt(id);
 
         var db = sails.getDatastore().manager;
-        var result = await db.collection('post').findOne({ "postID": id });
+        var post = await db.collection('post').findOne({ "postID": { $eq: postID } });
 
-        if (!result) return res.view('post/notFound', { id: id });
+        if (!post) return res.view('post/notFound', { id: id });
 
         if (req.wantsJSON) {
             sails.log("returning detail page json data");
-            sails.log("stringgify result: " + JSON.stringify(result));
-            return res.json(result);
+            sails.log("stringgify result: " + JSON.stringify(post));
+            return res.json(post);
         }
-        return res.view('post/postDetail', { post: result });
+        return res.view('post/postDetail', { post: post });
 
     },
 
