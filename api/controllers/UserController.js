@@ -903,11 +903,10 @@ module.exports = {
         var db = sails.getDatastore().manager;
         var post = await db.collection('post').findOne({ "postID": { $eq: id } });
 
-        var user = await db.collection('user').findOne({'username':post.HostUsername});
-
-        var creditScore = user.creditScore;
-
         if (!post) return res.view('post/notFound', { id: id });
+
+        var user = await db.collection('user').findOne({'username':post.HostUsername});
+        var creditScore = user.creditScore;
 
         if (req.wantsJSON) {
             sails.log("returning detail page json data");
@@ -958,7 +957,7 @@ module.exports = {
 
             var title = req.body.title;
             var description = req.body.description.trim();
-            var memberLimit = req.body.memberLimit;
+            // var memberLimit = req.body.memberLimit; // member limit is not allowed to change
             var attribution = req.body.attribution;
             var attribution2 = req.body.attribution2;
             var attribution3 = req.body.attribution3;
@@ -1015,7 +1014,7 @@ module.exports = {
             // YYYY-MM-DDTHH:MM:SS
             var dateString = year + "-" + month + "-" + day + "T" + h + ":" + m + ":" + s;
 
-            memberLimit = parseInt(memberLimit);
+            // memberLimit = parseInt(memberLimit);
             sails.log("editing the post (" + id + ")");
             sails.log("updated time: " + dateString);
 
@@ -1027,7 +1026,6 @@ module.exports = {
                     $set: {
                         'post.title': title,
                         'post.description': description,
-                        'post.memberLimit': memberLimit,
                         'post.attribution': attr,
                         'post.imgInput': img,
                         'post.cat': cat,

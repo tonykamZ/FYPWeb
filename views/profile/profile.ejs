@@ -360,6 +360,7 @@
                                             <!-- Joined post section only available for session user -->
                                             <% if(user.username==req.session.memberid){ %>
                                                 <% var cnt=0; %>
+                                                <br><br>
                                                     <h2 style="color: brown;"><b>Joined Posts (<%= joinedPosts.length %>)</b></h2>
 
                                                     <section class="card-container">
