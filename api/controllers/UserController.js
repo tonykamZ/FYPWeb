@@ -1054,7 +1054,7 @@ module.exports = {
                 }
             );
 
-            res.redirect("/manage");
+            res.redirect("/read/post/"+id);
         }
     },
 
