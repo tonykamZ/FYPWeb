@@ -1043,7 +1043,6 @@ module.exports = {
                     $set: {
                         'post.title': title,
                         'post.description': description,
-                        'post.memberLimit': memberLimit,
                         'post.attribution': attr,
                         'post.imgInput': img,
                         'post.cat': cat,
