@@ -104,7 +104,7 @@ module.exports = {
 
     signup: async function (req, res) {
 
-        if (req.method == "GET") return res.view('SignupForm', { status: '', ExisitingUser: '' });
+        if (req.method == "GET") return res.view('SignupForm', { status: '', ExisitingUser: '',ExisitingGmail:''  });
 
 
         var username = req.body.username;
@@ -135,7 +135,21 @@ module.exports = {
             }
 
 
-            return res.view('SignupForm', { status: '', ExisitingUser: newUser });
+            return res.view('SignupForm', { status: '', ExisitingUser: newUser, ExisitingGmail:'' });
+        }
+
+        // check if such username exist in the DB
+        var duplicatedGmail = await db.collection('user').findOne({ "connectedGmail": req.session.useremail });
+        if (duplicatedGmail) {
+            sails.log('Duplicated Gmail in signing up: '+duplicatedGmail);
+
+            if (req.wantsJSON) {
+                sails.log('This request wants JSON!');
+                return res.json(newUser);
+            }
+
+
+            return res.view('SignupForm', { status: '', ExisitingUser: '', ExisitingGmail: duplicatedGmail });
         }
 
         var date = new Date();

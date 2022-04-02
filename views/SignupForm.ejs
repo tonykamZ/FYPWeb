@@ -101,6 +101,14 @@
                         </p>
                         <small>**Please change the username and check its availability.</small>
                         <% }%>
+                        <% if(ExisitingGmail){ %>
+                            <p class="blink" style="background-color: red; color: white;">This Gmail is being used! (<b><%= ExisitingGmail.connectedGmail %></b>)
+                            </p>
+                            <p><small><b>**ONE Gmail account can only create ONE member account in the system!</b></small></p>
+                            <p><small><b>**Please use another Gmail account to pass the step 1 authentication!</b></small></p>
+                            <% }%>
+
+
                             <form method="POST" action="/signup">
                                 <div class="form-row">
                                     <div class="form-group col-md-10">
@@ -148,19 +156,11 @@
 <script>
     var useremail = "<%= req.session.useremail %>";
     var status = "<%= status %>";
-    var ExisitingUser = "<%= ExisitingUser %>";
     // logged in Gmail
     if (status == "verified") {
         var name = "<%= req.session.username %>";
         alert("Welcome! " + name + "\nYou're now logged in your Gmail account");
         window.location.replace("/signup");
-
-    }
-
-    // if such User Exisit
-    if (ExisitingUser) {
-        var DBusername = "<%= ExisitingUser.username %>";
-        var DBuseremail = "<%= ExisitingUser.connectedGmail %>";
 
     }
 

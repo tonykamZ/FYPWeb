@@ -31,7 +31,7 @@ module.exports = {
                 // if yes, req.session.exisitngAC = ac.name
 
 
-                return res.view('SignupForm', { status: 'verified', ExisitingUser: '' });
+                return res.view('SignupForm', { status: 'verified', ExisitingUser: '',ExisitingGmail:'' });
             }
         })(req, res, next);
     },
