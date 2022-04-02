@@ -140,7 +140,7 @@ module.exports = {
 
         // check if such username exist in the DB
         var duplicatedGmail = await db.collection('user').findOne({ "connectedGmail": req.session.useremail });
-        if (duplicatedGmail) {
+        /*if (duplicatedGmail) {
             sails.log('Duplicated Gmail in signing up: ' + duplicatedGmail);
 
             if (req.wantsJSON) {
@@ -150,7 +150,7 @@ module.exports = {
 
 
             return res.view('SignupForm', { status: '', ExisitingUser: '', ExisitingGmail: duplicatedGmail });
-        }
+        }*/
 
         var date = new Date();
         var day = date.getDate();

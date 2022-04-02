@@ -101,54 +101,67 @@
                         </p>
                         <small>**Please change the username and check its availability.</small>
                         <% }%>
-                        <% if(ExisitingGmail){ %>
-                            <p class="blink" style="background-color: red; color: white;">This Gmail is being used! (<b><%= ExisitingGmail.connectedGmail %></b>)
-                            </p>
-                            <p><small><b>**ONE Gmail account can only create ONE member account in the system!</b></small></p>
-                            <p><small><b>**Please use another Gmail account to pass the step 1 authentication!</b></small></p>
-                            <% }%>
+                            <% if(ExisitingGmail){ %>
+                                <p class="blink" style="background-color: red; color: white;">This Gmail is being used!
+                                    (<b>
+                                        <%= ExisitingGmail.connectedGmail %>
+                                    </b>)
+                                </p>
+                                <p><small><b>**ONE Gmail account can only create ONE member account in the
+                                            system!</b></small></p>
+                                <p><small><b>**Please use another Gmail account to pass the step 1
+                                            authentication!</b></small></p>
+                                <% }%>
 
 
-                            <form method="POST" action="/signup">
-                                <div class="form-row">
-                                    <div class="form-group col-md-10">
-                                        <label><b>Username</b> <span id="checkStatus"
-                                                style="padding-left: 10px;"></span></label>
-                                        <div id="usernameInput">
-                                            <input type="string" class="form-control" id="username" name="username"
-                                                required disabled>
-                                            <a class="tooltip-top" data-tooltip="Check availability of the username"
-                                                id="verify" style="margin-left: 20px; cursor: pointer;"
-                                                onclick="checkDul(document.getElementById('username').value)"><i
-                                                    class="fas fa-shield-alt"></i></a>
+                                    <form method="POST" action="/signup">
+                                        <div class="form-row">
+                                            <div class="form-group col-md-10">
+                                                <label><b>Username</b> <span id="checkStatus"
+                                                        style="padding-left: 10px;"></span></label>
+                                                <div id="usernameInput">
+                                                    <input type="string" class="form-control" id="username"
+                                                        name="username" required disabled>
+                                                    <a class="tooltip-top"
+                                                        data-tooltip="Check availability of the username" id="verify"
+                                                        style="margin-left: 20px; cursor: pointer;"
+                                                        onclick="checkDul(document.getElementById('username').value)"><i
+                                                            class="fas fa-shield-alt"></i></a>
+                                                </div>
+                                            </div>
+
                                         </div>
-                                    </div>
 
-                                </div>
+                                        <div class="form-row">
+                                            <div class="form-group col-md-9">
 
-                                <div class="form-row">
-                                    <div class="form-group col-md-9">
+                                                <label><b>Password</b>
+                                                    <span id="showNhidePW" onclick="showNhidePW()"
+                                                        style="cursor: pointer; display: none;"><i
+                                                            class="fas fa-eye"></i></span></label>
+                                                <input type="password" class="form-control" id="password"
+                                                    name="password" minlength=6 required disabled>
+                                                <small><b>**</b>The passwords should have minimum length of 6</small>
+                                            </div>
 
-                                        <label><b>Password</b>
-                                            <span id="showNhidePW" onclick="showNhidePW()"
-                                                style="cursor: pointer; display: none;"><i
-                                                    class="fas fa-eye"></i></span></label>
-                                        <input type="password" class="form-control" id="password" name="password"
-                                            minlength=6 required disabled>
-                                        <small><b>**</b>The passwords should have minimum length of 6</small>
-                                    </div>
-
-                                </div>
+                                        </div>
 
 
-                                <small><a href="/login">Already have an account? log in now</a></small>
-                                <div>
-                                    <button id="create" class="btn btn-outline-success" type="submit">Create</button>
-                                </div>
+                                        <small><a href="/login">Already have an account? log in now</a></small>
+                                        <div id="create">
+                                            <hr>
+                                            <input type="checkbox" id="agree" required>
+                                            <label for="agree">
+                                                <small><b>I have read and accept the <a href="/terms" style="color: blue;">terms and
+                                                            conditions</a> of HappyShare:)&#174;</b></small>
+                                            </label>
+                                            <br>
+                                            <button class="btn btn-outline-success" type="submit" onclick="checkAgree()">Create</button>
+                                        </div>
 
 
 
-                            </form>
+                                    </form>
         </div>
     </div>
 </body>
@@ -221,5 +234,14 @@
             location.reload();
         }
 
+    }
+
+    function checkAgree(){
+        var agree = document.getElementById('agree').checked;
+
+        if(!agree){
+            alert('Please check the box to continue!');
+            return;
+        }
     }
 </script>
