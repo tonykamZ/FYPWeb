@@ -16,7 +16,7 @@
     <p>You can check out the report status in your report history to see any update events.</p>
 
     <br>
-    <h6>Redirecting to user profile in <b id="sec">11</b> seconds...</h6>
+    <h6>Redirecting to user profile in <b id="sec">12</b> seconds...</h6>
     <a class="btn btn-outline-info" href="/read/profile?username=<%= reportUser %>">Redirect</a>
 
 </body>
@@ -40,5 +40,5 @@
 </script>
 
 <script type="text/javascript">
-	setTimeout('location.href="http://127.0.0.1:1337/read/profile?username=<%= reportUser %>"',10000);
+	setTimeout('location.href="/read/profile?username=<%= reportUser %>"',10000);
 </script>
