@@ -1,127 +1,133 @@
 <head>
     <title>Report list</title>
     <style>
-
+        .container {
+            padding-bottom: 60px;
+        }
     </style>
 
 </head>
 
 
 <body>
-    <% if(req.session.memberid){ %>
-        <% if(req.session.memberid=="admin" ){ %>
-            <br>
-            <form>
-                <div class="form-row">
-                    <div class="form-group col-md-3">
-                        <select class="form-control" name="status" id="status">
-                            <option value="" disabled selected>Status</option>
-                            <option value="pending">Pending</option>
-                            <option value="approved">Approved</option>
-                            <option value="rejected">Rejected</option>
-                            <option value="Further investigation">Further Investigation</option>
-                        </select>
+    <div class="container">
+        <% if(req.session.memberid){ %>
+            <% if(req.session.memberid=="admin" ){ %>
+                <br>
+                <form>
+                    <div class="form-row">
+                        <div class="form-group col-md-3">
+                            <select class="form-control" name="status" id="status">
+                                <option value="" disabled selected>Status</option>
+                                <option value="pending">Pending</option>
+                                <option value="approved">Approved</option>
+                                <option value="rejected">Rejected</option>
+                                <option value="Further investigation">Further Investigation</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group col-md-4">
+                            <input class="form-control" type="string" name="category" id="category"
+                                placeholder="misinformation/Hate speech/others...">
+                        </div>
+                        <button class="btn btn-info" style="margin-bottom: 20px;" onclick="findReport()">Find</button>
                     </div>
 
-                    <div class="form-group col-md-4">
-                        <input class="form-control" type="string" name="category" id="category"
-                            placeholder="misinformation/Hate speech/others...">
-                    </div>
-                    <button class="btn btn-info" style="margin-bottom: 20px;" onclick="findReport()">Find</button>
-                </div>
+                </form>
 
-            </form>
-
-            <b>There are total <%= reportCnt %> reports</b>
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th><b style="color: red;">Report User</b></th>
-                        <th>Content</th>
-                        <th>Detail</th>
-                        <th>Reported By</th>
-                        <th>Status</th>
-                        <th>Report date</th>
-                        <th></th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <% reports.forEach(function(report){ %>
-                    <tr>
-                        <td><a href="/read/profile?username=<%= report.reportUser %>">
-                                <%= report.reportUser %>
-                            </a></td>
-                        <td>
-                            <%= report.content %>
-                        </td>
-                        <td>
-                            <% if(report.evidence.length> 12){ %>
-                                <%= report.evidence.substring(0,11) %>...
-                                    <% }else{ %>
-                                        <%= report.evidence %>
-                                            <% } %>
-                        </td>
-                        <td>
-                            <a href="/read/profile?username=<%= report.reportedBy %>">
-                                <%= report.reportedBy %>
-                            </a>
-                        </td>
-                        <td>
-                            <% if(report.status=="Pending" ){ %>
-                                <b style="color: gray;">
-                                    <%= report.status %>
-                                </b>
-                                <% }else if(report.status=="Approved" ){ %>
-                                    <b style="color: #61ff89;">
+                <b>There are total <%= reportCnt %> reports</b>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th><b style="color: red;">Report User</b></th>
+                            <th>Content</th>
+                            <th>Detail</th>
+                            <th>Reported By</th>
+                            <th>Status</th>
+                            <th>Report date</th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <% reports.forEach(function(report){ %>
+                        <tr>
+                            <td><a href="/read/profile?username=<%= report.reportUser %>">
+                                    <%= report.reportUser %>
+                                </a></td>
+                            <td>
+                                <%= report.content %>
+                            </td>
+                            <td>
+                                <% if(report.evidence.length> 12){ %>
+                                    <%= report.evidence.substring(0,11) %>...
+                                        <% }else{ %>
+                                            <%= report.evidence %>
+                                                <% } %>
+                            </td>
+                            <td>
+                                <a href="/read/profile?username=<%= report.reportedBy %>">
+                                    <%= report.reportedBy %>
+                                </a>
+                            </td>
+                            <td>
+                                <% if(report.status=="Pending" ){ %>
+                                    <b style="color: gray;">
                                         <%= report.status %>
                                     </b>
-                                    <% }else if(report.status=="Rejected" ){ %>
-                                        <b style="color: rgb(252, 133, 35);">
+                                    <% }else if(report.status=="Approved" ){ %>
+                                        <b style="color: #61ff89;">
                                             <%= report.status %>
                                         </b>
-                                        <% }else{ %>
-                                            <b style="color: #7208eb;">
+                                        <% }else if(report.status=="Rejected" ){ %>
+                                            <b style="color: rgb(252, 133, 35);">
                                                 <%= report.status %>
                                             </b>
-                                            <% } %>
+                                            <% }else{ %>
+                                                <b style="color: #7208eb;">
+                                                    <%= report.status %>
+                                                </b>
+                                                <% } %>
 
-                        </td>
-                        <td>
-                            <% var str=report.createDateString.split("T"); %>
-                                <%= str[0] %>
-                                    <%= str[1] %>
-                        </td>
-                        <td>
-                            <a style="color: rgb(140, 0, 255);" href="/read/report/<%= report._id %>" class="tooltip-top" data-tooltip="View the report & Take action">View</a>
-                        </td>
-                        <td>
-                            <a href="/admin/report/delete/<%= report._id %>" class="tooltip-top" data-tooltip="Delete the report">❌</a>
-                        </td>
-                    </tr>
+                            </td>
+                            <td>
+                                <% var str=report.createDateString.split("T"); %>
+                                    <%= str[0] %>
+                            </td>
+                            <td>
+                                <a style="color: rgb(140, 0, 255);" href="/read/report/<%= report._id %>"
+                                    class="tooltip-top" data-tooltip="View the report & Take action">View</a>
+                            </td>
+                            <td>
+                                <a href="/admin/report/delete/<%= report._id %>" class="tooltip-top"
+                                    data-tooltip="Delete the report">❌</a>
+                            </td>
+                        </tr>
 
-                    <% }); %>
-            </table>
-            <% }else{ %>
-                <!-- normal member layout -->
-                <br>
-                <h3>You don't have permission to browse this page😬</h3>
-                <!-- should store url session to nav back later -->
+                        <% }); %>
+                </table>
+                <% }else{ %>
+                    <!-- normal member layout -->
+                    <br>
+                    <h3>You don't have permission to browse this page😬</h3>
+                    <!-- should store url session to nav back later -->
 
-                <!-- normal member layout -->
+                    <!-- normal member layout -->
 
-                <% } %>
+                    <% } %>
 
-                    <% }else{ %>
-                        <!-- visitor layout -->
-                        <br><br>
-                        <h3><a href="/login">Login <li class="tag__item" style="cursor: pointer;"><i
-                                        class="fas fa-sign-in-alt mr-2"></i></li></a> to admin account to browse report
-                            list
-                        </h3>
-                        <!-- should store url session to nav back later -->
+                        <% }else{ %>
+                            <!-- visitor layout -->
+                            <br><br>
+                            <h3><a href="/login">Login <li class="tag__item" style="cursor: pointer;"><i
+                                            class="fas fa-sign-in-alt mr-2"></i></li></a> to admin account to browse
+                                report
+                                list
+                            </h3>
+                            <!-- should store url session to nav back later -->
 
-                        <!-- visitor layout -->
-                        <% } %>
+                            <!-- visitor layout -->
+                            <% } %>
+    </div>
 
 </body>
 

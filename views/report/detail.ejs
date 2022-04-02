@@ -7,6 +7,7 @@
         .row {
             display: flex;
             padding-top: 30px;
+            padding-bottom: 60px;
         }
 
         .column1 {
@@ -167,7 +168,7 @@
                             </b></li>
                         <li>
                             Picture provided:
-                             <img src="<%= report.photoLink %>" alt="" class="image" height="180px" />
+                             <a href="<%= report.photoLink %>" target="_blank"><img src="<%= report.photoLink %>" alt="" class="image" height="180px" /></a>
                         </li>
                         <li><small>link: <a href="<%= report.photoLink %>" target="_blank"><%= report.photoLink %></a></small></li>
                     </ul>

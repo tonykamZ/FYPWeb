@@ -25,20 +25,20 @@
 
                 <div class="form-row">
                     <div class="form-group col-md-2">
-                        <input class="form-control" type="text" id="myInput" oninput="myFunction()"
-                            onkeyup='saveValue(this);' placeholder="Post ID" title="Search for Post ID">
+                        <input class="form-control" type="text" id="myInput" onkeyup="myFunction()"
+                            placeholder="Post ID" title="Search for Post ID">
                     </div>
                     <div class="form-group col-md-4">
-                        <input class="form-control" type="text" id="myInput2" oninput="myFunction2()"
-                            onkeyup='saveValue(this);' placeholder="Title" title="Search for Title">
+                        <input class="form-control" type="text" id="myInput2" onkeyup="myFunction2()"
+                            placeholder="Title" title="Search for Title">
                     </div>
                     <div class="form-group col-md-2">
-                        <input class="form-control" type="text" id="myInput3" oninput="myFunction3()"
-                            onkeyup='saveValue(this);' placeholder="Host " title="Search for Host username">
+                        <input class="form-control" type="text" id="myInput3" onkeyup="myFunction3()"
+                            placeholder="Host" title="Search for Host username">
                     </div>
                     <div class="form-group col-md-3">
-                        <input class="form-control" type="text" id="myInput4" oninput="myFunction4()"
-                            onkeyup='saveValue(this);' placeholder="Status" title="Search for Status">
+                        <input class="form-control" type="text" id="myInput4" onkeyup="myFunction4()"
+                            placeholder="Status" title="Search for Status">
                     </div>
 
                 </div>
@@ -223,8 +223,8 @@
         input3 = document.getElementById("myInput2");
         filter3 = input3.value.toUpperCase();
 
-        input3 = document.getElementById("myInput4");
-        filter3 = input3.value.toUpperCase();
+        input4 = document.getElementById("myInput4");
+        filter4 = input4.value.toUpperCase();
 
         table = document.getElementById("myTable");
         tr = table.getElementsByTagName("tr");
@@ -299,5 +299,5 @@
         cnt.innerHTML += ": <b>" + c + " records</b>";
     }
 
-    
+
 </script>
