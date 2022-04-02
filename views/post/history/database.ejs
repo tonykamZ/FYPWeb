@@ -1,0 +1,303 @@
+<head>
+    <title>Post Database</title>
+    <style>
+        .empty {
+            font: 47px "Amatic SC", sans-serif;
+        }
+
+        .container {
+            padding-bottom: 50px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <br>
+        <h3>Post Database (read only)</h3>
+        <button class="btn btn-outline-secondary" type="button" style="position: absolute; right: 10%; top: 12.4%;"
+            onclick="window.history.back()">Back</button>
+
+        <% if(posts.length==0){ %>
+            <h1 class="empty">The post history is empty.</h1>
+            <% }else{ %>
+                <small>Total: <%= posts.length %></small>
+
+                <div class="form-row">
+                    <div class="form-group col-md-2">
+                        <input class="form-control" type="text" id="myInput" oninput="myFunction()"
+                            onkeyup='saveValue(this);' placeholder="Post ID" title="Search for Post ID">
+                    </div>
+                    <div class="form-group col-md-4">
+                        <input class="form-control" type="text" id="myInput2" oninput="myFunction2()"
+                            onkeyup='saveValue(this);' placeholder="Title" title="Search for Title">
+                    </div>
+                    <div class="form-group col-md-2">
+                        <input class="form-control" type="text" id="myInput3" oninput="myFunction3()"
+                            onkeyup='saveValue(this);' placeholder="Host " title="Search for Host username">
+                    </div>
+                    <div class="form-group col-md-3">
+                        <input class="form-control" type="text" id="myInput4" oninput="myFunction4()"
+                            onkeyup='saveValue(this);' placeholder="Status" title="Search for Status">
+                    </div>
+
+                </div>
+                <table class="table table-sm table-striped" id="myTable">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Post ID</th>
+                            <th scope="col">Title</th>
+                            <th scope="col">Host</th>
+                            <th scope="col">Create Date</th>
+                            <th scope="col">Update Date</th>
+                            <th scope="col">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% var offset=1; %>
+                            <% posts.forEach(function(post){ %>
+                                <tr>
+                                    <th scope="row">
+                                        <%= offset %>
+                                    </th>
+                                    <td>
+                                        <%= post.postID %>
+                                    </td>
+                                    <td>
+                                        <%= post.post.title %>
+                                    </td>
+                                    <td>
+                                        <%= post.HostUsername %>
+                                    </td>
+                                    <% var createArr=post.createDateString.split("T"); %>
+                                        <td>
+                                            <%= createArr[0] %>
+                                                <%= createArr[1] %>
+                                        </td>
+                                        <% if(post.updateDateString){ %>
+                                            <% var updateArr=post.updateDateString.split("T"); %>
+                                                <td>
+                                                    <%= updateArr[0] %>
+                                                        <%= updateArr[1] %>
+                                                </td>
+                                                <% }else{ %>
+                                                    <td>N/A</td>
+                                                    <% } %>
+                                                        <td>
+                                                            <% if(post.status=="Active" ){ %>
+                                                                <b style="color: rgb(90, 20, 255);">
+                                                                    <%= post.status %>
+                                                                </b>
+                                                                <% }else if(post.status=="Deleted" ){ %>
+                                                                    <b style="color: rgb(83, 84, 102);">
+                                                                        <%= post.status %>
+                                                                    </b>
+                                                                    <% }else{ %>
+                                                                        <b style="color: rgb(248, 20, 20);">
+                                                                            <%= post.status %>
+                                                                        </b>
+                                                                        <% } %>
+                                                        </td>
+                                                        <% if(req.session.memberid=="admin" ){ %>
+                                                            <td>
+                                                                <a
+                                                                    href="/view/history/post/<%= post.postID %>">Detail</a>
+                                                            </td>
+                                                            <% } %>
+                                </tr>
+
+
+                                <% offset=offset + 1; %>
+                                    <% }); %>
+                    </tbody>
+                </table>
+                <% } %>
+
+    </div>
+
+</body>
+
+
+<script>
+    myFunction();
+
+
+
+    function myFunction() {
+        // Declare variables
+        var input, input2, input3, input4, filter, filter2, filter3, filter4, table, tr, td, td2, td3, td4, i, txtValue, txtValue2, txtValue3, txtValue4;
+        input = document.getElementById("myInput");
+        filter = input.value.toUpperCase();
+
+        input2 = document.getElementById("myInput2");
+        filter2 = input2.value.toUpperCase();
+
+        input3 = document.getElementById("myInput3");
+        filter3 = input3.value.toUpperCase();
+
+        input4 = document.getElementById("myInput4");
+        filter4 = input3.value.toUpperCase();
+
+        table = document.getElementById("myTable");
+        tr = table.getElementsByTagName("tr");
+
+        var cnt = document.getElementById("cnt");
+
+        var c = 0; // count the filtered records
+        // Loop through all table rows, and hide those who don't match the search query
+        for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[0];
+            td2 = tr[i].getElementsByTagName("td")[1];
+            td3 = tr[i].getElementsByTagName("td")[2];
+            td4 = tr[i].getElementsByTagName("td")[5];
+            if (td) {
+                txtValue = td.textContent || td.innerText;
+                txtValue2 = td2.textContent || td2.innerText;
+                txtValue3 = td3.textContent || td3.innerText;
+                txtValue4 = td4.textContent || td4.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1 && txtValue2.toUpperCase().indexOf(filter2) > -1 && txtValue3.toUpperCase().indexOf(filter3) > -1 && txtValue4.toUpperCase().indexOf(filter4) > -1) {
+                    tr[i].style.display = "";
+                    c = c + 1;
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+        cnt.innerHTML = "";
+        cnt.innerHTML += ": <b>" + c + " records</b>";
+    }
+
+    function myFunction2() {
+        // Declare variables
+        var input, input2, input3, input4, filter, filter2, filter3, filter4, table, tr, td, td2, td3, td4, i, txtValue, txtValue2, txtValue3, txtValue4;
+        input = document.getElementById("myInput2");
+        filter = input.value.toUpperCase();
+
+        input2 = document.getElementById("myInput");
+        filter2 = input2.value.toUpperCase();
+
+        input3 = document.getElementById("myInput3");
+        filter3 = input3.value.toUpperCase();
+
+        input4 = document.getElementById("myInput4");
+        filter4 = input3.value.toUpperCase();
+
+        table = document.getElementById("myTable");
+        tr = table.getElementsByTagName("tr");
+        var cnt = document.getElementById("cnt");
+
+        var c = 0; // count the filtered records
+        // Loop through all table rows, and hide those who don't match the search query
+        for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[1];
+            td2 = tr[i].getElementsByTagName("td")[0];
+            td3 = tr[i].getElementsByTagName("td")[2];
+            td4 = tr[i].getElementsByTagName("td")[5];
+            if (td) {
+                txtValue = td.textContent || td.innerText;
+                txtValue2 = td2.textContent || td2.innerText;
+                txtValue3 = td3.textContent || td3.innerText;
+                txtValue4 = td4.textContent || td4.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1 && txtValue2.toUpperCase().indexOf(filter2) > -1 && txtValue3.toUpperCase().indexOf(filter3) > -1 && txtValue4.toUpperCase().indexOf(filter4) > -1) {
+                    tr[i].style.display = "";
+                    c = c + 1;
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+        cnt.innerHTML = "";
+        cnt.innerHTML += ": <b>" + c + " records</b>";
+    }
+
+    function myFunction3() {
+        // Declare variables
+        var input, input2, input3, input4, filter, filter2, filter3, filter4, table, tr, td, td2, td3, td4, i, txtValue, txtValue2, txtValue3, txtValue4;
+        input = document.getElementById("myInput3");
+        filter = input.value.toUpperCase();
+
+        input2 = document.getElementById("myInput");
+        filter2 = input2.value.toUpperCase();
+
+        input3 = document.getElementById("myInput2");
+        filter3 = input3.value.toUpperCase();
+
+        input3 = document.getElementById("myInput4");
+        filter3 = input3.value.toUpperCase();
+
+        table = document.getElementById("myTable");
+        tr = table.getElementsByTagName("tr");
+        var cnt = document.getElementById("cnt");
+
+        var c = 0; // count the filtered records
+        // Loop through all table rows, and hide those who don't match the search query
+        for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[2];
+            td2 = tr[i].getElementsByTagName("td")[0];
+            td3 = tr[i].getElementsByTagName("td")[1];
+            td4 = tr[i].getElementsByTagName("td")[5];
+            if (td) {
+                txtValue = td.textContent || td.innerText;
+                txtValue2 = td2.textContent || td2.innerText;
+                txtValue3 = td3.textContent || td3.innerText;
+                txtValue4 = td4.textContent || td4.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1 && txtValue2.toUpperCase().indexOf(filter2) > -1 && txtValue3.toUpperCase().indexOf(filter3) > -1 && txtValue4.toUpperCase().indexOf(filter4) > -1) {
+                    tr[i].style.display = "";
+                    c = c + 1;
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+        cnt.innerHTML = "";
+        cnt.innerHTML += ": <b>" + c + " records</b>";
+    }
+
+    function myFunction4() {
+        // Declare variables
+        var input, input2, input3, input4, filter, filter2, filter3, filter4, table, tr, td, td2, td3, td4, i, txtValue, txtValue2, txtValue3, txtValue4;
+        input = document.getElementById("myInput4");
+        filter = input.value.toUpperCase();
+
+        input2 = document.getElementById("myInput");
+        filter2 = input2.value.toUpperCase();
+
+        input3 = document.getElementById("myInput2");
+        filter3 = input3.value.toUpperCase();
+
+        input4 = document.getElementById("myInput3");
+        filter4 = input4.value.toUpperCase();
+
+        table = document.getElementById("myTable");
+        tr = table.getElementsByTagName("tr");
+        var cnt = document.getElementById("cnt");
+
+        var c = 0; // count the filtered records
+        // Loop through all table rows, and hide those who don't match the search query
+        for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[5];
+            td2 = tr[i].getElementsByTagName("td")[0];
+            td3 = tr[i].getElementsByTagName("td")[1];
+            td4 = tr[i].getElementsByTagName("td")[2];
+
+            if (td) {
+                txtValue = td.textContent || td.innerText;
+                txtValue2 = td2.textContent || td2.innerText;
+                txtValue3 = td3.textContent || td3.innerText;
+                txtValue4 = td4.textContent || td4.innerText;
+
+                if (txtValue.toUpperCase().indexOf(filter) > -1 && txtValue2.toUpperCase().indexOf(filter2) > -1 && txtValue3.toUpperCase().indexOf(filter3) > -1 && txtValue4.toUpperCase().indexOf(filter4) > -1) {
+                    tr[i].style.display = "";
+                    c = c + 1;
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+        cnt.innerHTML = "";
+        cnt.innerHTML += ": <b>" + c + " records</b>";
+    }
+
+    
+</script>

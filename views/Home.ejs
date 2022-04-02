@@ -257,6 +257,24 @@
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
         }
 
+        .goToDB{
+            font: bold 18px "Raleway", sans-serif;
+            background-image: linear-gradient(15deg, #3923ff 0%, #1cf832 100%);
+            color: #ffffff;
+            padding: 20px;
+            opacity: 0.78;
+            border-radius: 5px;
+            display: inline-block;
+            margin: 1rem;
+            position: relative;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+            transition: all 0.3s cubic-bezier(.25, .8, .25, 1);
+        }
+
+        .goToDB:hover {
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+        }
+
         #lets{
             font: bold 30px "Amatic SC", sans-serif;
             color: rgb(136, 255, 0);
@@ -492,9 +510,13 @@
 
     <div class="container">
             
+        <% if(req.session.memberid == 'admin'){ %>
+            <a class="goToDB" href="/post/history/database">Post Database</a>
+        <% }else{ %>
                 <div class="intro"><i class="fas fa-bullhorn"></i> Here are the latest posts on the platform. You can filter the post by any keywords,
                   discount type and category.
                 </div>
+        <% } %>
               
                 <div style="float: right; margin-top: 19px;">
                     <form action="/read/postID">

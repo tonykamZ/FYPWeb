@@ -104,7 +104,7 @@ module.exports = {
 
     signup: async function (req, res) {
 
-        if (req.method == "GET") return res.view('SignupForm', { status: '', ExisitingUser: '',ExisitingGmail:''  });
+        if (req.method == "GET") return res.view('SignupForm', { status: '', ExisitingUser: '', ExisitingGmail: '' });
 
 
         var username = req.body.username;
@@ -135,13 +135,13 @@ module.exports = {
             }
 
 
-            return res.view('SignupForm', { status: '', ExisitingUser: newUser, ExisitingGmail:'' });
+            return res.view('SignupForm', { status: '', ExisitingUser: newUser, ExisitingGmail: '' });
         }
 
         // check if such username exist in the DB
         var duplicatedGmail = await db.collection('user').findOne({ "connectedGmail": req.session.useremail });
         if (duplicatedGmail) {
-            sails.log('Duplicated Gmail in signing up: '+duplicatedGmail);
+            sails.log('Duplicated Gmail in signing up: ' + duplicatedGmail);
 
             if (req.wantsJSON) {
                 sails.log('This request wants JSON!');
@@ -248,10 +248,10 @@ module.exports = {
             ' [SYSTEM MESSAGE]***';
         //send notification to user
 
-        var r = await db.collection('user').findOne({'username':username});
-        var user = { 
-            name : username,
-            date : dateString,
+        var r = await db.collection('user').findOne({ 'username': username });
+        var user = {
+            name: username,
+            date: dateString,
             email: r.connectedGmail
         }
         Mailer.sendBanMail(user);
@@ -314,10 +314,10 @@ module.exports = {
         var str = '***[SYSTEM MESSAGE] Your account has been activated again at ' + year + "-" + month + "-" + day + " " + h + ":" + m + ":" + s +
             ' [SYSTEM MESSAGE]***';
         //send notification to user
-        var r = await db.collection('user').findOne({'username':username});
-        var user = { 
-            name : username,
-            date : dateString,
+        var r = await db.collection('user').findOne({ 'username': username });
+        var user = {
+            name: username,
+            date: dateString,
             email: r.connectedGmail
         }
         Mailer.sendActiMail(user);
@@ -919,7 +919,7 @@ module.exports = {
 
         if (!post) return res.view('post/notFound', { id: id });
 
-        var user = await db.collection('user').findOne({'username':post.HostUsername});
+        var user = await db.collection('user').findOne({ 'username': post.HostUsername });
         var creditScore = user.creditScore;
 
         if (req.wantsJSON) {
@@ -927,7 +927,7 @@ module.exports = {
             sails.log("stringgify result: " + JSON.stringify(post));
             return res.json(post);
         }
-        return res.view('post/postDetail', { post: post, creditScore:creditScore });
+        return res.view('post/postDetail', { post: post, creditScore: creditScore });
 
     },
 
@@ -1068,7 +1068,7 @@ module.exports = {
                 }
             );
 
-            res.redirect("/read/post/"+id);
+            res.redirect("/read/post/" + id);
         }
     },
 
@@ -1112,7 +1112,7 @@ module.exports = {
         }
         var db = sails.getDatastore().manager;
         // find all post that the user hosted/hosting
-        var userHostPosts = await db.collection('postHistory').find({ "HostUsername": username }).toArray();
+        var userHostPosts = await db.collection('postHistory').find({ "HostUsername": username }).sort([['_id', -1]]).toArray();
 
         var user = await db.collection('user').findOne({ "username": username });
         if (!user) {
@@ -1128,6 +1128,19 @@ module.exports = {
         }
 
         return res.view('post/postHistory', { user: { username: username }, posts: userHostPosts });
+
+    },
+
+    viewALLPostHistory: async function (req, res) {
+
+        if (req.session.memberid != "admin") {
+            return res.view('404');
+        }
+        var db = sails.getDatastore().manager;
+        // find all post in the history
+        var posts = await db.collection('postHistory').find({}).sort([['_id', -1]]).toArray();
+
+        return res.view('post/history/database', { posts: posts });
 
     },
 

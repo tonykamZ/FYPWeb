@@ -138,6 +138,9 @@ module.exports.routes = {
 
   // send email
   'POST /send/email/welcome' : 'UserController.emailWelcome',
+
+  // View ALL posts history
+  'GET /post/history/database' : 'UserController.viewALLPostHistory',
    // *** admin ***********************************************
 
 
