@@ -536,6 +536,9 @@ module.exports = {
 
         if (req.method == "GET") return res.view('post/OpenPostForm');
 
+        // prevent non-active user create post
+        if (req.session.userStatus != "active") { return res.redirect('/explore'); }
+
         var title = req.body.title;
         var description = req.body.description.trim();
         var memberLimit = req.body.memberLimit;
@@ -686,6 +689,9 @@ module.exports = {
 
     memberDelPost: async function (req, res) {
 
+        // prevent non-active user create post
+        if (req.session.userStatus != "active") { return res.redirect('/explore'); }
+        
         var id = req.params.id;
         var ObjectId = require('mongodb').ObjectId;
         var o_id = new ObjectId(id);
@@ -965,6 +971,10 @@ module.exports = {
             }
             return res.view('post/editPostForm', { post: result });
         } else {
+
+            // prevent non-active user create post
+            if (req.session.userStatus != "active") { return res.redirect('/explore'); }
+
             var id = req.params.id;
             var ObjectId = require('mongodb').ObjectId;
             var o_id = new ObjectId(id);
