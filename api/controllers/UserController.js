@@ -691,7 +691,7 @@ module.exports = {
 
         // prevent non-active user create post
         if (req.session.userStatus != "active") { return res.redirect('/explore'); }
-        
+
         var id = req.params.id;
         var ObjectId = require('mongodb').ObjectId;
         var o_id = new ObjectId(id);
@@ -852,7 +852,7 @@ module.exports = {
         var user = await db.collection('user').find().toArray();
 
         // count category
-        var fnd = elect = colth = ness = course = service = any = 0;
+        var fnd = elect = colth = ness = course = service = game = any = 0;
         post.forEach(function (p) {
             if (p.post.cat == "Food&Drink") {
                 fnd += 1
@@ -866,13 +866,14 @@ module.exports = {
                 course += 1;
             } else if (p.post.cat == "Service") {
                 service += 1;
+            } else if (p.post.cat == "Game") {
+                game += 1;
             } else {
                 any += 1;
             }
             sails.log("CAT = " + p.post.cat);
         });
-        sails.log(fnd + " " + elect + " " + colth + " " + ness + " " + course + " " + service + " " + any);
-        return res.view('landingPage', { post: post, user: user.length, fnd: fnd, elect: elect, colth: colth, ness: ness, course: course, service: service, any: any });
+        return res.view('landingPage', { post: post, user: user.length, fnd: fnd, elect: elect, colth: colth, ness: ness, course: course, service: service, game: game, any: any });
 
     },
 

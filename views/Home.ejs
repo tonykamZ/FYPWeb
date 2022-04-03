@@ -958,7 +958,7 @@
 
 
         if (response.ok) {
-            window.location.reload();
+            window.location.replace('/read/post/'+id);
             alert("Joined to the post!");
         } else {
             var msg = response.statusText;

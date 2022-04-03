@@ -88,17 +88,7 @@
                                 <li class="tag__item"><i class="fas fa-users mr-2"></i>
                                     <%= post.joinedMembers.length + 1 %>/<%= post.post.memberLimit %>
                                 </li>
-                                <li class="tag__item"><i class="fas fa-user-secret mr-2"></i>Host:
-                                    <% if(post.post.HostNickname){ %>
-                                        <a href="/read/profile?username=<%= post.HostUsername %>">
-                                            <%= post.post.HostNickname %>
-                                        </a>
-                                        <% }else{ %>
-                                            <a href="/read/profile?username=<%= post.HostUsername %>">
-                                                <%= post.HostUsername %>
-                                            </a>
-                                            <% } %>
-                                </li>
+                                
                             </ul>
                         </div>
                     </article>

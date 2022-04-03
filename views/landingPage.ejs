@@ -610,7 +610,7 @@
     const myChart = new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: ['Food&Drink', 'Electronic', 'Colthing', 'Necessity', 'Course', 'Service', 'Any'],
+            labels: ['Food&Drink', 'Electronic', 'Colthing', 'Necessity', 'Course', 'Service','Game', 'Any'],
             datasets: [{
                 label: '# of Posts',
                 data: [],
@@ -655,7 +655,8 @@
     var cnt4 = "<%= ness %>";
     var cnt5 = "<%= course %>";
     var cnt6 = "<%= service %>";
-    var cnt7 = "<%= any %>";
+    var cnt7 = "<%= game %>";
+    var cnt8 = "<%= any %>";
     myChart.data.datasets[0].data[0] = cnt1;
     myChart.data.datasets[0].data[1] = cnt2;
     myChart.data.datasets[0].data[2] = cnt3;
@@ -663,5 +664,6 @@
     myChart.data.datasets[0].data[4] = cnt5;
     myChart.data.datasets[0].data[5] = cnt6;
     myChart.data.datasets[0].data[6] = cnt7;
+    myChart.data.datasets[0].data[7] = cnt8;
     myChart.update();
 </script>
