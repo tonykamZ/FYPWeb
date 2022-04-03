@@ -157,10 +157,10 @@
             <div>
                 <% if(req.session.memberid){ %>
                     <% if(req.session.userStatus=="active" ){ %>
-                        <button class="btn btn-outline-success" type="submit">Create post</button>
+                        <button class="btn btn-outline-success" type="submit">Share this discount!</button>
                         <% }else{ %>
                             <button class="btn btn-outline-success tooltip-top" data-tooltip="Create feature is banned" type="button"
-                                disabled>Create post</button>
+                                disabled>Share this discount!</button>
                             <% } %>
                                 <% }else{ %>
                                     <a class="btn btn-primary" href="/login">Login</a> or <a href="/signup">signup a new
